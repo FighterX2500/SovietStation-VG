@@ -49,6 +49,12 @@
 	flags_inv = HIDEJUMPSUIT
 	species_fit = list("Vox")
 
+/obj/item/clothing/suit/arabic_a
+	name = "White Apparels"
+	desc = "An white apparels, seems to be arabic"
+	icon_state = "arabic_app"
+	item_state = "nursesuit"
+	flags = FPRINT
 
 /obj/item/clothing/suit/cyborg_suit
 	name = "cyborg suit"

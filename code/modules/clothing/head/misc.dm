@@ -21,6 +21,16 @@
 	icon_state = "pwig"
 	item_state = "pwig"
 
+/obj/item/clothing/head/arabic_a
+	name = "white hood"
+	desc = "An simple white hood, seems to be arabic"
+	icon_state = "arabic_ha"
+
+/obj/item/clothing/head/arabic_e
+	name = "red hood"
+	desc = "An simple red hood, seems to be arabic"
+	icon_state = "arabic_he"
+
 /obj/item/clothing/head/that
 	name = "top-hat"
 	desc = "It's an amish looking hat."
