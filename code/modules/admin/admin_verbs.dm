@@ -107,6 +107,7 @@ var/list/admin_verbs_fun = list(
 	/client/proc/editappear,
 	/client/proc/commandname,
 	/client/proc/delete_all_adminbus,
+	/client/proc/load_map,
 	/client/proc/gib_money // /vg/
 	)
 var/list/admin_verbs_spawn = list(

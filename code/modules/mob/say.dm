@@ -27,9 +27,11 @@
 	message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
 
 	if(ishuman(src) || isrobot(src))
-		usr.emote("me",usr.emote_type,message)
+		custom_emote(usr.emote_type, message)
+//		usr.emote("me",usr.emote_type,message)
 	else
-		usr.emote(message)
+		custom_emote(1, message)
+//		usr.emote(message)
 
 /mob/proc/say_dead(var/message)
 	var/name = src.real_name

@@ -611,6 +611,9 @@
 	if (prob(mineralChance) && !mineral)
 		var/mineral_name = pickweight(mineralSpawnChanceList) //temp mineral name
 
+		if(mineral_name == "Cave" && !istype(src.loc, /area/mine/unexplored)) //for mineral deposits on planets
+			mineral_name = "Iron"
+
 		if(!name_to_mineral)
 			SetupMinerals()
 
