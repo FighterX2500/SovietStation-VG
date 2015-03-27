@@ -43,18 +43,33 @@
 	var/used_teleport
 	var/used_steleport
 	var/used_hypno
+	var/repeat = 1
+
+/mob/living/simple_animal/jirachi/Life()		//Jirachi loves fire!
+	..()
+	var/gain = 0
+	if(bodytemperature > 600)
+		gain = round((bodytemperature - 600)/10, 1)
+		bodytemperature -= 400
+		if(repeat == 1)
+			src << "\blue I feel my body starting to absorb heat and converting it into light energy..."
+			visible_message("\red \bold Jirachi starts absorbing heat around itself!")
+			repeat = 0
+	else if(repeat == 0)
+		repeat = 1
+
+	energy = min(energy + gain, max_energy)
 
 
-	Life()
-	 ..()
-		if(stat == 2)
-			new /obj/effect/decal/cleanable/ash(src.loc)
-			for(var/mob/M in viewers(src, null))
-				if((M.client && !( M.blinded )))
-					M.show_message("\red [src] starts burning with bright fire from inside, before turning into ashes") //Poor Jirachi :(
-					ghostize()
-			spawn(0)
-				del src
+
+/mob/living/simple_animal/jirachi/Die()
+	..()
+	new /obj/effect/decal/cleanable/ash(src.loc)
+	for(var/mob/M in viewers(src, null))
+		if((M.client && !( M.blinded )))
+			M.show_message("\red [src] starts burning with bright fire from inside, before turning into ashes") //Poor Jirachi :(
+	ghostize()
+	del src
 
 /mob/living/simple_animal/jirachi/Process_Spacemove(var/check_drift = 0)//Move freely in space
 	return 1
@@ -1125,12 +1140,9 @@
 
 /mob/living/simple_animal/jirachi/proc/global_telepathy()
 	set category = "Jirachi"
-	set name = "Global Telepathy(50)"
+	set name = "Global Telepathy"
 	set desc = "Send telepathic message to all organic creatures on the station."
 
-	if(energy<50)
-		src << "You don't have enough power!"
-		return
 	if(star_form == 0)
 		src << "You can use that power only in Star Form!"
 		return
@@ -1151,8 +1163,6 @@
 		G << "\bold GLOBAL TELEPATHY: [msg]"
 	log_say("Global Telepathy: [key_name(usr)] : [msg]")
 	src << {"\blue You project "[msg]" into mind of every living creature"}
-
-	energy-=50
 	return
 
 /mob/living/simple_animal/jirachi/verb/showa()
@@ -1469,6 +1479,6 @@
 			jirachi << "\blue <i><b>Star power begins to emerge from me, breaking my involucre</b></i>"
 			jirachi << "\blue <i><b>My crystalline shell brokens, as I opened my eyes...</b></i>"
 			jirachi << ""
-			jirachi << "<b>You are now playing as Jirachi - the Child Of The Star!</b> Jirachi is the creature, born by means of Light, Life and Star powers. It is kind to all living beings. That means you ought to protect ordinary crew members, wizards, traitors, aliens, changelings, Syndicate Operatives and others from killing each other. <b><font color=red>Do no harm! Jirachi can't stand pain or suffering of any living creature. Try to use your offensive abilities as little as possible</font></b> In short - you are adorable but very powerful creature, which loves everybody. More information how to RP as Jirachi can be found here: http://tauceti.ru/forums/index.php?topic=3171.0 Have fun!"
+			jirachi << "<b>You are now playing as Jirachi - the Child Of The Star!</b> Jirachi is the creature, born by means of Light, Life and Star powers. It is kind to all living beings. That means you ought to protect ordinary crew members, wizards, traitors, aliens, changelings, Syndicate Operatives and others from killing each other. <b><font color=red>Do no harm! Jirachi can't stand pain or suffering of any living creature. Try to use your offensive abilities as little as possible</font></b> In short - you are adorable but very powerful creature, which loves everybody. Also remember, that fire is best friend for you(and the worst enemy for the most other creatures). Being on fire is the other than Hybernation method to pretty rapidly regenerate your health and energy. More information how to RP as Jirachi can be found here: http://tauceti.ru/forums/index.php?topic=3171.0 Have fun!"
 			dead_mob_list -= C
 			del(src)
