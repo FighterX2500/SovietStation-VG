@@ -9,6 +9,10 @@
 		channel_name = "Tau Ceti Daily"
 		can_be_redacted = 0
 
+	New()
+		..()
+		channel_name = pick("Galaxy News", "Chronicles of Space Pouches")
+
 	revolution_inciting_event
 
 		paycuts_suspicion
@@ -57,12 +61,20 @@
 						say so!"}
 			round_time = 60 * 15
 
+			New()
+				..()
+				channel_name = "The Gibson Gazette"
+
 		net_block
 			author = "Assistant Editor Carl Ritz"
 			channel_name = "The Gibson Gazette"
 			message = {"Several corporations banding together to block access to 'wetskrell.nt', site administrators
 			claiming violation of net laws."}
 			round_time = 60 * 50
+
+			New()
+				..()
+				channel_name = "The Gibson Gazette"
 
 		found_ssd
 			channel_name = "Tau Ceti Daily"

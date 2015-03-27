@@ -29,4 +29,6 @@
 /mob/dead/observer/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq)
 	if(radio_freq)
 		speaker = speaker.GetSource()
-	src << "<a href='?src=\ref[src];follow=\ref[speaker]'>(Follow)</a> [message]"
+	if(src in get_hearers_in_view(7, speaker))
+		message = "<b>[message]</b>"
+	src << "<a href='?src=\ref[src];follow=\ref[speaker]'>(Follow)</a> <a href='?src=\ref[src];speakerinfo=\ref[speaker]'>(?)</a> [message]"

@@ -500,7 +500,7 @@ var/list/admin_verbs_mod = list(
 
 /client/proc/warn(warned_ckey)
 	var/reason = "Autobanning due to too many formal warnings"
-	if(!check_rights(R_MOD))	return
+	if(!check_rights(R_MOD) && !check_rights(R_ADMIN))	return
 
 	if(!warned_ckey || !istext(warned_ckey))	return
 	/*if(warned_ckey in admin_datums)

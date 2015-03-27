@@ -7,6 +7,9 @@ var/savefile/Banlist
 		LoadBans()		// try to load the bans
 		if(!Banlist)	// uh oh, can't find bans!
 			return 0	// ABORT ABORT ABORT
+	//Admins bans themselves with warn and "@ckey", so, hotfix.
+	if(ckey in admin_datums)
+		return 0
 
 	. = list()
 	var/appeal
