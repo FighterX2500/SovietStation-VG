@@ -2,7 +2,7 @@
 	name = "solar tracker"
 	desc = "A solar directional tracker."
 	icon_state = "tracker"
-
+	var/obj/machinery/power/solar/control/control = null
 	var/sun_angle = 0 // sun angle as set by sun datum
 
 /obj/machinery/power/solar/tracker/New(loc, obj/machinery/power/solar_assembly/S)
@@ -50,6 +50,8 @@
 
 // make sure we can draw power from the powernet
 /obj/machinery/power/solar/tracker/process()
+//Зачем тракеру кушать?
+/*
 	var/avail = surplus()
 
 	if(avail > 500)
@@ -57,6 +59,7 @@
 		stat &= ~NOPOWER
 	else
 		stat |= NOPOWER
+*/
 
 // tracker Electronic
 /obj/item/weapon/tracker_electronics
@@ -64,3 +67,4 @@
 	icon = 'icons/obj/doors/door_assembly.dmi'
 	icon_state = "door_electronics"
 	w_class = 2.0
+

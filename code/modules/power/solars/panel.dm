@@ -103,10 +103,10 @@
 /obj/machinery/power/solar/panel/process()//TODO: remove/add this from machines to save on processing as needed ~Carn PRIORITY
 	if(stat & BROKEN)
 		return
-
+/*
 	if(!control)
 		return
-
+*/
 	if(adir != ndir)
 		adir = (360 + adir + dd_range(-10, 10, ndir-adir)) % 360
 		update_icon()
