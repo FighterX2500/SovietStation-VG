@@ -274,9 +274,9 @@
 		if("medicalhud")
 			if(href_list["toggle"])
 				src.medHUD = !src.medHUD
-		if("translator")
-			if(href_list["toggle"])
-				languages = languages == ALL ? HUMAN & ROBOT : ALL
+	//	if("translator")
+	//		if(href_list["toggle"])
+	//			languages = languages == ALL ? HUMAN & ROBOT : ALL
 		if("doorjack")
 			if(href_list["jack"])
 				if(src.cable && src.cable.machine)

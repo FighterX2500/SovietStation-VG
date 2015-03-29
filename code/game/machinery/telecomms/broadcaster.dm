@@ -58,23 +58,23 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 			Broadcast_Message(signal.data["mob"],
 							  signal.data["vmask"], signal.data["radio"],
 							  signal.data["message"], signal.data["name"], signal.data["job"], signal.data["realname"],
-							  0, signal.data["compression"], signal.data["level"], signal.frequency)
+							  0, signal.data["compression"], signal.data["level"], signal.frequency, signal.data["languages"])
 
 
 
 	   /** #### - Simple Broadcast - #### **/
-
+/*
 		if(signal.data["type"] == 1)
 
 			/* ###### Broadcast a message using signal.data ###### */
 			Broadcast_SimpleMessage(signal.data["name"], signal.frequency,
 								  signal.data["message"],null, null,
-								  signal.data["compression"], listening_level)
+								  signal.data["compression"], listening_level, signal.data["languages"])
 
 	   /** #### - Artificial Broadcast - #### **/
 	   			// (Imitates a mob)
-
-		if(signal.data["type"] == 2)
+*/
+		else
 
 			/* ###### Broadcast a message using signal.data ###### */
 				// Parameter "data" as 4: AI can't track this person/mob
@@ -83,7 +83,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 							  signal.data["vmask"],
 							  signal.data["radio"], signal.data["message"],
 							  signal.data["name"], signal.data["job"],
-							  signal.data["realname"], 4, signal.data["compression"], signal.data["level"], signal.frequency)
+							  signal.data["realname"], 4, signal.data["compression"], signal.data["level"], signal.frequency, signal.data["languages"])
 
 
 		if(!message_delay)
@@ -139,14 +139,12 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 			sleep(signal.data["slow"]) // simulate the network lag if necessary
 
 		/* ###### Broadcast a message using signal.data ###### */
-
-
 		if(signal.frequency == SYND_FREQ) // if syndicate broadcast, just
 			Broadcast_Message(signal.data["mob"],
 							  signal.data["vmask"],
 							  signal.data["radio"], signal.data["message"],
 							  signal.data["name"], signal.data["job"],
-							  signal.data["realname"],, signal.data["compression"], list(0, z), signal.frequency)
+							  signal.data["realname"],, signal.data["compression"], list(0, z), signal.frequency, signal.data["languages"])
 
 /**
 
@@ -205,7 +203,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 /proc/Broadcast_Message(var/atom/movable/AM,
 						var/vmask, var/obj/item/device/radio/radio,
 						var/message, var/name, var/job, var/realname,
-						var/data, var/compression, var/list/level, var/freq)
+						var/data, var/compression, var/list/level, var/freq, datum/language/lang)
 
 	// Cut down on the message sizes.
 	message = copytext(message, 1, MAX_BROADCAST_LEN)
@@ -222,7 +220,6 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 	virt.source = AM
 	virt.faketrack = data == 4 ? 1 : 0
 	virt.radio = radio
-
 	if(compression > 0)
 		message = Gibberish(message, compression + 40)
 
@@ -267,9 +264,9 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 		if (R.client && !(R.client.prefs.toggles & CHAT_RADIO)) //Adminning with 80 people on can be fun when you're trying to talk and all you can hear is radios.
 			receive -= R
 
-	var/rendered = virt.compose_message(virt, virt.languages, message, freq) //Always call this on the virtualspeaker to advoid issues.
+	var/rendered = virt.compose_message(virt, lang, message, freq) //Always call this on the virtualspeaker to advoid issues.
 	for(var/atom/movable/hearer in receive)
-		hearer.Hear(rendered, virt, AM.languages, message, freq)
+		hearer.Hear(rendered, virt, lang, message, freq)
 
 	if(length(receive))
 			// --- This following recording is intended for research and feedback in the use of department radio channels ---
@@ -303,7 +300,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 	spawn(50)
 		qdel(virt)
 
-/proc/Broadcast_SimpleMessage(var/source, var/frequency, var/text, var/data, var/mob/M, var/compression, var/level)
+/proc/Broadcast_SimpleMessage(var/source, var/frequency, var/text, var/data, var/mob/M, var/compression, var/level, datum/language/lang)
 
   /* ###### Prepare the radio connection ###### */
 
@@ -324,7 +321,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 		for (var/obj/item/device/radio/intercom/R in connection.devices["[RADIO_CHAT]"])
 			var/turf/position = get_turf(R)
 			if(position && position.z == level)
-				receive |= R.send_hear(display_freq, level)
+				receive |= R.send_hear(display_freq, level, lang)
 
 
 	// --- Broadcast only to intercoms and station-bounced radios ---
@@ -336,7 +333,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 				continue
 			var/turf/position = get_turf(R)
 			if(position && position.z == level)
-				receive |= R.send_hear(display_freq)
+				receive |= R.send_hear(display_freq, lang)
 
 
 	// --- Broadcast to syndicate radio! ---
@@ -347,7 +344,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 		for (var/obj/item/device/radio/R in syndicateconnection.devices["[RADIO_CHAT]"])
 			var/turf/position = get_turf(R)
 			if(position && position.z == level)
-				receive |= R.send_hear(SYND_FREQ)
+				receive |= R.send_hear(SYND_FREQ, lang)
 
 
 	// --- Broadcast to ALL radio devices ---
@@ -356,7 +353,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 		for (var/obj/item/device/radio/R in connection.devices["[RADIO_CHAT]"])
 			var/turf/position = get_turf(R)
 			if(position && position.z == level)
-				receive |= R.send_hear(display_freq)
+				receive |= R.send_hear(display_freq, lang)
 
 
   /* ###### Organize the receivers into categories for displaying the message ###### */
@@ -383,7 +380,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 			continue
 
 		// --- Can understand the speech ---
-
+/*
 		if (R.languages & M.languages)
 
 			heard_normal += R
@@ -394,7 +391,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 			// - Just display a garbled message -
 
 			heard_garbled += R
-
+*/
 
   /* ###### Begin formatting and sending the message ###### */
 	if (length(heard_normal) || length(heard_garbled) || length(heard_gibberish))
@@ -500,7 +497,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 	 /* ###### Send the message ###### */
 
 		/* --- Process all the mobs that heard the voice normally (understood) --- */
-
+/*
 		if (length(heard_normal))
 			var/rendered = "[part_a][source][part_b]\"[text]\"[part_c]"
 
@@ -517,7 +514,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 			for (var/mob/R in heard_garbled)
 				R.show_message(rendered, 2)
 
-
+//																										мер мер бяе ме рюй
 		/* --- Complete gibberish. Usually happens when there's a compressed message --- */
 
 		if (length(heard_gibberish))
@@ -526,7 +523,30 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 
 			for (var/mob/R in heard_gibberish)
 				R.show_message(rendered, 2)
+*/
+		if (length(heard_normal))
+			var/rendered = "[part_a][source][part_b]\"[text]\"[part_c]"
 
+			for (var/mob/R in heard_normal)
+				R.show_message(rendered, 2)
+
+		/* --- Process all the mobs that heard a garbled voice (did not understand) --- */
+			// Displays garbled message (ie "f*c* **u, **i*er!")
+
+		if (length(heard_garbled))
+			var/quotedmsg = "\"[stars(text)]\""
+			var/rendered = "[part_a][source][part_b][quotedmsg][part_c]"
+
+			for (var/mob/R in heard_garbled)
+				R.show_message(rendered, 2)
+		/* --- Complete gibberish. Usually happens when there's a compressed message --- */
+
+		if (length(heard_gibberish))
+			var/quotedmsg = "\"[Gibberish(text, compression + 50)]\""
+			var/rendered = "[part_a][Gibberish(source, compression + 50)][part_b][quotedmsg][part_c]"
+
+			for (var/mob/R in heard_gibberish)
+				R.show_message(rendered, 2)
 //Use this to test if an obj can communicate with a Telecommunications Network
 
 /atom/proc/test_telecomms()

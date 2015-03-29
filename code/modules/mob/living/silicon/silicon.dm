@@ -1,7 +1,8 @@
 /mob/living/silicon
 	gender = NEUTER
 	voice_name = "synthesized voice"
-	languages = ROBOT | HUMAN
+	languages
+	mob_type_lang = list("Galactic Common","Sol Common","Sinta'unathi","Siik'tajr","Skrellian","Vox-pidgin","Rootspeak","Tradeband","Robot Talk")
 	var/syndicate = 0
 	var/datum/ai_laws/laws = null//Now... THEY ALL CAN ALL HAVE LAWS
 	var/list/alarms_to_show = list()
@@ -17,9 +18,13 @@
 	#define MESON_VISION 3 // Engineering borg and mommis
 	var/list/alarm_types_show = list("Motion" = 0, "Fire" = 0, "Atmosphere" = 0, "Power" = 0, "Camera" = 0)
 	var/list/alarm_types_clear = list("Motion" = 0, "Fire" = 0, "Atmosphere" = 0, "Power" = 0, "Camera" = 0)
-
+/mob/living/silicon/New()
+	..()
 /mob/living/silicon/hasFullAccess()
 	return 1
+
+/mob/living/binarycheck()
+	return 01
 
 /mob/living/silicon/GetAccess()
 	return get_all_accesses()

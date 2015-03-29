@@ -11,6 +11,7 @@
 	response_help  = "pets"
 	response_disarm = "shoos"
 	response_harm   = "stomps on"
+	mob_type_lang = "Slimespeak"
 	emote_see = list("jiggles", "bounces in place")
 	var/colour = "grey"
 

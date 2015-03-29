@@ -231,15 +231,8 @@ var/MAX_EXPLOSION_RANGE = 14
 #define PASSBLOB	8
 
 /*
-	These defines are used specifically with the atom/movable/languages bitmask.
-	They are used in atom/movable/Hear() and atom/movable/say() to determine whether hearers can understand a message.
+нахуй
 */
-
-#define HUMAN 1
-#define MONKEY 2
-#define ALIEN 4
-#define ROBOT 8
-#define SLIME 16
 
 //turf-only flags
 #define NOJAUNT		1
@@ -841,7 +834,7 @@ var/list/RESTRICTED_CAMERA_NETWORKS = list( //Those networks can only be accesse
 //Language flags.
 #define WHITELISTED 1  // Language is available if the speaker is whitelisted.
 #define RESTRICTED 2   // Language can only be accquired by spawning or an admin.
-
+#define HIVEMIND 4
 // Hairstyle flags
 #define HAIRSTYLE_CANTRIP 1 // 5% chance of tripping your stupid ass if you're running.
 

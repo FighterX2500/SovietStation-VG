@@ -85,36 +85,17 @@
 /mob/living/carbon/human/proc/GetSpecialVoice()
 	return special_voice
 
-/mob/living/carbon/human/binarycheck()
-	if(ears)
-		var/obj/item/device/radio/headset/dongle = ears
-		if(!istype(dongle)) return 0
-		if(dongle.translate_binary) return 1
-
-/mob/living/carbon/human/radio(message, message_mode)
+/mob/living/carbon/human/radio(message, message_mode, datum/language/lang = current_language_speak)
 	. = ..()
-	if(. != 0)
+	if(.)
 		return .
-
-	switch(message_mode)
-		if(MODE_HEADSET)
-			if (ears)
-				ears.talk_into(src, message)
-			return ITALICS | REDUCE_RANGE
-
-		if(MODE_SECURE_HEADSET)
-			if (ears)
-				ears.talk_into(src, message, 1)
-			return ITALICS | REDUCE_RANGE
-
-		if(MODE_DEPARTMENT)
-			if (ears)
-				ears.talk_into(src, message, message_mode)
-			return ITALICS | REDUCE_RANGE
-
-	if(message_mode in radiochannels)
+	if(message_mode == "headset")
 		if(ears)
-			ears.talk_into(src, message, message_mode)
+			ears.talk_into(src, message, null, lang)
+			return ITALICS | REDUCE_RANGE
+	else if(message_mode in radiochannels)
+		if(ears)
+			ears.talk_into(src, message, message_mode, lang)
 			return ITALICS | REDUCE_RANGE
 
 	return 0

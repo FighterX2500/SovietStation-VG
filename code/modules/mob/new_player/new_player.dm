@@ -386,22 +386,22 @@ Round Duration: [round(hours)]h [round(mins)]m<br>"}
 
 	var/mob/living/carbon/human/new_character = new(loc)
 	new_character.lastarea = get_area(loc)
-
+	new_character.add_language(new_character.mob_type_lang)
+	new_character.current_language_speak = new_character.languages[1]
 	var/datum/species/chosen_species
 	if(client.prefs.species)
 		chosen_species = all_species[client.prefs.species]
 	if(chosen_species)
 		if(is_alien_whitelisted(src, client.prefs.species) || !config.usealienwhitelist || !(chosen_species.flags & WHITELISTED) || (client.holder.rights & R_ADMIN) )// Have to recheck admin due to no usr at roundstart. Latejoins are fine though.
 			new_character.set_species(client.prefs.species)
-			//if(chosen_species.language)
-				//new_character.add_language(chosen_species.language)
-
-	//var/datum/language/chosen_language
-/*	if(client.prefs.language)
+			if(chosen_species.race_language)
+				new_character.add_language(chosen_species.race_language)
+	var/datum/language/chosen_language
+	if(client.prefs.language)
 		chosen_language = all_languages[client.prefs.language]
 	if(chosen_language)
 		if(is_alien_whitelisted(src, client.prefs.language) || !config.usealienwhitelist || !(chosen_language.flags & WHITELISTED))
-			new_character.add_language(client.prefs.language)*/
+			new_character.add_language(client.prefs.language)
 	if(ticker.random_players || appearance_isbanned(src)) //disabling ident bans for now
 		new_character.gender = pick(MALE, FEMALE)
 		client.prefs.real_name = random_name(new_character.gender)

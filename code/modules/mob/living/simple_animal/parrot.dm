@@ -136,23 +136,12 @@
 	. = ..()
 	if(. != 0)
 		return .
-
-	switch(message_mode)
-		if(MODE_HEADSET)
-			if (ears)
-				ears.talk_into(src, message)
-				return ITALICS | REDUCE_RANGE
-
-		if(MODE_SECURE_HEADSET)
-			if(ears)
-				ears.talk_into(src, message, 1)
-			return ITALICS | REDUCE_RANGE
-		if(MODE_DEPARTMENT)
-			if(ears)
-				ears.talk_into(src, message, message_mode)
+	if("headset")
+		if (ears)
+			ears.talk_into(src, message)
 			return ITALICS | REDUCE_RANGE
 
-	if(message_mode in radiochannels)
+	else if(message_mode in radiochannels || message_mode == "department")
 		if(ears)
 			ears.talk_into(src, message, message_mode)
 			return ITALICS | REDUCE_RANGE

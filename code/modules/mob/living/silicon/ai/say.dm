@@ -34,35 +34,38 @@
 	return !config.silent_ai
 
 /mob/living/silicon/ai/get_message_mode(message)
-	if(copytext(message, 1, 3) in list(":h", ":H", ".h", ".H", "#h", "#H"))
-		return MODE_HOLOPAD
+	. = ..()
+	var/obj/machinery/hologram/holopad/T = current
+	if((istype(T) && T.hologram && T.master == src))
+		if((. != "department"))
+			return "holopad"
+		else
+			return null
 	else
-		return ..()
-
+		return .
+/*Это уже не нужно
 /mob/living/silicon/ai/handle_inherent_channels(message, message_mode)
 	. = ..()
 	if(.)
 		return .
-
-	if(message_mode == MODE_HOLOPAD)
+	if(message_mode == "holopad")
 		holopad_talk(message)
 		return 1
-
+*/
 //For holopads only. Usable by AI.
-/mob/living/silicon/ai/proc/holopad_talk(var/message)
+/mob/living/silicon/ai/proc/holopad_talk(var/message, datum/language/lang)
 	log_say("[key_name(src)] : [message]")
 
 	message = trim(message)
 
 	if (!message)
 		return
-
 	var/obj/machinery/hologram/holopad/T = current
-	if(istype(T) && T.hologram && T.master == src)//If there is a hologram and its master is the user.
-		send_speech(message, 7, T, "R")
-		src << "<i><span class='game say'>Holopad transmitted, <span class='name'>[real_name]</span> <span class='message'>\"[message]\"</span></span></i>"//The AI can "hear" its own message.
-	else
-		src << "No holopad connected."
+	var/rendered
+	for(var/atom/movable/AM in get_hearers_in_view(7, T))
+		rendered = "<i><span class='game say'>Holopad transmitted, <span class='name'>[real_name]</span> <[AM.lang_treat(T,lang,message)]</span></i>"
+		AM.Hear(rendered, T, lang, message, 0)
+	src << "<i><span class='game say'>Holopad transmitted, <span class='name'>[real_name]</span> [lang_treat(T,lang,message)]</span></i>"//The AI can "hear" its own message.
 	return
 
 
@@ -70,6 +73,12 @@ var/announcing_vox = 0 // Stores the time of the last announcement
 var/const/VOX_CHANNEL = 200
 var/const/VOX_DELAY = 600
 
+/mob/living/silicon/ai/radio(message, message_mode, datum/language/lang)
+	. = ..()
+	if(message_mode)
+		if(message_mode == "holopad")
+			holopad_talk(message, lang)
+		return NOPASS //ИИ должен синтезировать речь напрямую, а не через микрофон.
 /mob/living/silicon/ai/verb/announcement_help()
 
 	set name = "Announcement Help"

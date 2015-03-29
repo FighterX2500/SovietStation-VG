@@ -13,7 +13,7 @@
 	anchored = 1
 	use_power = 0
 	var/output = 50000
-	var/outputting = 0 //1 - \ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd \ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd, 2 - \ufffd\ufffd \ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd \ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd
+	var/outputting = 0 //
 	var/lastout = 0
 	var/loaddemand = 0
 	var/capacity = 5e6
@@ -357,6 +357,7 @@
 
 	else if( href_list["online"] )
 		online = !online
+		outputting = online
 		updateicon()
 	else if( href_list["input"] )
 		switch( href_list["input"] )

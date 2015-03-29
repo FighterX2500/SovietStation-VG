@@ -19,6 +19,7 @@ var/list/ai_list = list()
 	anchored = 1 // -- TLE
 	density = 1
 	status_flags = CANSTUN|CANPARALYSE
+	radio = null
 	force_compose = 1
 	var/list/network = list("SS13")
 	var/obj/machinery/camera/current = null
@@ -86,6 +87,12 @@ var/list/ai_list = list()
 
 	verbs += /mob/living/silicon/ai/proc/show_laws_verb
 
+	radio = new/obj/item/device/radio/borg(src)
+	radio.keyslot = new/obj/item/device/encryptionkey/ai()
+	radio.subspace_transmission = 1
+	radio.recalculateChannels()
+	verbs += /mob/living/silicon/ai/proc/show_headset_control
+
 	aiPDA = new/obj/item/device/pda/ai(src)
 	aiPDA.owner = name
 	aiPDA.ownjob = "AI"
@@ -126,6 +133,11 @@ var/list/ai_list = list()
 /mob/living/silicon/ai/Destroy()
 	ai_list -= src
 	..()
+
+/mob/living/silicon/ai/proc/show_headset_control()
+	set category = "AI Commands"
+	set name = "Radio Settings"
+	radio.interact(src)
 
 /mob/living/silicon/ai/verb/pick_icon()
 	set category = "AI Commands"

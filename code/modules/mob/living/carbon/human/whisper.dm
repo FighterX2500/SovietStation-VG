@@ -1,5 +1,5 @@
 // NOTE THAT HEARD AND UNHEARD USE GENDER_REPLACE SYNTAX SINCE BYOND IS STUPID
-/mob/living/carbon/human/whisper(var/message as text)
+/mob/living/carbon/human/whisper(var/message as text, datum/language/lang)
 	if(!IsVocal())
 		return
 
@@ -58,19 +58,17 @@
 
 	var/rendered
 
-	rendered = "<span class='game say'><span class='name'>[src.name]</span> [whispers] something.</span>"
+	rendered = "<span class='game say'><span class='name'>[src.name]</span> <span class='[lang.colour]'>[whispers] something.</span></span>"
 	for(var/mob/M in watching)
 		M.show_message(rendered, 2)
 
-	rendered = "<span class='game say'><span class='name'>[GetVoice()]</span>[alt_name] [whispers], <span class='message'>\"[message]\"</span></span>"
-
 	for(var/mob/M in listening)
-		M.Hear(rendered, src, languages, message)
-
-	message = stars(message)
-	rendered = "<span class='game say'><span class='name'>[GetVoice()]</span>[alt_name] [whispers], <span class='message'>\"[message]\"</span></span>"
+		rendered = "<span class='game say'><span class='name'>[GetVoice()]</span>[alt_name] [whispers], [M.lang_treat(src,lang,message,0)]</span>"
+		M.Hear(rendered, src, languages, message, 0)
 	for(var/mob/M in eavesdropping)
-		M.Hear(rendered, src, languages, message)
+		message = stars(message)
+		rendered = "<span class='game say'><span class='name'>[GetVoice()]</span>[alt_name] [whispers], [M.lang_treat(src,lang,message,0)]</span>"
+		M.Hear(rendered, src, languages, message, 0)
 
 	if(said_last_words) //Dying words.
 		succumb(1)

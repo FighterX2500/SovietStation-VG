@@ -165,7 +165,6 @@
 	item_state = "headset"
 	freerange = 1
 	keyslot2 = new /obj/item/device/encryptionkey/ert
-
 /obj/item/device/radio/headset/attackby(obj/item/weapon/W as obj, mob/user as mob)
 //	..()
 	user.set_machine(src)

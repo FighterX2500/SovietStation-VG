@@ -1135,6 +1135,19 @@ var/list/slot_equipment_priority = list( \
 			onclose(usr, "[name]")
 		if("change")
 			update_flavor_text()
+	if(href_list["setlang"])
+		if(istype(src,/mob/living))
+			var/mob/living/S = src
+			if(!universal_speak)
+				for(var/datum/language/L in src.languages)
+					if(L.key == href_list["setlang"])
+						S.current_language_speak = L
+			else
+				for(var/W in all_languages)
+					var/datum/language/L = all_languages[W]
+					if(L.key == href_list["setlang"])
+						S.current_language_speak = L
+		src << browse(null, "window=checklanguage")
 
 /mob/proc/pull_damage()
 	if(ishuman(src))

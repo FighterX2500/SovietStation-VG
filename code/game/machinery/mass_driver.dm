@@ -30,6 +30,21 @@
 						M << "\blue The mass driver lets out a screech, it mustn't be able to handle any more items."
 					break
 				use_power(500)
+				var/turf/simulated/T = get_turf(src)
+				if(istype(O, /obj/structure/closet/coffin) && T.holy)
+					var/obj/structure/closet/coffin/C = O
+					for(var/mob/living/Mob in C.contents)
+						if(Mob.stat != 2)
+							continue
+						if(Mob.client)
+							Mob.timeofdeath=-19999
+							Mob:show_message(text("\blue <B>You may now respawn.  You should roleplay as if you learned nothing about the round during your time with the dead.</B>"), 1)
+						else if (Mob.mind)
+							for(var/mob/dead/observer/G in world)
+								if(G.mind.key == Mob.mind.key)
+									G.timeofdeath=-19999
+									G:show_message(text("\blue <B>You may now respawn.  You should roleplay as if you learned nothing about the round during your time with the dead.</B>"), 1)
+									break
 				spawn( 0 )
 					O.throw_at(target, drive_range * power, power)
 		flick("mass_driver1", src)

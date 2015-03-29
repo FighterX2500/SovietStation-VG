@@ -57,7 +57,9 @@ h1.alert, h2.alert		{color: #000000;}
 .vox					{color: #AA00AA;}
 .rough					{font-family: 'Trebuchet MS', cursive, sans-serif;}
 .say_quote				{font-family: Georgia, Verdana, sans-serif;}
+.robot_talk				{font-family: 'Trebuchet MS', cursive, sans-serif;color: #0272C3;}
 .interface				{color: #330033;}
+.changeling				{color: #800080;}
 /* /vg/ */
 /* Recruiting stuff */
 .recruit 				{color: #5c00e6; font-weight: bold; font-style: italic;}\""}

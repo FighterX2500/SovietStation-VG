@@ -112,7 +112,6 @@
 	var/mob/living/silicon/ai/O = new (loc, base_law_type,,1)//No MMI but safety is in effect.
 	O.invisibility = 0
 	O.aiRestorePowerRoutine = 0
-
 	if(mind)
 		mind.transfer_to(O)
 		O.mind.original = O
@@ -184,7 +183,6 @@
 		del(t)
 
 	var/mob/living/silicon/robot/O = new /mob/living/silicon/robot( loc )
-
 	// cyborgs produced by Robotize get an automatic power cell
 	O.cell = new(O)
 	O.cell.maxcharge = 7500
@@ -229,7 +227,6 @@
 		del(t)
 
 	var/mob/living/silicon/robot/mommi/O = new /mob/living/silicon/robot/mommi( loc )
-
 	// MoMMIs produced by Robotize get an automatic power cell
 	O.cell = new(O)
 	O.cell.maxcharge = (round_start ? 10000 : 15000)
@@ -288,7 +285,6 @@
 
 	new_xeno.a_intent = "hurt"
 	new_xeno.key = key
-
 	new_xeno << "<B>You are now an alien.</B>"
 	spawn(0)//To prevent the proc from returning null.
 		del(src)
@@ -324,7 +320,7 @@
 			new_slime = new /mob/living/carbon/slime(loc)
 	new_slime.a_intent = "hurt"
 	new_slime.key = key
-
+	new_slime.add_language(new_slime.mob_type_lang)
 	new_slime << "<B>You are now a slime. Skreee!</B>"
 	spawn(0)//To prevent the proc from returning null.
 		del(src)
@@ -365,7 +361,6 @@
 		return
 	for(var/obj/item/W in src)
 		drop_from_inventory(W)
-
 	regenerate_icons()
 	monkeyizing = 1
 	canmove = 0
@@ -396,7 +391,6 @@
 		return
 
 	var/mob/new_mob = new mobpath(src.loc)
-
 	new_mob.key = key
 	new_mob.a_intent = "hurt"
 	new_mob << "You feel more... animalistic"

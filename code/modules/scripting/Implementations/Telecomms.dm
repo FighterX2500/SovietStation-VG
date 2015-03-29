@@ -307,7 +307,7 @@ datum/signal
 		virt.name = source
 		virt.job = job
 		virt.faketrack = 1
-		virt.languages = HUMAN
+		//virt.languages = HUMAN
 		//END SAY REWRITE RELATED CODE.
 
 

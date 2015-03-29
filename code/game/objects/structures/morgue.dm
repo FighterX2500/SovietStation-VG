@@ -329,6 +329,13 @@
 			//log_attack("\[[time_stamp()]\] <b>[user]/[user.ckey]</b> cremated <b>[M]/[M.ckey]</b>")
 			M.death(1)
 			M.ghostize()
+			if (M.mind)
+				for(var/mob/dead/observer/G in world)
+					if(G.mind.key == M.mind.key)
+						G.timeofdeath=-19999
+						G.can_reenter_corpse = 1
+						G:show_message(text("\blue <B>You may now respawn.  You should roleplay as if you learned nothing about the round during your time with the dead.</B>"), 1)
+						break
 			del(M)
 
 		for(var/obj/O in contents) //obj instead of obj/item so that bodybags and ashes get destroyed. We dont want tons and tons of ash piling up

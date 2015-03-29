@@ -27,8 +27,12 @@
 
 
 /obj/item/weapon/gun/energy/update_icon()
-	var/ratio = power_supply.charge / power_supply.maxcharge
-	ratio = round(ratio, 0.25) * 100
+	var/ratio
+	if(power_supply)
+		ratio = power_supply.charge / power_supply.maxcharge
+		ratio = round(ratio, 0.25) * 100
+	else
+		ratio = 0
 	if(modifystate && charge_states)
 		icon_state = "[modifystate][ratio]"
 	else if(charge_states)
@@ -44,6 +48,36 @@
 
 	power_supply.give(power_supply.maxcharge)
 
+/obj/item/weapon/gun/energy/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	if(istype(W,/obj/item/weapon/cell))
+		if(!power_supply)
+			if(user)
+				user.drop_item(W)
+				usr << "<span class='notice'>You put cell into \the [src].</span>"
+			W.loc = src
+			power_supply = W
+			W.update_icon()
+			update_icon()
+			return 1
+		else
+			usr << "<span class='notice'>Already cell inside \the [src].</span>"
+			return 1
+
+/obj/item/weapon/gun/energy/verb/unload_cell()
+	set name = "Unload cell"
+	set category = "Object"
+	if(power_supply)
+		power_supply.loc = get_turf(src.loc)
+		if(usr)
+			usr.put_in_hands(power_supply)
+			usr << "<span class='notice'>You pull the cell out of \the [src]!</span>"
+		power_supply.update_icon()
+		power_supply = null
+		update_icon()
+		return 1
+	else
+		usr << "<span class='warning'>No cell inside \the [src]!</span>"
+	return 0
 /*
 /obj/item/weapon/gun/energy/Destroy()
 	if(power_supply)

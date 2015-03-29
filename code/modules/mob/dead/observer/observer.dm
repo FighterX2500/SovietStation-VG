@@ -14,6 +14,7 @@
 	blinded = 0
 	anchored = 1	//  don't get pushed around
 	invisibility = INVISIBILITY_OBSERVER
+	universal_speak = 1
 	languages = ALL
 
 	// For Aghosts dicking with telecoms equipment.

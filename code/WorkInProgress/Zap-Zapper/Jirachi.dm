@@ -18,7 +18,8 @@
 	unacidable = 1
 	status_flags = 1
 	pass_flags = PASSTABLE
-	languages = ALL
+	//languages = ALL
+	universal_speak = 1 //’уйн€ конечно, но пусть хот€бы так
 	var/energy = 900
 	var/const/max_energy = 900
 	var/star_form = 0		//Is S-form enabled?

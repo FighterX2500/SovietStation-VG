@@ -82,66 +82,14 @@
 
 						// -- Determine race of orator --
 
-						var/race			   // The actual race of the mob
-						var/language = "Human" // MMIs, pAIs, Cyborgs and humans all speak Human
-						var/mobtype = C.parameters["mobtype"]
-
-						var/list/humans = typesof(/mob/living/carbon/human, /mob/living/carbon/brain)
-						var/list/monkeys = typesof(/mob/living/carbon/monkey)
-						var/list/silicons = typesof(/mob/living/silicon)
-						var/list/slimes = typesof(/mob/living/carbon/slime)
-						var/list/animals = typesof(/mob/living/simple_animal)
-
-						if(mobtype in humans)
-							race = "Human"
-							language = race
-
-						else if(mobtype in monkeys)
-							race = "Monkey"
-							language = race
-
-						else if(mobtype in silicons || C.parameters["job"] == "AI") // sometimes M gets deleted prematurely for AIs... just check the job
-							race = "Artificial Life"
-
-						else if(mobtype in slimes) // NT knows a lot about slimes, but not aliens. Can identify slimes
-							race = "slime"
-							language = race
-
-						else if(istype(mobtype, /obj))
-							race = "Machinery"
-							language = race
-
-						else if(mobtype in animals)
-							race = "Domestic Animal"
-							language = race
-
-						else
-							race = "<i>Unidentifiable</i>"
-							language = race
-
+						var/datum/language/language = C.parameters["languages"] // MMIs, pAIs, Cyborgs and humans all speak Human
 						// -- If the orator is a human, or universal translate is active, OR mob has universal speech on --
-
-						if(language == "Human" || universal_translate || C.parameters["uspeech"])
-
 							// AUTOFIXED BY fix_string_idiocy.py
 							// C:\Users\Rob\Documents\Projects\vgstation13\code\game\machinery\telecomms\logbrowser.dm:102: dat += "<u><font color = #18743E>Data type</font color></u>: [C.input_type]<br>"
-							dat += {"<u><font color = #18743E>Data type</font color></u>: [C.input_type]<br>
-								<u><font color = #18743E>Source</font color></u>: [C.parameters["name"]] (Job: [C.parameters["job"]])<br>
-								<u><font color = #18743E>Class</font color></u>: [race]<br>
-								<u><font color = #18743E>Contents</font color></u>: \"[C.parameters["message"]]\"<br>"}
-							// END AUTOFIX
-						// -- Orator is not human and universal translate not active --
-
-						else
-
-							// AUTOFIXED BY fix_string_idiocy.py
-							// C:\Users\Rob\Documents\Projects\vgstation13\code\game\machinery\telecomms\logbrowser.dm:111: dat += "<u><font color = #18743E>Data type</font color></u>: Audio File<br>"
-							dat += {"<u><font color = #18743E>Data type</font color></u>: Audio File<br>
-								<u><font color = #18743E>Source</font color></u>: <i>Unidentifiable</i><br>
-								<u><font color = #18743E>Class</font color></u>: [race]<br>
-								<u><font color = #18743E>Contents</font color></u>: <i>Unintelligble</i><br>"}
-						// END AUTOFIX
-
+						dat += {"<u><font color = #18743E>Data type</font color></u>: [C.input_type]<br>
+							<u><font color = #18743E>Source</font color></u>: [C.parameters["name"]] (Job: [C.parameters["job"]])<br>
+							<u><font color = #18743E>Language</font color></u>: [language.name]<br>
+							<u><font color = #18743E>Contents</font color></u>: \"[user.can_speak_lang(language) ? C.parameters["message"] : C.parameters["badmessage"]]\"<br>"}
 						dat += "</li><br>"
 
 					else if(C.input_type == "Execution Error")

@@ -7,7 +7,7 @@
 		return
 	usr.say(message)
 
-/mob/verb/whisper(message as text)
+/mob/proc/whisper(message as text, datum/language/lang)
 	set name = "Whisper"
 	set category = "IC"
 	return

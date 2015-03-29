@@ -3,57 +3,35 @@
 	name = "universal recorder"
 	icon_state = "taperecorderidle"
 	item_state = "analyzer"
-	w_class = 1.0
-	flags = HEAR
-	languages = ALL //this is a translator, after all.
-	m_amt = 60
-	g_amt = 30
-	w_type = RECYK_ELECTRONIC
-	melt_temperature = MELTPOINT_PLASTIC
+	w_class = 2.0
+
 	var/emagged = 0.0
 	var/recording = 0.0
 	var/playing = 0.0
 	var/timerecorded = 0.0
 	var/playsleepseconds = 0.0
-	var/list/storedinfo = new/list()
+	var/list/storedinfo = new/list(0,0)
 	var/list/timestamp = new/list()
-	var/obj/item/device/tape/mytape
 	var/canprint = 1
-	flags = FPRINT
-	siemens_coefficient = 1
+	flags = FPRINT | HEAR
 	throwforce = 2
 	throw_speed = 4
 	throw_range = 20
 
-
-/obj/item/device/tape
-	name = "tape"
-	desc = "A magnetic tape that can hold up to ten minutes of content."
-	icon_state = "tape_white"
-	item_state = "analyzer"
-	w_class = 1
-	m_amt = 20
-	g_amt = 5
-	force = 1
-	throwforce = 0
-	var/max_capacity = 600
-	var/used_capacity = 0
-	var/list/storedinfo = list()
-	var/list/timestamp = list()
-	var/ruined = 0
-
-
-/obj/item/device/taperecorder/New()
-//	wires = new(src)
-	mytape = new /obj/item/device/tape
-	update_icon()
-
-
-/obj/item/device/taperecorder/Hear(atom/movable/speaker, message_langs, raw_message, radio_freq, mob/living/M as mob, msg, var/verb="says")
-	if(mytape && recording)
-		mytape.timestamp += mytape.used_capacity
-//		mytape.storedinfo += "\[[time2text(mytape.used_capacity * 10,"mm:ss")]\] [strip_html_properly(message)]"
-		mytape.storedinfo += "\[[time2text(timerecorded*10,"mm:ss")]\] [M.name] [verb], \"[msg]\""
+/obj/item/device/taperecorder/Hear(message, atom/movable/speaker, datum/language/message_langs, raw_message, radio_freq)
+	if(recording)
+		var/verb = "says"
+		if(istype(message_langs) && message_langs)
+			verb = message_langs.get_spoken_verb(copytext(raw_message, length(raw_message)))
+		timestamp+= timerecorded
+		storedinfo["[storedinfo.len]"] = list(
+		"message" = raw_message,
+		"speaker_name" = speaker.name,
+		"language" = message_langs,
+		"time" = time2text(timerecorded*10,"mm:ss"),
+		"verb" = verb,
+		)
+		//storedinfo += "\[[time2text(timerecorded*10,"mm:ss")]\] [M.name] [verb], \"[msg]\""
 		return
 
 /obj/item/device/taperecorder/attackby(obj/item/weapon/W as obj, mob/user as mob)
@@ -73,7 +51,7 @@
 		var/mob/M = loc
 		M << "<span class='danger'>\The [src] explodes!</span>"
 	if(T)
-		T.hotspot_expose(700,125,surfaces=istype(loc,/turf))
+		T.hotspot_expose(700,125)
 		explosion(T, -1, -1, 0, 4)
 	del(src)
 	return
@@ -92,7 +70,14 @@
 		usr << "<span class='notice'>Recording started.</span>"
 		recording = 1
 		timestamp+= timerecorded
-		storedinfo += "\[[time2text(timerecorded*10,"mm:ss")]\] Recording started."
+		storedinfo["[storedinfo.len]"] = list(
+		"message" = "Recording started",
+		"speaker_name" = src.name,
+		"language" = all_languages["Galactic Common"],
+		"time" = time2text(timerecorded*10,"mm:ss"),
+		"verb" = "states",
+		)
+		//storedinfo += "\[[time2text(timerecorded*10,"mm:ss")]\] Recording started."
 		for(timerecorded, timerecorded<3600)
 			if(recording == 0)
 				break
@@ -112,18 +97,25 @@
 	if(usr.stat)
 		return
 	if(emagged == 1)
-		usr << "<span class='danger'>The tape recorder makes a scratchy noise.</span>"
+		usr << "\red The tape recorder makes a scratchy noise."
 		return
-	if(recording)
+	if(recording == 1)
 		recording = 0
 		timestamp+= timerecorded
-		storedinfo += "\[[time2text(timerecorded*10,"mm:ss")]\] Recording stopped."
+		storedinfo[storedinfo.len] = list(
+		"message" = "Recording stopped",
+		"speaker_name" = src.name,
+		"language" = all_languages["Galactic Common"],
+		"time" = time2text(timerecorded*10,"mm:ss"),
+		"verb" = "states",
+		)
 		usr << "<span class='notice'>Recording stopped.</span>"
 		icon_state = "taperecorderidle"
 		return
-	else if(playing)
+	else if(playing == 1)
 		playing = 0
-		say("Playback stopped.")
+		var/turf/T = get_turf(src)
+		T.visible_message("<font color=Maroon><B>Tape Recorder</B>: Playback stopped.</font>")
 		icon_state = "taperecorderidle"
 		return
 
@@ -171,30 +163,38 @@
 			break
 		if(storedinfo.len < i)
 			break
-		say("<font color=Maroon><B>Tape Recorder</B>: [storedinfo[i]]</font>")
+		var/turf/T = get_turf(src)
+		send_speech(storedinfo["[i - 1]"])
 		if(storedinfo.len < i+1)
 			playsleepseconds = 1
 			sleep(10)
-			say("<font color=Maroon><B>Tape Recorder</B>: End of recording.</font>")
+			T = get_turf(src)
+			T.visible_message("<font color=Maroon><B>Tape Recorder</B>: End of recording.</font>")
 		else
 			playsleepseconds = timestamp[i+1] - timestamp[i]
 		if(playsleepseconds > 14)
 			sleep(10)
-			say("<font color=Maroon><B>Tape Recorder</B>: Skipping [playsleepseconds] seconds of silence</font>")
+			T = get_turf(src)
+			T.visible_message("<font color=Maroon><B>Tape Recorder</B>: Skipping [playsleepseconds] seconds of silence</font>")
 			playsleepseconds = 1
 		i++
 	icon_state = "taperecorderidle"
 	playing = 0
 	if(emagged == 1.0)
-		say("<font color=Maroon><B>Tape Recorder</B>: This tape recorder will self-destruct in... Five.</font>")
+		var/turf/T = get_turf(src)
+		T.visible_message("<font color=Maroon><B>Tape Recorder</B>: This tape recorder will self-destruct in... Five.</font>")
 		sleep(10)
-		say("<font color=Maroon><B>Tape Recorder</B>: Four.</font>")
+		T = get_turf(src)
+		T.visible_message("<font color=Maroon><B>Tape Recorder</B>: Four.</font>")
 		sleep(10)
-		say("<font color=Maroon><B>Tape Recorder</B>: Three.</font>")
+		T = get_turf(src)
+		T.visible_message("<font color=Maroon><B>Tape Recorder</B>: Three.</font>")
 		sleep(10)
-		say("<font color=Maroon><B>Tape Recorder</B>: Two.</font>")
+		T = get_turf(src)
+		T.visible_message("<font color=Maroon><B>Tape Recorder</B>: Two.</font>")
 		sleep(10)
-		say("<font color=Maroon><B>Tape Recorder</B>: One.</font>")
+		T = get_turf(src)
+		T.visible_message("<font color=Maroon><B>Tape Recorder</B>: One.</font>")
 		sleep(10)
 		explode()
 
@@ -202,7 +202,7 @@
 /obj/item/device/taperecorder/verb/print_transcript()
 	set name = "Print Transcript"
 	set category = "Object"
-
+	usr << "\red This function is не работает!"
 	if(usr.stat)
 		return
 	if(emagged == 1)
@@ -220,11 +220,20 @@
 	for(var/i=1,storedinfo.len >= i,i++)
 		t1 += "[storedinfo[i]]<BR>"
 	P.info = t1
-	P.name = "paper- 'Transcript'"
+	P.name = "Transcript"
 	canprint = 0
 	sleep(300)
 	canprint = 1
 
+/obj/item/device/taperecorder/send_speech(var/list/info)
+	var/src_message
+	var/speaker_message
+	var/message
+	for(var/atom/movable/AM in get_hearers_in_view(7, src))
+		src_message = "\[[info["time"]]\] [info["speaker_name"]] "
+		speaker_message = "[AM.lang_treat(src, info["language"], info["message"])]"
+		message = "[src_message][speaker_message]"
+		AM.Hear(message, src, info["Galactic Common"], message, 0)
 
 /obj/item/device/taperecorder/attack_self(mob/user)
 	if(recording == 0 && playing == 0)
@@ -238,7 +247,13 @@
 			usr << "\blue Recording started."
 			recording = 1
 			timestamp+= timerecorded
-			storedinfo += "\[[time2text(timerecorded*10,"mm:ss")]\] Recording started."
+			storedinfo["[storedinfo.len]"] = list(
+			"message" = "Recording started",
+			"speaker_name" = src.name,
+			"language" = all_languages["Galactic Common"],
+			"time" = time2text(timerecorded*10,"mm:ss"),
+			"verb" = "states",
+			)
 			for(timerecorded, timerecorded<3600)
 				if(recording == 0)
 					break
@@ -256,7 +271,13 @@
 		if(recording == 1)
 			recording = 0
 			timestamp+= timerecorded
-			storedinfo += "\[[time2text(timerecorded*10,"mm:ss")]\] Recording stopped."
+			storedinfo["[storedinfo.len]"] = list(
+			"message" = "Recording stopped",
+			"speaker_name" = src.name,
+			"language" = all_languages["Galactic Common"],
+			"time" = time2text(timerecorded*10,"mm:ss"),
+			"verb" = "states",
+			)
 			usr << "\blue Recording stopped."
 			icon_state = "taperecorderidle"
 			return
