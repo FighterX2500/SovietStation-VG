@@ -1,6 +1,7 @@
 /obj/item/weapon/melee/energy
 	var/active = 0
-
+	hitsound = 'sound/weapons/saberhit1.ogg'
+	inhand_states = list("left_hand" = 'icons/mob/in-hand/left/swords_axes.dmi', "right_hand" = 'icons/mob/in-hand/right/swords_axes.dmi')
 	suicide_act(mob/user)
 		viewers(user) << pick("\red <b>[user] is slitting \his stomach open with the [src.name]! It looks like \he's trying to commit seppuku.</b>", \
 							"\red <b>[user] is falling on the [src.name]! It looks like \he's trying to commit suicide.</b>")
@@ -15,7 +16,7 @@
 	throw_speed = 1
 	throw_range = 5
 	w_class = 3.0
-	flags = FPRINT
+	flags = FPRINT | NOBLOODY | BLOODCLEAR
 	siemens_coefficient = 1
 	origin_tech = "combat=3"
 	attack_verb = list("attacked", "chopped", "cleaved", "torn", "cut")
@@ -36,7 +37,7 @@
 	throw_speed = 1
 	throw_range = 5
 	w_class = 2.0
-	flags = FPRINT
+	flags = FPRINT | NOBLOODY | BLOODCLEAR
 	origin_tech = "magnets=3;syndicate=4"
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 
@@ -121,6 +122,6 @@
 	throw_speed = 1
 	throw_range = 1
 	w_class = 4.0//So you can't hide it in your pocket or some such.
-	flags = FPRINT
+	flags = FPRINT | NOBLOODY | BLOODCLEAR
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 	var/datum/effect/effect/system/spark_spread/spark_system
