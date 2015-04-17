@@ -265,8 +265,8 @@ This function completely restores a damaged organ to perfect condition.
 			break
 	if(W)
 		wounds += W
-	if(clamp)
-		W.clamped = 1
+		if(clamp)
+			W.clamped = 1
 
 /****************************************************
 			   PROCESSING & UPDATING
