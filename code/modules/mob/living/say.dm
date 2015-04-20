@@ -81,7 +81,7 @@ var/list/special_chat_symbols = list(":" = 1,"#" = 1,"." = 1)
 	var/message_mode = get_message_mode(message)
 	if(message_mode == "headset")
 		message = copytext(message, 2)
-	else if(message_mode)
+	else if(message_mode && message_mode != "holopad")
 		message = copytext(message, 3)
 	if(findtext(message, " ",1, 2))
 		message = copytext(message, 2)
@@ -131,7 +131,7 @@ var/list/special_chat_symbols = list(":" = 1,"#" = 1,"." = 1)
 	return 1
 
 
-/mob/living/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq, need_to_render)
+/mob/living/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq, need_to_render = 1)
 	if(!client)
 		return
 	var/deaf_message

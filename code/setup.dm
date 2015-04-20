@@ -754,16 +754,6 @@ var/list/TAGGERLOCATIONS = list(
 #define AGE_MIN 17			//youngest a character can be
 #define AGE_MAX 85			//oldest a character can be
 
-//Languages!
-#define LANGUAGE_HUMAN		1
-#define LANGUAGE_ALIEN		2
-#define LANGUAGE_DOG		4
-#define LANGUAGE_CAT		8
-#define LANGUAGE_BINARY		16
-#define LANGUAGE_OTHER		32768
-
-#define LANGUAGE_UNIVERSAL	65535
-
 #define LEFT 1
 #define RIGHT 2
 
