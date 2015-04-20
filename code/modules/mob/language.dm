@@ -24,7 +24,7 @@
 
 		if(istype(player,/mob/dead))
 			understood = 1
-		else if(player.can_speak_lang(src) && (check_special_condition(speaker) || speaker.universal_speak))
+		else if(player.can_speak_lang(src) && (check_special_condition(player) || player.universal_speak))
 			understood = 1
 
 		if(understood)

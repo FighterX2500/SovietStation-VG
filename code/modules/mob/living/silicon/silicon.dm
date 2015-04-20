@@ -24,7 +24,7 @@
 	return 1
 
 /mob/living/binarycheck()
-	return 01
+	return 1
 
 /mob/living/silicon/GetAccess()
 	return get_all_accesses()
