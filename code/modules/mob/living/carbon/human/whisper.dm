@@ -1,5 +1,5 @@
 // NOTE THAT HEARD AND UNHEARD USE GENDER_REPLACE SYNTAX SINCE BYOND IS STUPID
-/mob/living/carbon/human/whisper(var/message as text, datum/language/lang)
+/mob/living/carbon/human/whisper(var/message as text, datum/language/lang = current_language_speak)
 	if(!IsVocal())
 		return
 

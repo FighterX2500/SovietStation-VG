@@ -94,22 +94,26 @@
 		var/datum/organ/internal/I = pick(internal_organs)
 		I.take_damage(brute / 2)
 		brute -= brute / 2
-
 	if(status & ORGAN_BROKEN && prob(40) && brute)
 		owner.emote("scream",,, 1)	//getting hit on broken hand hurts
+	var/clamp = 0
 	if(used_weapon)
 		add_autopsy_data("[used_weapon]", brute + burn)
+		if(istype(used_weapon,/obj/item))
+			var/obj/item/I = used_weapon
+			if(I.flags & BLOODCLEAR)
+				clamp = 1
 
 	var/can_cut = (prob(brute*2) || sharp) && !(status & (ORGAN_ROBOT|ORGAN_PEG))
 	// If the limbs can break, make sure we don't exceed the maximum damage a limb can take before breaking
 	if((brute_dam + burn_dam + brute + burn) < max_damage || !config.limbs_can_break)
 		if(brute)
 			if(can_cut)
-				createwound( CUT, brute )
+				createwound( CUT, brute, clamp )
 			else
-				createwound( BRUISE, brute )
+				createwound( BRUISE, brute, clamp )
 		if(burn)
-			createwound( BURN, burn )
+			createwound( BURN, burn, clamp )
 	else
 		//If we can't inflict the full amount of damage, spread the damage in other ways
 		//How much damage can we actually cause?
@@ -118,9 +122,9 @@
 			if (brute > 0)
 				//Inflict all burte damage we can
 				if(can_cut)
-					createwound( CUT, min(brute,can_inflict) )
+					createwound( CUT, min(brute,can_inflict), clamp )
 				else
-					createwound( BRUISE, min(brute,can_inflict) )
+					createwound( BRUISE, min(brute,can_inflict), clamp )
 				var/temp = can_inflict
 				//How much mroe damage can we inflict
 				can_inflict = max(0, can_inflict - brute)
@@ -212,7 +216,7 @@ This function completely restores a damaged organ to perfect condition.
 	owner.updatehealth()
 
 
-/datum/organ/external/proc/createwound(var/type = CUT, var/damage)
+/datum/organ/external/proc/createwound(var/type = CUT, var/damage, var/clamp = 0)
 	if(damage == 0) return
 
 	// first check whether we can widen an existing wound
@@ -261,6 +265,8 @@ This function completely restores a damaged organ to perfect condition.
 			break
 	if(W)
 		wounds += W
+		if(clamp)
+			W.clamped = 1
 
 /****************************************************
 			   PROCESSING & UPDATING

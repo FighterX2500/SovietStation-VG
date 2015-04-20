@@ -178,7 +178,7 @@
 					if("O+") pack = new/obj/item/weapon/reagent_containers/blood/OPlus/
 					else pack = new/obj/item/weapon/reagent_containers/blood/OMinus/
 				pack.loc = src
-				var/sanitized_name = sanitize(pack.name, list("\"" = "", "'" = "", "+" = "plus", ";" = "", "^" = "", "&" = "", "<" = "", ">" = ""))
+				var/sanitized_name = sanitize(pack.name, list("\"" = "", "'" = "", "+" = " plus", ";" = "", "^" = "", "&" = "", "<" = "", ">" = ""))
 				pack.name = sanitized_name
 				if(item_quants[sanitized_name])
 					item_quants[sanitized_name]++
@@ -334,7 +334,7 @@
 
 				// AUTOFIXED BY fix_string_idiocy.py
 				// C:\Users\Rob\Documents\Projects\vgstation13\code\game\machinery\kitchen\smartfridge.dm:140: dat += "<FONT color = 'blue'><B>[capitalize(O)]</B>:"
-				dat += {"<FONT color = 'blue'><B>[sanitize(O, list("plus" = "+"))]</B>:
+				dat += {"<FONT color = 'blue'><B>[O]</B>:
 					[N] </font>
 					<a href='byond://?src=\ref[src];vend=[O];amount=1'>Vend</A> "}
 				// END AUTOFIX

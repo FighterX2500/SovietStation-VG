@@ -6,7 +6,11 @@
 		usr << "<span class='danger'>Speech is currently admin-disabled.</span>"
 		return
 	usr.say(message)
-
+/mob/verb/whisper_verb(message as text)
+	set name = "Whisper"
+	set category = "IC"
+	whisper(message)
+	return
 /mob/proc/whisper(message as text, datum/language/lang)
 	set name = "Whisper"
 	set category = "IC"

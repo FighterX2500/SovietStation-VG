@@ -65,7 +65,6 @@
 	for(var/atom/movable/AM in get_hearers_in_view(7, T))
 		rendered = "<i><span class='game say'>Holopad transmitted, <span class='name'>[real_name]</span> <[AM.lang_treat(T,lang,message)]</span></i>"
 		AM.Hear(rendered, T, lang, message, 0)
-	src << "<i><span class='game say'>Holopad transmitted, <span class='name'>[real_name]</span> [lang_treat(T,lang,message)]</span></i>"//The AI can "hear" its own message.
 	return
 
 

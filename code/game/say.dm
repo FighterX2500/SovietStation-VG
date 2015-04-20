@@ -36,16 +36,16 @@ var/list/freqtoname = list(
 		return
 	send_speech(message)
 
-/atom/movable/proc/Hear(message, atom/movable/speaker, datum/language/message_langs, raw_message, radio_freq, need_to_render)
+/atom/movable/proc/Hear(message, atom/movable/speaker, datum/language/message_langs, raw_message, radio_freq, need_to_render = 1)
 	return
 
 /atom/movable/proc/can_speak()
 	return 1
 
 /atom/movable/proc/send_speech(message, range, datum/language/lang = all_languages["Galactic Common"])
-	var/rendered = compose_message(src, lang, message)
+	//var/rendered = compose_message(src, lang, message)
 	for(var/atom/movable/AM in get_hearers_in_view(range, src))
-		AM.Hear(rendered, src, lang, message)
+		AM.Hear(message, src, lang, message)
 
 /atom/movable/proc/compose_message(atom/movable/speaker, datum/language/message_langs, raw_message, radio_freq)
 	//This proc uses text() because it is faster than appending strings. Thanks BYOND.
