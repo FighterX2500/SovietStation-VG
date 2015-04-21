@@ -1,6 +1,6 @@
 // NOTE THAT HEARD AND UNHEARD USE GENDER_REPLACE SYNTAX SINCE BYOND IS STUPID
 /mob/living/carbon/human/whisper(var/message as text, datum/language/lang = current_language_speak)
-	if(!IsVocal())
+	if(!src.IsVocal())
 		return
 
 	if(say_disabled)	//This is here to try to identify lag problems
@@ -9,7 +9,7 @@
 
 	message = trim(copytext(strip_html_simple(message), 1, MAX_MESSAGE_LEN))
 	message = sanitize(message)
-	if(!can_speak(message))
+	if(!src.can_speak(message))
 		return
 
 	message = "<i>[message]</i>"
@@ -22,17 +22,17 @@
 
 	log_whisper("[src.name]/[src.key] : [message]")
 
-	var/alt_name = get_alt_name()
+	var/alt_name = src.get_alt_name()
 
 	var/whispers = "whispers"
-	var/critical = InCritical()
+	var/critical = src.InCritical()
 
 	// We are unconscious but not in critical, so don't allow them to whisper.
-	if(stat == UNCONSCIOUS && (!critical || said_last_words))
+	if(stat == UNCONSCIOUS && (!critical || src.said_last_words))
 		return
 
 	// If whispering your last words, limit the whisper based on how close you are to death.
-	if(critical && !said_last_words)
+	if(critical && !src.said_last_words)
 		var/health_diff = round(-config.health_threshold_dead + health)
 		// If we cut our message short, abruptly end it with a-..
 		var/message_len = length(message)

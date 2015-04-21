@@ -101,6 +101,17 @@ var/list/special_chat_symbols = list(":" = 1,"#" = 1,"." = 1)
 				if(lang.key == key)
 					speak_lang = lang
 					break
+			if(istype(src,/mob/living/carbon/human))
+				var/mob/living/carbon/human/H = src
+				if(H.ears && istype(H.ears,/obj/item/device/radio/headset))
+					var/obj/item/device/radio/headset/S = H.ears
+					if(S.translate.len > 0)
+						for(var/N in S.translate)
+							var/datum/language/lang = all_languages[N]
+							if(istype(lang) && lang.key == key)
+								speak_lang = lang
+								break
+
 			message = copytext(message, 3)
 	if(!speak_lang)
 		src << "<span class = 'warning'>You can't speak! Teach language!</span>" // Не умеешь говорить

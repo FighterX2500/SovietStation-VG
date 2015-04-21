@@ -230,19 +230,15 @@
 	speech_verb = "states"
 	ask_verb = "queries"
 	exclaim_verb = "declares"
-	key = "b"
+	key = "è"
 	flags = RESTRICTED | HIVEMIND
 	var/drone_only
 
 /datum/language/binary/broadcast(var/mob/living/speaker,var/message,var/speaker_mask)
-
-	if(!speaker.binarycheck())
-		return
-
 	if (!message)
 		return
 
-	var/message_start = "<i><span class='game say'>[name], <span class='name'>[speaker.name]</span>"
+	var/message_start = "<i><span class='robot_talk'>[name], <span class='name'>[speaker.name]</span>"
 	var/message_body = "<span class='message'>[src.get_spoken_verb(copytext(message, length(message)))], \"[message]\"</span></span></i>"
 
 	for (var/mob/M in dead_mob_list)
@@ -254,7 +250,7 @@
 		//	continue
 		if(istype(S , /mob/living/silicon/ai))
 			message_start = "<i><span class='robot_talk'>[name], <a href='byond://?src=\ref[S];track2=\ref[S];track=\ref[speaker];trackname=[html_encode(speaker.name)]'><span class='name'>[speaker.name]</span></a>"
-		else if (!S.binarycheck())
+		if (!S.can_speak_lang(src))
 			continue
 
 		S.show_message("[message_start] [message_body]", 2)
@@ -319,7 +315,16 @@
 	if(src.universal_speak)
 		return 1
 	return (speaking in src.languages)
+/mob/living/carbon/human/can_speak_lang(datum/language/speaking)
+	if(..())
+		return 1
+	if(ears)
+		var/obj/item/device/radio/headset/H = ears
+		if(istype(H))
+			if(speaking.name in H.translate)
+				return 1
 
+	return 0
 //TBD
 /mob/verb/check_languages()
 	set name = "Language"
@@ -332,18 +337,52 @@
 		if(!universal_speak)
 			for(var/datum/language/L in languages)
 				if(S.current_language_speak == L)
-					dat += "<b>[L.name] (:[L.key]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
+					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
 				else
-					dat += "<b>[L.name] (:[L.key]) - <a href='byond://?src=\ref[src];setlang=[L.key]'>Set default </a></b><br/>[L.desc]<br/><br/>"
+					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - <a href='byond://?src=\ref[src];setlang=[L.key]'>Set default </a></b><br/>[L.desc]<br/><br/>"
 		else
 			for(var/W in all_languages)
 				var/datum/language/L = all_languages[W]
 				if(S.current_language_speak == L)
-					dat += "<b>[L.name] (:[L.key]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
+					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
 				else
-					dat += "<b>[L.name] (:[L.key]) - <a href='byond://?src=\ref[src];setlang=[L.key]'>Set default </a></b><br/>[L.desc]<br/><br/>"
+					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - <a href='byond://?src=\ref[src];setlang=[L.key]'>Set default </a></b><br/>[L.desc]<br/><br/>"
 	else
 		for(var/datum/language/L in languages)
 			dat += "<b>[L.name] (:[L.key])</b><br/>[L.desc]<br/><br/>"
+	src << browse(dat, "window=checklanguage")
+	return
+/mob/living/carbon/human/check_languages()
+	set name = "Language"
+	set category = "IC"
+	set src = usr
+
+	var/dat = "<b><font size = 5>Known Languages</font></b><br/><br/>"
+	if(istype(src,/mob/living))
+		var/mob/living/S = src
+		if(!universal_speak)
+			for(var/datum/language/L in languages)
+				if(S.current_language_speak == L)
+					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
+				else
+					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - <a href='byond://?src=\ref[src];setlang=[L.key]'>Set default </a></b><br/>[L.desc]<br/><br/>"
+			if(ears)
+				var/obj/item/device/radio/headset/H = ears
+				if(istype(H) && H.translate.len > 0)
+					dat += "<b><span class='confirm'>Your headset can translate:</span></b><br>"
+					for(var/L in H.translate)
+						var/datum/language/lang = all_languages[L]
+						if(istype(lang))
+							dat += "<b><span class='[lang.colour]'>[lang.name]</span> (:[lang.key])</b><br/>[lang.desc]<br/><br/>"
+		else
+			for(var/W in all_languages)
+				var/datum/language/L = all_languages[W]
+				if(S.current_language_speak == L)
+					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
+				else
+					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - <a href='byond://?src=\ref[src];setlang=[L.key]'>Set default </a></b><br/>[L.desc]<br/><br/>"
+	else
+		for(var/datum/language/L in languages)
+			dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key])</b><br/>[L.desc]<br/><br/>"
 	src << browse(dat, "window=checklanguage")
 	return

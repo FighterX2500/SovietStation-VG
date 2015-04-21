@@ -1,6 +1,15 @@
 ///mob/living/carbon/human/say(var/message)
 //	..(message)
-
+/*
+/mob/living/carbon/human/binarycheck()
+	if(ears)
+		var/obj/item/device/radio/headset/dongle = ears
+		world << "[src]  [dongle.translate_binary]"
+		if(!istype(dongle))
+			return 0
+ 		if(dongle.translate_binary)
+ 			return 1
+ */
 /mob/living/carbon/human/say_quote(text)
 	if(!text)
 		return "says, \"...\"";	//not the best solution, but it will stop a large number of runtimes. The cause is somewhere in the Tcomms code

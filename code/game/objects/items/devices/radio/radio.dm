@@ -224,7 +224,7 @@
 /obj/item/device/radio/talk_into(mob/living/M as mob, message, channel, datum/language/lang = M.current_language_speak)
 	if(!on) return // the device has to be on
 	//  Fix for permacell radios, but kinda eh about actually fixing them.
-	if(!M || !message) return
+	if(!M || !message || !istype(M)) return
 
 	//  Uncommenting this. To the above comment:
 	// 	The permacell radios aren't suppose to be able to transmit, this isn't a bug and this "fix" is just making radio wires useless. -Giacom
