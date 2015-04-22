@@ -10,9 +10,9 @@
 	var/exclaim_verb = "exclaims"    // Used when sentence ends in a !
 	var/signlang_verb = list()       // list of emotes that might be displayed if this language has NONVERBAL or SIGNLANG flags
 	var/colour = "body"         // CSS style to use for strings in this language.
-	var/key = "x"                    // Character used to speak in language eg. :o for Unathi.
+	var/list/key = "x"                    // Character used to speak in language eg. :o for Unathi.
 	var/flags = 0                    // Various language flags.
-	var/native                       // If set, non-native speakers will have trouble speaking.
+//	var/native                       // If set, non-native speakers will have trouble speaking.
 
 /datum/language/proc/broadcast(var/mob/living/speaker,var/message,var/speaker_mask)
 
@@ -47,17 +47,15 @@
 	desc = "The common galactic tongue."
 	speech_verb = "says"
 	exclaim_verb = "exclaims"
-
-	key = "0"
+	key = list("0")
 	flags = RESTRICTED
 /datum/language/clatter
 	name = "Clatter"
-	desc = ""
 	speech_verb = "says"
 	ask_verb = "asks"
 	exclaim_verb = "exclaims"
 	colour = "white"
-	key = "ù"
+	key = list("ù","o")
 	flags = WHITELISTED
 /datum/language/unathi
 	name = "Sinta'unathi"
@@ -66,7 +64,7 @@
 	ask_verb = "hisses"
 	exclaim_verb = "roars"
 	colour = "soghun"
-	key = "à"
+	key = list("à","f")
 	flags = WHITELISTED
 
 /datum/language/tajaran
@@ -76,7 +74,7 @@
 	ask_verb = "mrowls"
 	exclaim_verb = "yowls"
 	colour = "tajaran"
-	key = "í"
+	key = list("í","y")
 	flags = WHITELISTED
 
 /datum/language/skrell
@@ -86,7 +84,7 @@
 	ask_verb = "warbles"
 	exclaim_verb = "warbles"
 	colour = "skrell"
-	key = "ô"
+	key = list("ô","a")
 	flags = WHITELISTED
 
 /datum/language/vox
@@ -96,7 +94,7 @@
 	ask_verb = "creels"
 	exclaim_verb = "SHRIEKS"
 	colour = "vox"
-	key = "ì"
+	key = list("ì","v")
 	flags = RESTRICTED
 
 /datum/language/diona
@@ -106,7 +104,7 @@
 	ask_verb = "creaks"
 	exclaim_verb = "rustles"
 	colour = "soghun"
-	key = "å"
+	key = list("å","t")
 	flags = RESTRICTED
 
 /datum/language/common/get_spoken_verb(var/msg_end)
@@ -121,7 +119,7 @@
 	name = "Sol Common"
 	desc = "A bastardized hybrid of informal English and elements of Mandarin Chinese; the common language of the Sol system."
 	colour = "rough"
-	key = "1"
+	key = list("1")
 	flags = RESTRICTED
 
 // Galactic common languages (systemwide accepted standards).
@@ -130,14 +128,14 @@
 	desc = "Maintained by the various trading cartels in major systems, this elegant, structured language is used for bartering and bargaining."
 	speech_verb = "enunciates"
 	colour = "say_quote"
-	key = "2"
+	key = list("2")
 
 /datum/language/gutter
 	name = "Gutter"
 	desc = "Much like Standard, this crude pidgin tongue descended from numerous languages and serves as Tradeband for criminal elements."
 	speech_verb = "growls"
 	colour = "rough"
-	key = "3"
+	key = list("3")
 
 /datum/language/xenocommon
 	name = "Xenomorph"
@@ -146,7 +144,7 @@
 	speech_verb = "hisses"
 	ask_verb = "hisses"
 	exclaim_verb = "hisses"
-	key = "4"
+	key = list("4")
 	flags = RESTRICTED
 
 /datum/language/xenos
@@ -156,7 +154,7 @@
 	ask_verb = "hisses"
 	exclaim_verb = "hisses"
 	colour = "alien"
-	key = "î"
+	key = list("î","j")
 	flags = RESTRICTED | HIVEMIND
 
 /datum/language/xenos/check_special_condition(var/mob/other)
@@ -173,7 +171,7 @@
 	desc = "Although they are normally wary and suspicious of each other, changelings can commune over a distance."
 	speech_verb = "says"
 	colour = "changeling"
-	key = "ï"
+	key = list("ï","g")
 	flags = RESTRICTED | HIVEMIND
 
 /datum/language/ling/broadcast(var/mob/living/speaker,var/message,var/speaker_mask)
@@ -189,7 +187,7 @@
 	ask_verb = "sings"
 	exclaim_verb = "sings"
 	colour = "alien"
-	key = "÷"
+	key = list("÷","x")
 	flags = RESTRICTED | HIVEMIND
 
 /datum/language/animal
@@ -199,7 +197,7 @@
 	ask_verb = "speaks"
 	exclaim_verb = "speaks"
 	colour = "animal"
-	key = "ë"
+	key = list("ë","k")
 	flags = RESTRICTED
 /datum/language/slime
 	name = "Slimespeak"
@@ -208,7 +206,7 @@
 	ask_verb = "chirps"
 	exclaim_verb = "chirps"
 	colour = "slime"
-	key = "æ"
+	key = list("æ",";")
 	flags = RESTRICTED | HIVEMIND
 /datum/language/corticalborer/broadcast(var/mob/living/speaker,var/message,var/speaker_mask)
 
@@ -230,7 +228,7 @@
 	speech_verb = "states"
 	ask_verb = "queries"
 	exclaim_verb = "declares"
-	key = "è"
+	key = list("è","b")
 	flags = RESTRICTED | HIVEMIND
 	var/drone_only
 
@@ -334,19 +332,26 @@
 	var/dat = "<b><font size = 5>Known Languages</font></b><br/><br/>"
 	if(istype(src,/mob/living))
 		var/mob/living/S = src
+		var/keytostring
 		if(!universal_speak)
 			for(var/datum/language/L in languages)
+				for(var/k in L.key)
+					keytostring += ":[k] "
 				if(S.current_language_speak == L)
-					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
+					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
 				else
-					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - <a href='byond://?src=\ref[src];setlang=[L.key]'>Set default </a></b><br/>[L.desc]<br/><br/>"
+					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - <a href='byond://?src=\ref[src];setlang=[L.key[1]]'>Set default </a></b><br/>[L.desc]<br/><br/>"
+				keytostring = ""
 		else
 			for(var/W in all_languages)
 				var/datum/language/L = all_languages[W]
+				for(var/k in L.key)
+					keytostring += ":[k] "
 				if(S.current_language_speak == L)
-					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
+					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
 				else
-					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - <a href='byond://?src=\ref[src];setlang=[L.key]'>Set default </a></b><br/>[L.desc]<br/><br/>"
+					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - <a href='byond://?src=\ref[src];setlang=[L.key[1]]'>Set default </a></b><br/>[L.desc]<br/><br/>"
+				keytostring = ""
 	else
 		for(var/datum/language/L in languages)
 			dat += "<b>[L.name] (:[L.key])</b><br/>[L.desc]<br/><br/>"
@@ -356,33 +361,45 @@
 	set name = "Language"
 	set category = "IC"
 	set src = usr
-
+	var/keytostring
 	var/dat = "<b><font size = 5>Known Languages</font></b><br/><br/>"
 	if(istype(src,/mob/living))
 		var/mob/living/S = src
 		if(!universal_speak)
 			for(var/datum/language/L in languages)
+				for(var/k in L.key)
+					keytostring += ":[k] "
 				if(S.current_language_speak == L)
-					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
+					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
 				else
-					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - <a href='byond://?src=\ref[src];setlang=[L.key]'>Set default </a></b><br/>[L.desc]<br/><br/>"
+					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - <a href='byond://?src=\ref[src];setlang=[L.key[1]]'>Set default</a></b><br/>[L.desc]<br/><br/>"
+				keytostring = ""
 			if(ears)
 				var/obj/item/device/radio/headset/H = ears
 				if(istype(H) && H.translate.len > 0)
 					dat += "<b><span class='confirm'>Your headset can translate:</span></b><br>"
 					for(var/L in H.translate)
 						var/datum/language/lang = all_languages[L]
+						for(var/k in lang.key)
+							keytostring += ":[k] "
 						if(istype(lang))
-							dat += "<b><span class='[lang.colour]'>[lang.name]</span> (:[lang.key])</b><br/>[lang.desc]<br/><br/>"
+							dat += "<b><span class='[lang.colour]'>[lang.name]</span> ([keytostring])</b><br/>[lang.desc]<br/><br/>"
+						keytostring = ""
 		else
 			for(var/W in all_languages)
 				var/datum/language/L = all_languages[W]
+				for(var/k in L.key)
+					keytostring += ":[k] "
 				if(S.current_language_speak == L)
-					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
+					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
 				else
-					dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key]) - <a href='byond://?src=\ref[src];setlang=[L.key]'>Set default </a></b><br/>[L.desc]<br/><br/>"
+					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - <a href='byond://?src=\ref[src];setlang=[L.key[1]]'>Set default</a></b><br/>[L.desc]<br/><br/>"
+				keytostring = ""
 	else
 		for(var/datum/language/L in languages)
-			dat += "<b><span class='[L.colour]'>[L.name]</span> (:[L.key])</b><br/>[L.desc]<br/><br/>"
+			for(var/k in L.key)
+				keytostring += ":[k] "
+			dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring])</b><br/>[L.desc]<br/><br/>"
+			keytostring = ""
 	src << browse(dat, "window=checklanguage")
 	return

@@ -1140,12 +1140,12 @@ var/list/slot_equipment_priority = list( \
 			var/mob/living/S = src
 			if(!universal_speak)
 				for(var/datum/language/L in src.languages)
-					if(L.key == href_list["setlang"])
+					if(L && (L.key.len > 0) && (L.key[1] == href_list["setlang"]))
 						S.current_language_speak = L
 			else
 				for(var/W in all_languages)
 					var/datum/language/L = all_languages[W]
-					if(L.key == href_list["setlang"])
+					if(L && (L.key.len > 0) && (L.key[1] == href_list["setlang"]))
 						S.current_language_speak = L
 		src << browse(null, "window=checklanguage")
 
