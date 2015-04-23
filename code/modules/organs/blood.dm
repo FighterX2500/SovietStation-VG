@@ -146,6 +146,9 @@ var/const/BLOOD_VOLUME_SURVIVE = 122
 				blood_max += 10 //Yer missing a fucking limb.
 			if (temp.open)
 				blood_max += 1  //Yer stomach is cut open
+		var/datum/organ/internal/heart = internal_organs["heart"]
+		if(heart.is_broken())
+			blood_max /= 50//Кровь вытекает намного хуже, если сердце почти не работает
 		drip(blood_max)
 
 //Makes a blood drop, leaking amt units of blood from the mob
