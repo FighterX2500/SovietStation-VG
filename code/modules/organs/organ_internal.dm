@@ -146,9 +146,9 @@
 		..()
 		//Сердечко плохо работает, а значит кислород слишком плохо распростроняется по организму
 		if(is_bruised())
-			owner.oxyloss += 0.1
-		if(is_broken())
 			owner.oxyloss += 2
+		if(is_broken())
+			owner.oxyloss += 5
 
 /datum/organ/internal/lungs
 	name = "lungs"
