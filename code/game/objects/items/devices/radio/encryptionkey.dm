@@ -5,8 +5,7 @@
 	icon = 'icons/obj/radio.dmi'
 	icon_state = "cypherkey"
 	item_state = ""
-	var/translate_binary = 0
-	var/translate_hive = 0
+	var/translate
 	var/syndie = 0
 	var/list/channels = list()
 
@@ -20,7 +19,7 @@
 
 /obj/item/device/encryptionkey/binary
 	icon_state = "cypherkey"
-	translate_binary = 1
+	translate = "Robot Talk"
 	origin_tech = "syndicate=3"
 
 /obj/item/device/encryptionkey/headset_sec

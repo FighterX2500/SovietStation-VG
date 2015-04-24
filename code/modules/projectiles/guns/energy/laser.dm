@@ -112,7 +112,8 @@ obj/item/weapon/gun/energy/laser/retro
 
 		update_icon()
 		return 1
-
+/obj/item/weapon/gun/energy/laser/cyborg/unload_cell()
+	return 0
 
 
 /obj/item/weapon/gun/energy/lasercannon

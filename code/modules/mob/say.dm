@@ -9,11 +9,9 @@
 /mob/verb/whisper_verb(message as text)
 	set name = "Whisper"
 	set category = "IC"
-	whisper(message)
+	whisper(message, null)
 	return
 /mob/proc/whisper(message as text, datum/language/lang)
-	set name = "Whisper"
-	set category = "IC"
 	return
 /*
 /mob/proc/whisper(var/message, var/unheard=" whispers something", var/heard="whispers,", var/apply_filters=1, var/allow_lastwords=1)
