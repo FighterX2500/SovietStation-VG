@@ -2791,7 +2791,7 @@
 "bbI" = (/obj/structure/disposalpipe/segment{dir = 4},/obj/machinery/atmospherics/pipe/simple/supply/hidden{dir = 4},/turf/simulated/floor/wood,/area/crew_quarters/bar)
 "bbJ" = (/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden,/obj/structure/disposalpipe/segment{dir = 8; icon_state = "pipe-c"},/obj/machinery/atmospherics/pipe/simple/supply/hidden{dir = 4},/turf/simulated/floor/wood,/area/crew_quarters/bar)
 "bbK" = (/obj/structure/stool{pixel_y = 8},/obj/machinery/atmospherics/pipe/simple/supply/hidden{dir = 4},/obj/effect/landmark{name = "meteorbombkit"},/turf/simulated/floor/wood,/area/crew_quarters/bar)
-"bbL" = (/obj/structure/table/reinforced,/obj/machinery/atmospherics/pipe/simple/supply/hidden{dir = 4},/turf/simulated/floor{icon_state = "grimy"},/area/crew_quarters/bar)
+"bbL" = (/obj/structure/table/reinforced,/obj/machinery/atmospherics/pipe/simple/supply/hidden{dir = 4},/obj/machinery/party/mixer,/turf/simulated/floor{icon_state = "grimy"},/area/crew_quarters/bar)
 "bbM" = (/obj/machinery/cooking/icemachine,/obj/machinery/atmospherics/pipe/manifold/supply/hidden,/turf/simulated/floor{icon_state = "grimy"},/area/crew_quarters/bar)
 "bbN" = (/obj/machinery/atmospherics/pipe/manifold/supply/hidden,/mob/living/carbon/monkey{name = "Pun Pun"},/turf/simulated/floor{icon_state = "grimy"},/area/crew_quarters/bar)
 "bbO" = (/obj/machinery/atmospherics/pipe/simple/supply/hidden{dir = 4},/turf/simulated/floor{icon_state = "grimy"},/area/crew_quarters/bar)
