@@ -4,7 +4,7 @@
 	icon_state = "grey baby slime"
 	pass_flags = PASSTABLE
 	speak_emote = list("hums")
-	languages = "Slimespeak"
+	mob_type_lang = list("Slimespeak","Animalspeak")
 
 	layer = 5
 

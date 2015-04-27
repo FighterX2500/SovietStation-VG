@@ -7,8 +7,6 @@
 
 #define SAY_MINIMUM_PRESSURE 10
 var/list/department_radio_keys = list(
-	  "r" = "right ear",
-	  "l" = "left ear",
 	  "i" = "intercom",
 	  "h" = "department",
 	  "c" = "Command",
@@ -59,15 +57,13 @@ var/list/special_chat_symbols = list(":" = 1,"#" = 1,"." = 1)
 // /vg/edit: Added forced_by for handling braindamage messages and meme stuff
 /mob/living/say(var/message, bubble_type)
 	var/datum/language/speak_lang = current_language_speak //Говорим на выбранном языке
+	message = capitalize_uni(message)
 	message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
-	message = capitalize(message)
-
 	if(!message) return
 
 	if(silent)
 		src << "\red You can't speak while silenced."
 		return
-
 	if (stat == DEAD) // Dead.
 		say_dead(message)
 		return

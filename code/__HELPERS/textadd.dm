@@ -83,9 +83,13 @@ proc/sanitize_russian(var/msg, var/html = 0) //Специально для всего, где не нужн
 	var/s = 2
 	if (copytext(t,1,2) == ";")
 		s += 1
+		if (copytext(t,2,3) == ":")
+			s += 2
 	if (copytext(t,1,2) == ":")
 		s += 2
-	return pointization(uppertext_uni(copytext(t, s - 1, s)) + copytext(t, s))
+		if (copytext(t,3,4) == ":")
+			s+=2
+	return pointization(copytext(t, 1, s - 1) + uppertext_uni(copytext(t, s - 1, s)) + copytext(t, s))
 
 /proc/pointization(text as text)
 	if (!text)
@@ -99,6 +103,11 @@ proc/sanitize_russian(var/msg, var/html = 0) //Специально для всего, где не нужн
 
 
 /proc/uppertext_uni(text as text)
+	var/rep = "&#223;"
+	var/index = findtext(text, "я")
+	while(index)
+		text = copytext(text, 1, index) + rep + copytext(text, index + 1)
+		index = findtext(text, "я")
 	var/t = ""
 	for(var/i = 1, i <= length(text), i++)
 		var/a = text2ascii(text, i)
@@ -154,7 +163,7 @@ proc/slurring_uni(phrase) // using cp1251!
 	phrase = rhtml_decode(phrase)
 	var/index = findtext(phrase, "я")
 	while(index)
-		phrase = copytext(phrase, 1, index) + "Я" + copytext(phrase, index+1)
+		phrase = copytext(phrase, 1, index) + "" + copytext(phrase, index+1)
 		index = findtext(phrase, "я")
 	var
 		leng=lentext(phrase)

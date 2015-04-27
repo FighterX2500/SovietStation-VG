@@ -29,7 +29,7 @@
 
 		if(understood)
 			if(!speaker_mask) speaker_mask = speaker.name
-			var/msg = "<i><span class='game say'>[name], <span class='name'>[speaker_mask]</span> <span class='message'>[src.get_spoken_verb(copytext(message, length(message)))], \"<span class='[colour]'>[message]</span><span class='message'>\"</span></span></i>"
+			var/msg = "<i><span class='[colour]'>[name], <span class='name'>[speaker_mask]</span> [src.get_spoken_verb(copytext(message, length(message)))], \"[message]\"</span></i>"
 			player << "[msg]"
 
 /datum/language/proc/check_special_condition(var/mob/other)
@@ -84,7 +84,7 @@
 	ask_verb = "warbles"
 	exclaim_verb = "warbles"
 	colour = "skrell"
-	key = list("ô","a")
+	key = list("ê","r")
 	flags = WHITELISTED
 
 /datum/language/vox
@@ -104,7 +104,7 @@
 	ask_verb = "creaks"
 	exclaim_verb = "rustles"
 	colour = "soghun"
-	key = list("å","t")
+	key = list("î","j")
 	flags = RESTRICTED
 
 /datum/language/common/get_spoken_verb(var/msg_end)
@@ -154,7 +154,7 @@
 	ask_verb = "hisses"
 	exclaim_verb = "hisses"
 	colour = "alien"
-	key = list("î","j")
+	key = list("ô","a")
 	flags = RESTRICTED | HIVEMIND
 
 /datum/language/xenos/check_special_condition(var/mob/other)
@@ -236,18 +236,18 @@
 	if (!message)
 		return
 
-	var/message_start = "<i><span class='robot_talk'>[name], <span class='name'>[speaker.name]</span>"
+	var/message_start = "<i><span class='[colour]'>[name], <span class='name'>[speaker.name]</span>"
 	var/message_body = "<span class='message'>[src.get_spoken_verb(copytext(message, length(message)))], \"[message]\"</span></span></i>"
 
 	for (var/mob/M in dead_mob_list)
-		if(!istype(M,/mob/new_player) && !istype(M,/mob/living/carbon/brain)) //No meta-evesdropping
+		if(!istype(M,/mob/new_player)) //No meta-evesdropping
 			M.show_message("[message_start] [message_body]", 2)
 
 	for (var/mob/living/S in living_mob_list)
 		//if(drone_only && !istype(S,/mob/living/silicon/robot/drone))
 		//	continue
 		if(istype(S , /mob/living/silicon/ai))
-			message_start = "<i><span class='robot_talk'>[name], <a href='byond://?src=\ref[S];track2=\ref[S];track=\ref[speaker];trackname=[html_encode(speaker.name)]'><span class='name'>[speaker.name]</span></a>"
+			message_start = "<i><span class='[colour]'>[name], <a href='byond://?src=\ref[S];track2=\ref[S];track=\ref[speaker];trackname=[html_encode(speaker.name)]'><span class='name'>[speaker.name]</span></a>"
 		if (!S.can_speak_lang(src))
 			continue
 

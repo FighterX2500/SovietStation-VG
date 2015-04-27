@@ -55,9 +55,9 @@ h1.alert, h2.alert		{color: #000000;}
 .skrell					{color: #00CED1;}
 .soghun					{color: #228B22;}
 .vox					{color: #AA00AA;}
-.rough					{font-family: 'Trebuchet MS', cursive, sans-serif;}
+.rough					{font-family: 'Trebuchet MS', cursive, sans-serif;font-weight: bold;}
 .say_quote				{font-family: Georgia, Verdana, sans-serif;}
-.robot_talk				{font-family: 'Trebuchet MS', cursive, sans-serif;color: #0272C3;}
+.robot_talk				{font-family: 'Trebuchet MS', cursive, sans-serif;color: #0272C3;font-weight: bold;}
 .interface				{color: #330033;}
 .changeling				{color: #800080;}
 /* /vg/ */
