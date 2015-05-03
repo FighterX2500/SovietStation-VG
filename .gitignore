@@ -29,3 +29,7 @@ info.json
 /bot/config.yml
 /bot/data
 /analysis
+
+##ignore any files in tools/, except those in subdirectories.
+/tools/*
+!/tools/*/*

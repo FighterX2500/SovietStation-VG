@@ -408,6 +408,10 @@ var/global/list/whitelisted_species = list("Human")
 
 	var/datum/speech_filter/filter = new
 
+	equip(var/mob/living/carbon/human/H)
+		H.u_equip(H.shoes)
+		H.equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal(H), slot_shoes)
+
 /datum/species/tajaran/New()
 	..()
 	// Combining all the worst shit the world has ever offered.
@@ -422,28 +426,25 @@ var/global/list/whitelisted_species = list("Human")
 			"party pooper"
 		)
 	)
-	filter.addWordReplacement("me","meow")
-	filter.addWordReplacement("I","meow") // Should replace with player's first name.
-	filter.addReplacement("fuck","yiff")
-	filter.addReplacement("shit","scat")
-	filter.addReplacement("scratch","scritch")
-	filter.addWordReplacement("(help|assist)\\bmeow","kill meow") // help me(ow) -> kill meow
-	filter.addReplacement("god","gosh")
-	filter.addWordReplacement("(ass|butt)", "rump")
+	filter.addWordReplacement("(ìîé|ìîÿ|ìîå|ìî¸)","ìÿó")
+	filter.addWordReplacement("&#255;","Ì&#255;ó") // Should replace with player's first name.
+	filter.addReplacement("Áëÿäü","Ïğğ")
+	filter.addReplacement("Ãîâíî","Ïîì¸ò")
+	filter.addReplacement("Áîã","Áîõ")
 
 /datum/species/tajaran/say_filter(mob/M, message, datum/language/speaking)
 	if(prob(15))
 		message = ""
 		if(prob(50))
 			message = pick(
-				"GOD, PLEASE",
-				"NO, GOD",
-				"AGGGGGGGH",
+				"Áîõ, ïîæàëóéñòà!",
+				"ÍÅÒ, ÁÎÕ!",
+				"ÌßÓÓÓÓÓÓÓÓ!",
 			)+" "
 		message += pick(
-			"KILL ME",
-			"END MY SUFFERING",
-			"I CAN'T DO THIS ANYMORE",
+			"ÓÁÅÉÒÅ ÌßÓ!",
+			"ÇÀÊÎÍ×ÈÒÅ ÑÒĞÀÄÀÍÈß ÌßÓ!",
+			"ÌßÓ ÁÎËÜØÅ ÍÅ ÌÎÆÅÒ İÒÎÃÎ ÒÅĞÏÅÒÜ!",
 		)
 		return message
 	if(copytext(message, 1, 2) != "*")

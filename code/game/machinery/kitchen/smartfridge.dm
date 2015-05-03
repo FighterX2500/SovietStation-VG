@@ -150,7 +150,7 @@
 /obj/machinery/smartfridge/blood
 	name = "\improper Blood Storage"
 	desc = "A refrigerated storage unit for blood packs"
-	var/blood_packs_count_at_start = 3
+	var/blood_packs_count_at_start = 5
 	var/list/blood_types_at_start = list("A+","A-","B+","B-","O+","O-")
 	accepted_types = list(	/obj/item/weapon/reagent_containers/blood)
 	New()
@@ -184,6 +184,7 @@
 					item_quants[sanitized_name]++
 				else
 					item_quants[sanitized_name] = 1
+
 /obj/machinery/smartfridge/drinks
 	name = "\improper Drink Showcase"
 	desc = "A refrigerated storage unit for tasty tasty alcohol."

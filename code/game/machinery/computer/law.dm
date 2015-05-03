@@ -3,7 +3,7 @@
 /obj/machinery/computer/aiupload
 	name = "AI Upload"
 	desc = "Used to upload laws to the AI."
-	icon_state = "command"
+	icon_state = "aiupload"
 	circuit = "/obj/item/weapon/circuitboard/aiupload"
 	var/mob/living/silicon/ai/current = null
 	var/opened = 0

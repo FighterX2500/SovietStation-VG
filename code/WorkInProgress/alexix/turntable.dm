@@ -22,7 +22,7 @@
 	t += "<A href='?src=\ref[src];on=remove_kebab'>Remove Llego</A><br>"
 	//t += "<A href='?src=\ref[src];on2=Testloop2'>TestLoop2</A><br>"
 	//t += "<A href='?src=\ref[src];on3=Testloop3'>TestLoop3</A><br>"
-	user << browse(t, "window=turntable;size=420x700")
+	user << browse(t, "window=turntable;size=420x300")
 
 /obj/machinery/party/mixer/Topic(href, href_list)
 	..()
