@@ -101,6 +101,9 @@ RCD
 					user << "Building Floor..."
 					activate()
 					A:ChangeTurf(/turf/simulated/floor/plating/airless)
+					message_admins("Floor has been created with RCD by [key_name(usr, usr.client)](<A HREF='?_src_=holder;adminmoreinfo=\ref[usr]'>?</A>) in ([x],[y],[z] - <A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)",0,1)
+					log_game("Floor has been created with RCD by [key_name(usr, usr.client)] at ([x],[y],[z])")
+					investigation_log(I_RCD,"Floor has been created with RCD by [key_name(usr, usr.client)] at ([x],[y],[z])")
 					return 1
 				return 0
 
@@ -112,6 +115,9 @@ RCD
 						if(!useResource(3, user)) return 0
 						activate()
 						A:ChangeTurf(/turf/simulated/wall)
+						message_admins("Wall has been created with RCD by [key_name(usr, usr.client)](<A HREF='?_src_=holder;adminmoreinfo=\ref[usr]'>?</A>) in ([x],[y],[z] - <A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)",0,1)
+						log_game("Wall has been created with RCD by [key_name(usr, usr.client)] at ([x],[y],[z])")
+						investigation_log(I_RCD,"Wall has been created with RCD by [key_name(usr, usr.client)] at ([x],[y],[z])")
 						return 1
 				return 0
 
@@ -125,6 +131,9 @@ RCD
 						activate()
 						var/obj/machinery/door/airlock/T = new /obj/machinery/door/airlock( A )
 						T.autoclose = 1
+						message_admins("Airlock has been created with RCD by [key_name(usr, usr.client)](<A HREF='?_src_=holder;adminmoreinfo=\ref[usr]'>?</A>) in ([x],[y],[z] - <A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)",0,1)
+						log_game("Airlock has been created with RCD by [key_name(usr, usr.client)] at ([x],[y],[z])")
+						investigation_log(I_RCD,"Airlock has been created with RCD by [key_name(usr, usr.client)] at ([x],[y],[z])")
 						return 1
 					return 0
 				return 0
@@ -140,6 +149,9 @@ RCD
 						if(!useResource(5, user)) return 0
 						activate()
 						A:ChangeTurf(/turf/simulated/floor/plating)
+						message_admins("Wall has been destroyed with RCD by [key_name(usr, usr.client)](<A HREF='?_src_=holder;adminmoreinfo=\ref[usr]'>?</A>) in ([x],[y],[z] - <A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)",0,1)
+						log_game("Wall has been destroyed with RCD by [key_name(usr, usr.client)] at ([x],[y],[z])")
+						investigation_log(I_RCD,"Wall has been destroyed with RCD by [key_name(usr, usr.client)] at ([x],[y],[z])")
 						return 1
 				return 0
 
@@ -151,6 +163,9 @@ RCD
 						if(!useResource(5, user)) return 0
 						activate()
 						A:ChangeTurf(/turf/space)
+						message_admins("Floor has been destroyed with RCD by [key_name(usr, usr.client)](<A HREF='?_src_=holder;adminmoreinfo=\ref[usr]'>?</A>) in ([x],[y],[z] - <A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)",0,1)
+						log_game("Floor has been destroyed with RCD by [key_name(usr, usr.client)] at ([x],[y],[z])")
+						investigation_log(I_RCD,"Floor has been destroyed with RCD by [key_name(usr, usr.client)] at ([x],[y],[z])")
 						return 1
 				return 0
 
@@ -161,6 +176,9 @@ RCD
 					if(do_after(user, 50))
 						if(!useResource(10, user)) return 0
 						activate()
+						message_admins("Airlock has been destroyed with RCD by [key_name(usr, usr.client)](<A HREF='?_src_=holder;adminmoreinfo=\ref[usr]'>?</A>) in ([x],[y],[z] - <A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)",0,1)
+						log_game("Airlock has been destroyed with RCD by [key_name(usr, usr.client)] at ([x],[y],[z])")
+						investigation_log(I_RCD,"Airlock has been destroyed with RCD by [key_name(usr, usr.client)] at ([x],[y],[z])")
 						del(A)
 						return 1
 				return	0

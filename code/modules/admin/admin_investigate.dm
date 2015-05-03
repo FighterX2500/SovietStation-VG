@@ -21,6 +21,7 @@ var/global/list/investigations=list(
 	"ntsl"    = new /datum/log_controller("ntsl"),
 	"singulo" = new /datum/log_controller("singulo"),
 	"atmos"   = new /datum/log_controller("atmos"),
+	"rcd"     = new /datum/log_controller("rcd"),
 )
 
 // Handles appending shit to log.

@@ -52,8 +52,8 @@
 	supervisors = "the chief medical officer"
 	selection_color = "#ffeef0"
 	idtype = /obj/item/weapon/card/id/medical
-	access = list(access_medical, access_morgue, access_surgery, access_chemistry, access_virology, access_genetics)
-	minimal_access = list(access_medical, access_morgue, access_surgery, access_virology)
+	access = list(access_medical, access_morgue, access_surgery, access_chemistry, access_virology, access_genetics, access_maint_tunnels)
+	minimal_access = list(access_medical, access_morgue, access_surgery, access_virology, access_chemistry, access_maint_tunnels)
 	alt_titles = list("Surgeon","Emergency Physician","Nurse","Virologist")
 
 	pdaslot=slot_belt
