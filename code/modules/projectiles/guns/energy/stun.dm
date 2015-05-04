@@ -15,6 +15,7 @@
 	icon_state = "taser"
 	fire_sound = 'sound/weapons/Taser.ogg'
 	charge_cost = 100
+	can_remove_cell = 0
 	projectile_type = "/obj/item/projectile/energy/electrode"
 	cell_type = "/obj/item/weapon/cell/secborg"
 	var/charge_tick = 0
@@ -67,6 +68,7 @@
 	w_type = RECYK_ELECTRONIC
 	origin_tech = "combat=2;magnets=2;syndicate=5"
 	silenced = 1
+	can_remove_cell = 0
 	fire_sound = 'sound/weapons/ebow.ogg'
 	projectile_type = "/obj/item/projectile/energy/bolt"
 	cell_type = "/obj/item/weapon/cell/crap"

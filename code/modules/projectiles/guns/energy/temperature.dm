@@ -6,6 +6,7 @@
 	slot_flags = SLOT_BACK
 	w_class = 4.0
 	fire_sound = 'sound/weapons/pulse3.ogg'
+	can_remove_cell = 0
 	desc = "A gun that changes the body temperature of its targets."
 	var/temperature = 300
 	var/target_temperature = 300
@@ -40,6 +41,8 @@
 	onclose(user, "tempgun")
 
 /obj/item/weapon/gun/energy/temperature/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	if(..())
+		return 1
 	if(istype(W, /obj/item/weapon/card/emag) && !emagged)
 		emagged = 1
 		user << "<span class='caution'>You double the gun's temperature cap ! Targets hit by searing beams will burst into flames !</span>"
@@ -155,7 +158,11 @@
 	icon_state = item_state
 
 /obj/item/weapon/gun/energy/temperature/proc/update_charge()
-	var/charge = power_supply.charge
+	var/charge
+	if(power_supply)
+		charge = power_supply.charge
+	else
+		charge = 0
 	switch(charge)
 		if(900 to INFINITY)		overlays += "900"
 		if(800 to 900)			overlays += "800"

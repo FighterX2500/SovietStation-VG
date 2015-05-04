@@ -89,6 +89,7 @@ obj/item/weapon/gun/energy/laser/retro
 
 /obj/item/weapon/gun/energy/laser/cyborg
 	var/charge_tick = 0
+	can_remove_cell = 0
 	New()
 		..()
 		processing_objects.Add(src)
@@ -112,8 +113,6 @@ obj/item/weapon/gun/energy/laser/retro
 
 		update_icon()
 		return 1
-/obj/item/weapon/gun/energy/laser/cyborg/unload_cell()
-	return 0
 
 
 /obj/item/weapon/gun/energy/lasercannon
