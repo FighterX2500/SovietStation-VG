@@ -142,14 +142,6 @@
 	name = "heart"
 	parent_organ = "chest"
 	removed_type = /obj/item/organ/heart
-	process()
-		..()
-		//Сердечко плохо работает, а значит кислород слишком плохо распростроняется по организму
-		if(is_bruised())
-			owner.oxyloss += 2
-		if(is_broken())
-			owner.oxyloss += 5
-
 /datum/organ/internal/lungs
 	name = "lungs"
 	parent_organ = "chest"
