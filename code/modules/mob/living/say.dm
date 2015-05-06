@@ -106,7 +106,7 @@ var/list/special_chat_symbols = list(":" = 1,"#" = 1,"." = 1)
 
 			message = copytext(message, 3)
 	if(!speak_lang)
-		src << "<span class = 'warning'>You can't speak! Teach language!</span>" // Не умеешь говорить
+		src << "<span class = 'warning'>ТЫ НЕ УМЕЕШЬ ГОВОРИТЬ, ПЁС!</span>" // Не умеешь говорить
 		return
 	if(speak_lang.flags & HIVEMIND)
 		speak_lang.broadcast(src,message,0)
@@ -162,6 +162,12 @@ var/list/special_chat_symbols = list(":" = 1,"#" = 1,"." = 1)
 
 	var/rendered = compose_message(src, language, message)
 	for(var/atom/movable/AM in listening)
+		for(var/mob/living/simple_animal/jirachi/M)
+			if(AM == M.remoteview_target)
+				M.Hear(rendered, src, language, message)
+		for(var/mob/living/carbon/human/H)
+			if(AM == H.remoteview_target)
+				H.Hear(rendered, src, language, message)
 		AM.Hear(rendered, src, language, message)
 
 	for(var/mob/M in listening_dead)
