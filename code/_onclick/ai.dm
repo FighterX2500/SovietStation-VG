@@ -96,10 +96,35 @@
 	I have no idea why it was in atoms.dm instead of respective files.
 */
 
-/atom/proc/AIShiftClick()
-	return
+/atom/proc/AIShiftClick(var/mob/living/silicon/ai/user)
+	user << "<span class='warning'>Сканирование объекта...</span>"
+	sleep (20)
+	if(!istype(src,/mob))
+		sleep (30)
+		src.examine(user)
+		return
+	//if(!ishuman(src))//Работаем только с людьми.
+	//	user << "<span class='danger'>Неопознанна&#255; форма жизни.</span>"
+	//	return
+	var/mob/living/carbon/human/H = src
+	var/datum/data/record/rec = null
+	for(var/datum/data/record/t in data_core.general)
+		if(t.fields["name"] == H.name)
+			rec = t
+			break
+	var/text
+	if(rec)
+		text += "Объект идентифицирован как [H.name].\n"
+	else
+		text += "<span class='warning'>Объект не идентифицирован, как член экипажа.</span>\n"
+	if(ishuman(H))
+		text += "<a href='?src=\ref[user];mdatabase=[H.name]'>Найти в медицинской базе данных.</a>\n"
+		text += "<a href='?src=\ref[user];sdatabase=[H.name]'>Найти в базе данных службы безопасности.</a>\n"
+	text += "<a href='?src=\ref[user];fullscan=\ref[H]'>Детальное сканирование.</a>"
+	text = sanitize_russian(text)
+	user << text
 
-/obj/machinery/door/airlock/AIShiftClick()  // Opens and closes doors!
+/obj/machinery/door/airlock/AIShiftClick(var/mob/living/silicon/ai/user)  // Opens and closes doors!
 	if(density)
 		Topic("aiEnable=7", list("aiEnable"="7"), 1) // 1 meaning no window (consistency!)
 	else
@@ -107,7 +132,7 @@
 	return
 
 
-/atom/proc/AICtrlClick()
+/atom/proc/AICtrlClick(var/mob/living/silicon/ai/user)
 	return
 
 /obj/machinery/door/airlock/AICtrlClick() // Bolts doors
