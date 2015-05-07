@@ -5,7 +5,7 @@
 	var/abstract = 0
 	var/item_state = null
 	var/wasbloody = 0
-	var/list/inhand_states = list("left_hand" = 'icons/mob/in-hand/left/zz_old_items_lefthand.dmi', "right_hand" = 'icons/mob/in-hand/right/zz_old_items_righthand.dmi')
+	var/list/inhand_states = list("left_hand" = 'icons/mob/in-hand/left/items_lefthand.dmi', "right_hand" = 'icons/mob/in-hand/right/items_righthand.dmi')
 	var/r_speed = 1.0
 	var/health = null
 	var/hitsound = null
