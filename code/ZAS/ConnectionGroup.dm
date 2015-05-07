@@ -151,7 +151,6 @@ Class Procs:
 	A.edges.Remove(src)
 	B.edges.Remove(src)
 	. = ..()
-
 /connection_edge/zone/tick()
 	if(A.invalid || B.invalid)
 		erase()
@@ -166,7 +165,12 @@ Class Procs:
 			return
 
 	//air_master.equalize(A, B)
-	ShareRatio(A.air,B.air,coefficient)
+	var/ratio
+	var/A_ratio = connecting_turfs.len / A.contents.len
+	var/B_ratio = connecting_turfs.len / B.contents.len
+	ratio = min(max(A_ratio + B_ratio, 0.6), 0.9)//Быдлокод. Не пытайтесь понять
+	ratio = 1 - ratio
+	ShareRatio(A.air,B.air,ratio)
 	air_master.mark_zone_update(A)
 	air_master.mark_zone_update(B)
 	//world << "equalized."
@@ -236,11 +240,11 @@ Class Procs:
 
 var/list/sharing_lookup_table = list(0.30, 0.40, 0.48, 0.54, 0.60, 0.66)
 
-proc/ShareRatio(datum/gas_mixture/A, datum/gas_mixture/B, connecting_tiles)
+proc/ShareRatio(datum/gas_mixture/A, datum/gas_mixture/B, ratio)
 	//Shares a specific ratio of gas between mixtures using simple weighted averages.
 	var
 		//WOOT WOOT TOUCH THIS AND YOU ARE A RETARD
-		ratio = sharing_lookup_table[6]
+		//ratio = sharing_lookup_table[6]
 		//WOOT WOOT TOUCH THIS AND YOU ARE A RETARD
 
 		size = max(1,A.group_multiplier)
@@ -268,37 +272,37 @@ proc/ShareRatio(datum/gas_mixture/A, datum/gas_mixture/B, connecting_tiles)
 		temp_avg = (A.temperature * full_heat_capacity + B.temperature * s_full_heat_capacity) / (full_heat_capacity + s_full_heat_capacity)
 
 	//WOOT WOOT TOUCH THIS AND YOU ARE A RETARD
-	if(sharing_lookup_table.len >= connecting_tiles) //6 or more interconnecting tiles will max at 42% of air moved per tick.
-		ratio = sharing_lookup_table[connecting_tiles]
+	//if(sharing_lookup_table.len >= connecting_tiles) //6 or more interconnecting tiles will max at 42% of air moved per tick.
+	//	ratio = sharing_lookup_table[connecting_tiles]
 	//WOOT WOOT TOUCH THIS AND YOU ARE A RETARD
 
-	A.oxygen = max(0, (A.oxygen - oxy_avg) * (1-ratio) + oxy_avg )
-	A.nitrogen = max(0, (A.nitrogen - nit_avg) * (1-ratio) + nit_avg )
-	A.carbon_dioxide = max(0, (A.carbon_dioxide - co2_avg) * (1-ratio) + co2_avg )
-	A.toxins = max(0, (A.toxins - plasma_avg) * (1-ratio) + plasma_avg )
+	A.oxygen = max(0, (A.oxygen - oxy_avg) * ratio + oxy_avg )
+	A.nitrogen = max(0, (A.nitrogen - nit_avg) * ratio + nit_avg )
+	A.carbon_dioxide = max(0, (A.carbon_dioxide - co2_avg) * ratio + co2_avg )
+	A.toxins = max(0, (A.toxins - plasma_avg) * ratio + plasma_avg )
 
-	A.temperature = max(0, (A.temperature - temp_avg) * (1-ratio) + temp_avg )
+	A.temperature = max(0, (A.temperature - temp_avg) * ratio + temp_avg )
 
-	B.oxygen = max(0, (B.oxygen - oxy_avg) * (1-ratio) + oxy_avg )
-	B.nitrogen = max(0, (B.nitrogen - nit_avg) * (1-ratio) + nit_avg )
-	B.carbon_dioxide = max(0, (B.carbon_dioxide - co2_avg) * (1-ratio) + co2_avg )
-	B.toxins = max(0, (B.toxins - plasma_avg) * (1-ratio) + plasma_avg )
+	B.oxygen = max(0, (B.oxygen - oxy_avg) * ratio + oxy_avg )
+	B.nitrogen = max(0, (B.nitrogen - nit_avg) * ratio + nit_avg )
+	B.carbon_dioxide = max(0, (B.carbon_dioxide - co2_avg) * ratio + co2_avg )
+	B.toxins = max(0, (B.toxins - plasma_avg) * ratio + plasma_avg )
 
-	B.temperature = max(0, (B.temperature - temp_avg) * (1-ratio) + temp_avg )
+	B.temperature = max(0, (B.temperature - temp_avg) * ratio + temp_avg )
 
 	for(var/datum/gas/G in A.trace_gases)
 		var/datum/gas/H = locate(G.type) in B.trace_gases
 		if(H)
 			var/G_avg = (G.moles*size + H.moles*share_size) / (size+share_size)
-			G.moles = (G.moles - G_avg) * (1-ratio) + G_avg
+			G.moles = (G.moles - G_avg) * ratio + G_avg
 
-			H.moles = (H.moles - G_avg) * (1-ratio) + G_avg
+			H.moles = (H.moles - G_avg) * ratio + G_avg
 		else
 			H = new G.type
 			B.trace_gases += H
 			var/G_avg = (G.moles*size) / (size+share_size)
-			G.moles = (G.moles - G_avg) * (1-ratio) + G_avg
-			H.moles = (H.moles - G_avg) * (1-ratio) + G_avg
+			G.moles = (G.moles - G_avg) * ratio + G_avg
+			H.moles = (H.moles - G_avg) * ratio + G_avg
 
 	for(var/datum/gas/G in B.trace_gases)
 		var/datum/gas/H = locate(G.type) in A.trace_gases
@@ -306,8 +310,8 @@ proc/ShareRatio(datum/gas_mixture/A, datum/gas_mixture/B, connecting_tiles)
 			H = new G.type
 			A.trace_gases += H
 			var/G_avg = (G.moles*size) / (size+share_size)
-			G.moles = (G.moles - G_avg) * (1-ratio) + G_avg
-			H.moles = (H.moles - G_avg) * (1-ratio) + G_avg
+			G.moles = (G.moles - G_avg) * ratio + G_avg
+			H.moles = (H.moles - G_avg) * ratio + G_avg
 
 	A.update_values()
 	B.update_values()
@@ -376,9 +380,8 @@ proc/ShareSpace(datum/gas_mixture/A, list/unsimulated_tiles, dbg_output)
 		return 0
 
 	unsim_heat_capacity = HEAT_CAPACITY_CALCULATION(unsim_oxygen, unsim_co2, unsim_nitrogen, unsim_plasma)
-
 	var
-		ratio = sharing_lookup_table[6]
+		ratio = 0.9
 
 		old_pressure = A.return_pressure()
 
@@ -399,8 +402,8 @@ proc/ShareSpace(datum/gas_mixture/A, list/unsimulated_tiles, dbg_output)
 	if((full_heat_capacity + unsim_heat_capacity) > 0)
 		temp_avg = (A.temperature * full_heat_capacity + unsim_temperature * unsim_heat_capacity) / (full_heat_capacity + unsim_heat_capacity)
 
-	if(sharing_lookup_table.len >= tileslen) //6 or more interconnecting tiles will max at 42% of air moved per tick.
-		ratio = sharing_lookup_table[tileslen]
+//	if(sharing_lookup_table.len >= tileslen) //6 or more interconnecting tiles will max at 42% of air moved per tick.
+//		ratio = sharing_lookup_table[tileslen]
 
 	if(dbg_output)
 		world << "Ratio: [ratio]"
