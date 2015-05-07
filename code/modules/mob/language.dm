@@ -24,8 +24,11 @@
 
 		if(istype(player,/mob/dead))
 			understood = 1
-		else if(player.can_speak_lang(src) && (check_special_condition(player) || player.universal_speak))
+		else if((player.can_speak_lang(src) && check_special_condition(player)) || player.universal_speak)
 			understood = 1
+
+		if(istype(player, /mob/living/simple_animal/jirachi))
+			understood = 0
 
 		if(understood)
 			if(!speaker_mask) speaker_mask = speaker.name
@@ -49,13 +52,19 @@
 	exclaim_verb = "exclaims"
 	key = list("0")
 	flags = RESTRICTED
+/datum/language/jirachispeak
+	name = "Jirachispeak"
+	desc = "Telepathy projected voice"
+	speech_verb = "telepatically says"
+	exclaim_verb = "telepatically cries"
+	ask_verb = "telepatically asks"
 /datum/language/clatter
 	name = "Clatter"
 	speech_verb = "says"
 	ask_verb = "asks"
 	exclaim_verb = "exclaims"
 	colour = "white"
-	key = list("ù","o")
+	key = list("Ã¹","o")
 	flags = WHITELISTED
 /datum/language/unathi
 	name = "Sinta'unathi"
@@ -64,7 +73,7 @@
 	ask_verb = "hisses"
 	exclaim_verb = "roars"
 	colour = "soghun"
-	key = list("à","f")
+	key = list("Ã ","f")
 	flags = WHITELISTED
 
 /datum/language/tajaran
@@ -74,7 +83,7 @@
 	ask_verb = "mrowls"
 	exclaim_verb = "yowls"
 	colour = "tajaran"
-	key = list("í","y")
+	key = list("Ã­","y")
 	flags = WHITELISTED
 
 /datum/language/skrell
@@ -84,7 +93,7 @@
 	ask_verb = "warbles"
 	exclaim_verb = "warbles"
 	colour = "skrell"
-	key = list("ê","r")
+	key = list("Ãª","r")
 	flags = WHITELISTED
 
 /datum/language/vox
@@ -94,7 +103,7 @@
 	ask_verb = "creels"
 	exclaim_verb = "SHRIEKS"
 	colour = "vox"
-	key = list("ì","v")
+	key = list("Ã¬","v")
 	flags = RESTRICTED
 
 /datum/language/diona
@@ -104,7 +113,7 @@
 	ask_verb = "creaks"
 	exclaim_verb = "rustles"
 	colour = "soghun"
-	key = list("î","j")
+	key = list("Ã®","j")
 	flags = RESTRICTED
 
 /datum/language/common/get_spoken_verb(var/msg_end)
@@ -137,6 +146,7 @@
 	colour = "rough"
 	key = list("3")
 
+
 /datum/language/xenocommon
 	name = "Xenomorph"
 	colour = "alien"
@@ -154,7 +164,7 @@
 	ask_verb = "hisses"
 	exclaim_verb = "hisses"
 	colour = "alien"
-	key = list("ô","a")
+	key = list("Ã´","a")
 	flags = RESTRICTED | HIVEMIND
 
 /datum/language/xenos/check_special_condition(var/mob/other)
@@ -171,7 +181,7 @@
 	desc = "Although they are normally wary and suspicious of each other, changelings can commune over a distance."
 	speech_verb = "says"
 	colour = "changeling"
-	key = list("ï","g")
+	key = list("Ã¯","g")
 	flags = RESTRICTED | HIVEMIND
 
 /datum/language/ling/broadcast(var/mob/living/speaker,var/message,var/speaker_mask)
@@ -187,7 +197,7 @@
 	ask_verb = "sings"
 	exclaim_verb = "sings"
 	colour = "alien"
-	key = list("÷","x")
+	key = list("Ã·","x")
 	flags = RESTRICTED | HIVEMIND
 
 /datum/language/animal
@@ -197,7 +207,7 @@
 	ask_verb = "speaks"
 	exclaim_verb = "speaks"
 	colour = "animal"
-	key = list("ë","k")
+	key = list("Ã«","k")
 	flags = RESTRICTED
 /datum/language/slime
 	name = "Slimespeak"
@@ -206,7 +216,7 @@
 	ask_verb = "chirps"
 	exclaim_verb = "chirps"
 	colour = "slime"
-	key = list("æ",";")
+	key = list("Ã¦",";")
 	flags = RESTRICTED | HIVEMIND
 /datum/language/corticalborer/broadcast(var/mob/living/speaker,var/message,var/speaker_mask)
 
@@ -228,7 +238,7 @@
 	speech_verb = "states"
 	ask_verb = "queries"
 	exclaim_verb = "declares"
-	key = list("è","b")
+	key = list("Ã¨","b")
 	flags = RESTRICTED | HIVEMIND
 	var/drone_only
 
@@ -261,7 +271,7 @@
 			continue
 		M.show_message("<i><span class='game say'><span class='name'>synthesised voice</span> <span class='message'>beeps, \"beep beep beep\"</span></span></i>",2)
 
-	//Òðàòèì çàðÿä áàòàðåè íà áîëòîâíþ
+	//Ã’Ã°Ã Ã²Ã¨Ã¬ Ã§Ã Ã°Ã¿Ã¤ Ã¡Ã Ã²Ã Ã°Ã¥Ã¨ Ã­Ã  Ã¡Ã®Ã«Ã²Ã®Ã¢Ã­Ã¾
 	if (isrobot(speaker))
 		var/mob/living/silicon/robot/R = speaker
 		if(R.cell)
@@ -311,6 +321,8 @@
 // Can we speak this language, as opposed to just understanding it?
 /atom/movable/proc/can_speak_lang(datum/language/speaking)
 	if(src.universal_speak)
+		return 1
+	if(istype(speaking, /datum/language/jirachispeak))
 		return 1
 	return (speaking in src.languages)
 /mob/living/carbon/human/can_speak_lang(datum/language/speaking)
