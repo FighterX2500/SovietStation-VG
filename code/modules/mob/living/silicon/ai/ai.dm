@@ -35,6 +35,9 @@ var/list/ai_list = list()
 	var/obj/item/device/multitool/aiMulti = null
 	var/custom_sprite = 0 //For our custom sprites
 	var/obj/item/device/camera/ai_camera/aicamera = null
+	//ЭТО ПТИЦА? ЭТО САМОЛЕТ?! НЕТ! ЭТО БЫДЛОКОД!!!
+	var/obj/machinery/computer/med_data/aimed = null
+	var/obj/machinery/computer/secure_data/aisec = null
 //Hud stuff
 
 	//MALFUNCTION
@@ -100,6 +103,16 @@ var/list/ai_list = list()
 
 	aiMulti = new(src)
 	aicamera = new/obj/item/device/camera/ai_camera(src)
+
+	aimed = new/obj/machinery/computer/med_data(src)
+	aimed.Topic(null,list("login" = 1))
+	verbs += /mob/living/silicon/ai/proc/med_computer
+	//aimed.usr = src
+
+	aisec = new/obj/machinery/computer/secure_data(src)
+	aisec.Topic(null,list("choice" = "Log In"))
+	verbs += /mob/living/silicon/ai/proc/sec_computer
+	//aisec._using = src
 
 	if (istype(loc, /turf))
 		verbs.Add(/mob/living/silicon/ai/proc/ai_network_change, \
@@ -417,7 +430,33 @@ var/list/ai_list = list()
 				continue
 
 		return
-
+	if(href_list["mdatabase"])
+		set_machine(aimed)
+		aimed.attack_ai(src)
+		aimed.Topic(null, list("search" = href_list["mdatabase"]))
+		return
+	if(href_list["sdatabase"])
+		set_machine(aisec)
+		aisec.attack_ai(src)
+		aisec.Topic(null,list("choice" = "Search Records","search_data" = href_list["sdatabase"]))
+		return
+	if(href_list["fullscan"])
+		var/mob/living/hum = null
+		for(var/mob/living/M in living_mob_list)
+			if("\ref[M]" == href_list["fullscan"])
+				hum = M
+				break
+		if(!hum)
+			return
+		if(!cameranet.checkCameraVis(hum))
+			src << sanitize_russian("<span class='warning'>Объект находится вне поля зрения камер. Сканирование невозможно.</span>")
+			return
+		src << "<span class='warning'>Сбор данных...</span>"
+		sleep(50)
+		src << "<span class='warning'>Обработка...</span>"
+		sleep(50)
+		hum.examine(src)
+		return
 	return
 
 /mob/living/silicon/ai/meteorhit(obj/O as obj)
@@ -728,7 +767,17 @@ var/list/ai_list = list()
 		src << "\blue You are already in your Main Core."
 		return
 	apc.malfvacate()
-
+//Доступ к базам данных
+/mob/living/silicon/ai/proc/med_computer()
+	set category = "AI Commands"
+	set name = "Medical Records"
+	set_machine(aimed)
+	aimed.attack_ai(src)
+/mob/living/silicon/ai/proc/sec_computer()
+	set category = "AI Commands"
+	set name = "Security Records"
+	set_machine(aisec)
+	aisec.attack_ai(src)
 //Toggles the luminosity and applies it by re-entereing the camera.
 /mob/living/silicon/ai/proc/toggle_camera_light()
 	if(stat != CONSCIOUS)

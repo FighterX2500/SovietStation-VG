@@ -438,7 +438,11 @@
 					src.active2.fields[text("com_[]", href_list["del_c"])] = "<B>Deleted</B>"
 
 			if (href_list["search"])
-				var/t1 = input("Search String: (Name, DNA, or ID)", "Med. records", null, null)  as text
+				var/t1
+				if(href_list["search"] != 1)
+					t1 = href_list["search"]
+				else
+					t1 = input("Search String: (Name, DNA, or ID)", "Med. records", null, null)  as text
 				if ((!( t1 ) || usr.stat || !( src.authenticated ) || usr.restrained() || ((!in_range(src, usr)) && (!istype(usr, /mob/living/silicon)))))
 					return
 				src.active1 = null
