@@ -114,7 +114,7 @@
 			break
 	var/text
 	if(rec)
-		text += "Объект идентифицирован как [H.name].\n"
+		text += "Объект идентифицирован как [H.name], занимающий должность [rec.fields["rank"]].\n"
 	else
 		text += "<span class='warning'>Объект не идентифицирован, как член экипажа.</span>\n"
 	if(ishuman(H))
