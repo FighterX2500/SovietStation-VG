@@ -150,9 +150,7 @@ var/global/list/damage_icon_parts = list()
 //constructs damage icon for each organ from mask * damage field and saves it in our overlays_ lists
 /mob/living/carbon/human/UpdateDamageIcon(var/update_icons=1)
 	// first check whether something actually changed about damage appearance
-	var/damage_appearance = ""
-
-	for(var/datum/organ/external/O in organs)
+	/*for(var/datum/organ/external/O in organs)
 		if(O.status & ORGAN_DESTROYED) damage_appearance += "d"
 		else
 			damage_appearance += O.damage_state
@@ -162,10 +160,9 @@ var/global/list/damage_icon_parts = list()
 		return
 
 	previous_damage_appearance = damage_appearance
+	*/
 
-	var/icon/standing = icon('icons/mob/dam_human.dmi', "00")
-
-	var/image/standing_image = image("icon" = standing)
+	var/image/standing_image = image('icons/mob/dam_human.dmi', "blank")
 
 	// blend the individual damage states with our icons
 	for(var/datum/organ/external/O in organs)
@@ -178,11 +175,10 @@ var/global/list/damage_icon_parts = list()
 			DI = get_damage_icon_part(O.damage_state, O.icon_name, (species.blood_color == "#A10808" ? "" : species.blood_color))
 
 			standing_image.overlays += DI
-
-	overlays -= obj_overlays[DAMAGE_LAYER]
 	var/obj/Overlays/O = obj_overlays[DAMAGE_LAYER]
-	O.icon = standing_image
-	O.icon_state = standing_image.icon_state
+	overlays -= O
+	O.overlays.len = 0
+	O.overlays += standing_image
 	overlays += O
 	obj_overlays[DAMAGE_LAYER] = O
 	//overlays_standing[DAMAGE_LAYER]	= standing_image
