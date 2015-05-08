@@ -1,5 +1,5 @@
 /obj/item/device/taperecorder
-	desc = "A device that can record up to an hour of dialogue and play it back. It cant automatically translate the content in playback."
+	desc = "A device that can record up to an hour of dialogue and play it back."
 	name = "universal recorder"
 	icon_state = "taperecorderidle"
 	item_state = "analyzer"
@@ -11,7 +11,7 @@
 	var/timerecorded = 0.0
 	var/playsleepseconds = 0.0
 	var/list/storedinfo = new/list(0,0)
-	var/list/storedinforec = new/list() // Запись звука на обычном языке
+	var/list/storedinforec = new/list()
 	var/list/timestamp = new/list()
 	var/canprint = 1
 	flags = FPRINT | HEAR
@@ -32,10 +32,10 @@
 		"time" = time2text(timerecorded*10,"mm:ss"),
 		"verb" = verb,
 		)
-		if (message_langs == all_languages["Galactic Common"]) // Если разговор на обычом то записывает
+		if (message_langs == all_languages["Galactic Common"]) 
 		 storedinforec += "\[[time2text(timerecorded*10,"mm:ss")]\] [strip_html_properly(html_decode(raw_message))]"
-		else	// Если разговор на другом языке - не может распознать для распечатки
-			storedinforec += "\[[time2text(timerecorded*10,"mm:ss")]\] ["Íå óäàëîñü ðàñïîçíàòü ðå÷ü"]"
+		else
+			storedinforec += "\[[time2text(timerecorded*10,"mm:ss")]\] ["Unable to translate"]"
 		return
 		//storedinfo += "\[[time2text(timerecorded*10,"mm:ss")]\] [M.name] [verb], \"[msg]\""
 		return
@@ -225,7 +225,7 @@
 	for(var/i=1,storedinforec.len >= i,i++)
 		t1 += "[storedinforec[i]]<BR>"
 	P.info = t1
-	P.name = "Распечатка"
+	P.name = "Transcript"
 	canprint = 0
 	sleep(300)
 	canprint = 1
