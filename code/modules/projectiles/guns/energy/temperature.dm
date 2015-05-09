@@ -47,6 +47,19 @@
 		emagged = 1
 		user << "<span class='caution'>You double the gun's temperature cap ! Targets hit by searing beams will burst into flames !</span>"
 		desc = "A gun that changes the body temperature of its targets. Its temperature cap has been hacked"
+	if(istype(W,/obj/item/weapon/cell))
+		if(!power_supply)
+			if(user)
+				user.drop_item(W)
+				usr << "<span class='notice'>You put cell into \the [src].</span>"
+			W.loc = src
+			power_supply = W
+			W.update_icon()
+			update_icon()
+			return 1
+		else
+			usr << "<span class='notice'>Already cell inside \the [src].</span>"
+			return 1
 
 /obj/item/weapon/gun/energy/temperature/Topic(href, href_list)
 	if (..())

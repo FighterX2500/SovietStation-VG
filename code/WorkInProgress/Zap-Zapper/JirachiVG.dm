@@ -15,10 +15,8 @@
 	response_harm = "punches"
 	harm_intent_damage = 15
 	speed = 0
-	mob_type_lang = list("Galactic Common","Clatter","Sinta'unathi","Siik'tajr","Skrellian","Vox-pidgin","Rootspeak","Sol Common","Tradeband","Gutter","Xenomorph","Animalspeak","Slimespeak")
-	languages = list("Galactic Common","Animalspeak")
+	universal_speak = 1 //Jirachi can understand anyone. But, it still can't hear HIVEMIND languages
 	unacidable = 1
-	status_flags = 1
 	pass_flags = PASSTABLE
 	var/energy = 1000
 	var/max_energy = 1000
@@ -76,7 +74,6 @@
 	energy = min(energy + gain, max_energy)
 
 
-
 /mob/living/simple_animal/jirachi/Die()
 	..()
 	new /obj/effect/decal/cleanable/ash(src.loc)
@@ -85,6 +82,10 @@
 			M.show_message("\red [src] starts burning with bright fire from inside, before turning into ashes") //Poor Jirachi :(
 	ghostize()
 	del src
+
+/mob/living/simple_animal/jirachi/New()
+	src.verbs -= /mob/verb/check_languages		//Åìó ýòîò âåðá íå íóæåí, îí è òàê âñåõ ïîíèìàåò. À åñëè êàêîé-ëèáî èãðîê íàæì¸ò è ïîïûòàåòñÿ ñìåíèòü Äæèðà÷è ÿçûê - íà÷í¸òñÿ ðåàëüíîå äåðüìî.
+	src.add_language("Jirachispeak")
 
 
 
@@ -158,13 +159,7 @@
 		src << "\red I can't speak while my mind is not in my body!"
 		return
 
-	var/ending = copytext(message, length(message))
-	if(ending=="!")
-		speak_emote = list("telepatically cries")
-	else if(ending=="?")
-		speak_emote = list("telepatically asks")
-	else
-		speak_emote = list("telepatically says")
+
 	..(message, speaking, verb, alt_name, italics, message_range, used_radios)
 
 
@@ -212,6 +207,11 @@
 		spark_system.start()
 		playsound(src.loc, 'sound/effects/sparks2.ogg', 50, 1)
 
+		if(get_dist(src, T) >= 8)
+			energy -= 200
+		else
+			energy -= 100
+
 		src.loc = T
 
 		var/datum/effect/effect/system/spark_spread/spark = new /datum/effect/effect/system/spark_spread()
@@ -220,12 +220,11 @@
 
 		used_steleport = world.time
 
-	if(get_dist(src, T) >= 8)
-		energy -= 200
-
 	else
 		src << "\red I can't teleport into solid matter."
 		return
+
+
 
 
 //Forcewall
