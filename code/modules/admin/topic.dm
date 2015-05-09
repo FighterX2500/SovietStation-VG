@@ -746,6 +746,27 @@
 			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Vox Raider;jobban4=\ref[M]'><font color=red>Vox&nbsp;Raider</font></a></td>"
 		else
 			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Vox Raider;jobban4=\ref[M]'>Vox&nbsp;Raider</a></td>"
+		
+		jobs += "</tr><tr align='center'>" //Breaking it up so it fits nicer on the screen every 5 entries
+
+		//Alien
+		if(jobban_isbanned(M, "alien candidate") || isbanned_dept)
+			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=alien candidate;jobban4=\ref[M]'><font color=red>[replacetext("Alien", " ", "&nbsp")]</font></a></td>"
+		else
+			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=alien candidate;jobban4=\ref[M]'>[replacetext("Alien", " ", "&nbsp")]</a></td>"
+
+		//Vampire
+		if(jobban_isbanned(M, "vampire") || isbanned_dept)
+			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=vampire;jobban4=\ref[M]'><font color=red>[replacetext("Vampire", " ", "&nbsp")]</font></a></td>"
+		else
+			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=vampire;jobban4=\ref[M]'>[replacetext("Vampire", " ", "&nbsp")]</a></td>"
+
+		//Blob
+		if(jobban_isbanned(M, "Blob") || isbanned_dept)
+			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Blob;jobban4=\ref[M]'><font color=red>[replacetext("Blob", " ", "&nbsp")]</font></a></td>"
+		else
+			jobs += "<td width='20%'><a href='?src=\ref[src];jobban3=Blob;jobban4=\ref[M]'>[replacetext("Blob", " ", "&nbsp")]</a></td>"
+
 
 /*		//Malfunctioning AI	//Removed Malf-bans because they're a pain to impliment
 		if(jobban_isbanned(M, "malf AI") || isbanned_dept)
