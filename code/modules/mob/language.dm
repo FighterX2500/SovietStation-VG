@@ -58,13 +58,14 @@
 	speech_verb = "telepatically says"
 	exclaim_verb = "telepatically cries"
 	ask_verb = "telepatically asks"
+	flags = RESTRICTED
 /datum/language/clatter
 	name = "Clatter"
 	speech_verb = "says"
 	ask_verb = "asks"
 	exclaim_verb = "exclaims"
 	colour = "white"
-	key = list("Ã¹","o")
+	key = list("ù","o")
 	flags = WHITELISTED
 /datum/language/unathi
 	name = "Sinta'unathi"
@@ -73,7 +74,7 @@
 	ask_verb = "hisses"
 	exclaim_verb = "roars"
 	colour = "soghun"
-	key = list("Ã ","f")
+	key = list("à","f")
 	flags = WHITELISTED
 
 /datum/language/tajaran
@@ -83,7 +84,7 @@
 	ask_verb = "mrowls"
 	exclaim_verb = "yowls"
 	colour = "tajaran"
-	key = list("Ã­","y")
+	key = list("í","y")
 	flags = WHITELISTED
 
 /datum/language/skrell
@@ -93,7 +94,7 @@
 	ask_verb = "warbles"
 	exclaim_verb = "warbles"
 	colour = "skrell"
-	key = list("Ãª","r")
+	key = list("ê","r")
 	flags = WHITELISTED
 
 /datum/language/vox
@@ -103,7 +104,7 @@
 	ask_verb = "creels"
 	exclaim_verb = "SHRIEKS"
 	colour = "vox"
-	key = list("Ã¬","v")
+	key = list("ì","v")
 	flags = RESTRICTED
 
 /datum/language/diona
@@ -113,7 +114,7 @@
 	ask_verb = "creaks"
 	exclaim_verb = "rustles"
 	colour = "soghun"
-	key = list("Ã®","j")
+	key = list("î","j")
 	flags = RESTRICTED
 
 /datum/language/common/get_spoken_verb(var/msg_end)
@@ -164,7 +165,7 @@
 	ask_verb = "hisses"
 	exclaim_verb = "hisses"
 	colour = "alien"
-	key = list("Ã´","a")
+	key = list("ô","a")
 	flags = RESTRICTED | HIVEMIND
 
 /datum/language/xenos/check_special_condition(var/mob/other)
@@ -181,7 +182,7 @@
 	desc = "Although they are normally wary and suspicious of each other, changelings can commune over a distance."
 	speech_verb = "says"
 	colour = "changeling"
-	key = list("Ã¯","g")
+	key = list("ï","g")
 	flags = RESTRICTED | HIVEMIND
 
 /datum/language/ling/broadcast(var/mob/living/speaker,var/message,var/speaker_mask)
@@ -197,7 +198,7 @@
 	ask_verb = "sings"
 	exclaim_verb = "sings"
 	colour = "alien"
-	key = list("Ã·","x")
+	key = list("÷","x")
 	flags = RESTRICTED | HIVEMIND
 
 /datum/language/animal
@@ -207,7 +208,7 @@
 	ask_verb = "speaks"
 	exclaim_verb = "speaks"
 	colour = "animal"
-	key = list("Ã«","k")
+	key = list("ë","k")
 	flags = RESTRICTED
 /datum/language/slime
 	name = "Slimespeak"
@@ -216,7 +217,7 @@
 	ask_verb = "chirps"
 	exclaim_verb = "chirps"
 	colour = "slime"
-	key = list("Ã¦",";")
+	key = list("æ",";")
 	flags = RESTRICTED | HIVEMIND
 /datum/language/corticalborer/broadcast(var/mob/living/speaker,var/message,var/speaker_mask)
 
@@ -238,7 +239,7 @@
 	speech_verb = "states"
 	ask_verb = "queries"
 	exclaim_verb = "declares"
-	key = list("Ã¨","b")
+	key = list("è","b")
 	flags = RESTRICTED | HIVEMIND
 	var/drone_only
 
