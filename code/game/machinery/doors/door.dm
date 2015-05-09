@@ -340,8 +340,8 @@
 /obj/machinery/door/CanPass(atom/movable/mover, turf/target, height=1.5, air_group = 0)
 	if(air_group)
 		if(blockair)
-			return 0
-		return 1
+			return 1
+		return 0
 	if(istype(mover) && mover.checkpass(PASSGLASS))
 		return !opacity
 	return !density
