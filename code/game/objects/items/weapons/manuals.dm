@@ -180,7 +180,7 @@
 				<body>
 
 				<H3>How to Clone People</H3>
-				So thereís 50 dead people lying on the floor, chairs are spinning like no tomorrow and you havenít the foggiest idea of what to do? Not to worry! This guide is intended to teach you how to clone people and how to do it right, in a simple step-by-step process! If at any point of the guide you have a mental meltdown, genetics probably isnít for you and you should get a job-change as soon as possible before youíre sued for malpractice.
+				So there‚Äôs 50 dead people lying on the floor, chairs are spinning like no tomorrow and you haven‚Äôt the foggiest idea of what to do? Not to worry! This guide is intended to teach you how to clone people and how to do it right, in a simple step-by-step process! If at any point of the guide you have a mental meltdown, genetics probably isn‚Äôt for you and you should get a job-change as soon as possible before you‚Äôre sued for malpractice.
 
 				<ol>
 					<li><a href='#1'>Acquire body</a></li>
@@ -200,36 +200,36 @@
 				This is pretty much vital for the process because without a body, you cannot clone it. Usually, bodies will be brought to you, so you do not need to worry so much about this step. If you already have a body, great! Move on to the next step.
 
 				<a name='2'><H4>Step 2: Strip body</H4>
-				The cloning machine does not like abiotic items. What this means is you canít clone anyone if theyíre wearing clothes, so take all of it off. If itís just one person, itís courteous to put their possessions in the closet. If you have about seven people awaiting cloning, just leave the piles where they are, but donít mix them around and for Godís sake donít let people in to steal them.
+				The cloning machine does not like abiotic items. What this means is you can‚Äôt clone anyone if they‚Äôre wearing clothes, so take all of it off. If it‚Äôs just one person, it‚Äôs courteous to put their possessions in the closet. If you have about seven people awaiting cloning, just leave the piles where they are, but don‚Äôt mix them around and for God‚Äôs sake don‚Äôt let people in to steal them.
 
 				<a name='3'><H4>Step 3: Put body in cloning machine</H4>
 				Grab the body and then put it inside the DNA modifier. If you cannot do this, then you messed up at Step 2. Go back and check you took EVERYTHING off - a commonly missed item is their headset.
 
 				<a name='4'><H4>Step 4: Scan body</H4>
-				Go onto the computer and scan the body by pressing ëScan - <Subject Name Here>í. If youíre successful, they will be added to the records (note that this can be done at any time, even with living people, so that they can be cloned without a body in the event that they are lying dead on port solars and didnët turn on their suit sensors)! If not, and it says ìError: Mental interface failure.î, then they have left their bodily confines and are one with the spirits. If this happens, just shout at them to get back in their body, click ëRefreshë and try scanning them again. If thereís no success, threaten them with gibbing. Still no success? Skip over to Step 7 and donët continue after it, as you have an unresponsive body and it cannot be cloned. If you got ìError: Unable to locate valid genetic data.ì, you are trying to clone a monkey - start over.
+				Go onto the computer and scan the body by pressing ‚ÄòScan - <Subject Name Here>‚Äô. If you‚Äôre successful, they will be added to the records (note that this can be done at any time, even with living people, so that they can be cloned without a body in the event that they are lying dead on port solars and didn‚Äòt turn on their suit sensors)! If not, and it says ‚ÄúError: Mental interface failure.‚Äù, then they have left their bodily confines and are one with the spirits. If this happens, just shout at them to get back in their body, click ‚ÄòRefresh‚Äò and try scanning them again. If there‚Äôs no success, threaten them with gibbing. Still no success? Skip over to Step 7 and don‚Äòt continue after it, as you have an unresponsive body and it cannot be cloned. If you got ‚ÄúError: Unable to locate valid genetic data.‚Äú, you are trying to clone a monkey - start over.
 
 				<a name='5'><H4>Step 5: Clone body</H4>
-				Now that the body has a record, click íView Recordsí, click the subjectís name, and then click ëCloneí to start the cloning process. Congratulations! Youíre halfway there. Remember not to ëEjectí the cloning pod as this will kill the developing clone and youíll have to start the process again.
+				Now that the body has a record, click ‚ÄôView Records‚Äô, click the subject‚Äôs name, and then click ‚ÄòClone‚Äô to start the cloning process. Congratulations! You‚Äôre halfway there. Remember not to ‚ÄòEject‚Äô the cloning pod as this will kill the developing clone and you‚Äôll have to start the process again.
 
 				<a name='6'><H4>Step 6: Get clean SEs for body</H4>
-				Cloning is a finicky and unreliable process. Whilst it will most certainly bring someone back from the dead, they can have any number of nasty disabilities given to them during the cloning process! For this reason, you need to prepare a clean, defect-free Structural Enzyme (SE) injection for when theyíre done. If youíre a competent Geneticist, you will already have one ready on your working computer. If, for any reason, you do not, then eject the body from the DNA modifier (NOT THE CLONING POD) and take it next door to the Genetics research room. Put the body in one of those DNA modifiers and then go onto the console. Go into View/Edit/Transfer Buffer, find an open slot and click ìSEì to save it. Then click ëInjectorí to get the SEs in syringe form. Put this in your pocket or something for when the body is done.
+				Cloning is a finicky and unreliable process. Whilst it will most certainly bring someone back from the dead, they can have any number of nasty disabilities given to them during the cloning process! For this reason, you need to prepare a clean, defect-free Structural Enzyme (SE) injection for when they‚Äôre done. If you‚Äôre a competent Geneticist, you will already have one ready on your working computer. If, for any reason, you do not, then eject the body from the DNA modifier (NOT THE CLONING POD) and take it next door to the Genetics research room. Put the body in one of those DNA modifiers and then go onto the console. Go into View/Edit/Transfer Buffer, find an open slot and click ‚ÄúSE‚Äú to save it. Then click ‚ÄòInjector‚Äô to get the SEs in syringe form. Put this in your pocket or something for when the body is done.
 
 				<a name='7'><H4>Step 7: Put body in morgue</H4>
-				Now that the cloning process has been initiated and you have some clean Structural Enzymes, you no longer need the body! Drag it to the morgue and tell the Chef over the radio that they have some fresh meat waiting for them in there. To put a body in a morgue bed, simply open the tray, grab the body, put it on the open tray, then close the tray again. Use one of the nearby pens to label the bed ìCHEF MEATî in order to avoid confusion.
+				Now that the cloning process has been initiated and you have some clean Structural Enzymes, you no longer need the body! Drag it to the morgue and tell the Chef over the radio that they have some fresh meat waiting for them in there. To put a body in a morgue bed, simply open the tray, grab the body, put it on the open tray, then close the tray again. Use one of the nearby pens to label the bed ‚ÄúCHEF MEAT‚Äù in order to avoid confusion.
 
 				<a name='8'><H4>Step 8: Await cloned body</H4>
-				Now go back to the lab and wait for your patient to be cloned. It wonít be long now, I promise.
+				Now go back to the lab and wait for your patient to be cloned. It won‚Äôt be long now, I promise.
 
 				<a name='9'><H4>Step 9: Use the clean SE injector on person</H4>
-				Has your body been cloned yet? Great! As soon as the guy pops out, grab your injector and jab it in them. Once youíve injected them, they now have clean Structural Enzymes and their defects, if any, will disappear in a short while.
+				Has your body been cloned yet? Great! As soon as the guy pops out, grab your injector and jab it in them. Once you‚Äôve injected them, they now have clean Structural Enzymes and their defects, if any, will disappear in a short while.
 
 				<a name='10'><H4>Step 10: Give person clothes back</H4>
-				Obviously the person will be naked after they have been cloned. Provided you werenít an irresponsible little shit, you should have protected their possessions from thieves and should be able to give them back to the patient. No matter how cruel you are, itís simply against protocol to force your patients to walk outside naked.
+				Obviously the person will be naked after they have been cloned. Provided you weren‚Äôt an irresponsible little shit, you should have protected their possessions from thieves and should be able to give them back to the patient. No matter how cruel you are, it‚Äôs simply against protocol to force your patients to walk outside naked.
 
 				<a name='11'><H4>Step 11: Send person on their way</H4>
-				Give the patient one last check-over - make sure they donít still have any defects and that they have all their possessions. Ask them how they died, if they know, so that you can report any foul play over the radio. Once youíre done, your patient is ready to go back to work! Chances are they do not have Medbay access, so you should let them out of Genetics and the Medbay main entrance.
+				Give the patient one last check-over - make sure they don‚Äôt still have any defects and that they have all their possessions. Ask them how they died, if they know, so that you can report any foul play over the radio. Once you‚Äôre done, your patient is ready to go back to work! Chances are they do not have Medbay access, so you should let them out of Genetics and the Medbay main entrance.
 
-				<p>If youíve gotten this far, congratulations! You have mastered the art of cloning. Now, the real problem is how to resurrect yourself after that traitor had his way with you for cloning his target.
+				<p>If you‚Äôve gotten this far, congratulations! You have mastered the art of cloning. Now, the real problem is how to resurrect yourself after that traitor had his way with you for cloning his target.
 
 
 
@@ -575,7 +575,7 @@
 	dat = {"
 		<html>
 			<body>
-				<iframe width="100%" height="100%" src="http://ss13.nexisonline.net/w/index.php?title=Space_Law&printable=yes"></iframe>
+					<iframe width="100%" height="100%" src="http://wiki.sovietstation.ru/index.php?title=%D0%9A%D0%BE%D1%81%D0%BC%D0%BE%D0%B7%D0%B0%D0%BA%D0%BE%D0%BD&printable=yes"></iframe>
 			</body>
 
 		</html>
