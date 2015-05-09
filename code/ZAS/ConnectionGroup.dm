@@ -168,14 +168,14 @@ Class Procs:
 	var/ratio
 	var/A_ratio = connecting_turfs.len / A.contents.len
 	var/B_ratio = connecting_turfs.len / B.contents.len
-	ratio = min(max(A_ratio + B_ratio, 0.6), 0.9)//Быдлокод. Не пытайтесь понять
+	ratio = min(max(A_ratio + B_ratio, 0.3), 0.9)//Быдлокод. Не пытайтесь понять
 	ratio = 1 - ratio
+	var/differential = A.air.return_pressure() - B.air.return_pressure()
 	ShareRatio(A.air,B.air,ratio)
 	air_master.mark_zone_update(A)
 	air_master.mark_zone_update(B)
 	//world << "equalized."
 
-	var/differential = A.air.return_pressure() - B.air.return_pressure()
 	if(abs(differential) < zas_settings.Get(/datum/ZAS_Setting/airflow_lightest_pressure)) return
 
 	var/list/attracted
@@ -229,10 +229,10 @@ Class Procs:
 		return
 	//world << "[id]: Tick [air_master.current_cycle]: To [B]!"
 	//A.air.mimic(B, coefficient)
+	var/differential = A.air.return_pressure() - air.return_pressure()
 	ShareSpace(A.air,air,dbg_out)
 	air_master.mark_zone_update(A)
 
-	var/differential = A.air.return_pressure() - air.return_pressure()
 	if(abs(differential) < zas_settings.Get(/datum/ZAS_Setting/airflow_lightest_pressure)) return
 
 	var/list/attracted = A.movables()
@@ -381,7 +381,7 @@ proc/ShareSpace(datum/gas_mixture/A, list/unsimulated_tiles, dbg_output)
 
 	unsim_heat_capacity = HEAT_CAPACITY_CALCULATION(unsim_oxygen, unsim_co2, unsim_nitrogen, unsim_plasma)
 	var
-		ratio = 0.9
+		ratio = 0.75
 
 		old_pressure = A.return_pressure()
 
