@@ -1,5 +1,5 @@
 /obj/item/device/taperecorder
-	desc = "A device that can record up to an hour of dialogue and play it back. It automatically translates the content in playback."
+	desc = "A device that can record up to an hour of dialogue and play it back."
 	name = "universal recorder"
 	icon_state = "taperecorderidle"
 	item_state = "analyzer"
@@ -11,6 +11,7 @@
 	var/timerecorded = 0.0
 	var/playsleepseconds = 0.0
 	var/list/storedinfo = new/list(0,0)
+	var/list/storedinforec = new/list()
 	var/list/timestamp = new/list()
 	var/canprint = 1
 	flags = FPRINT | HEAR
@@ -31,6 +32,11 @@
 		"time" = time2text(timerecorded*10,"mm:ss"),
 		"verb" = verb,
 		)
+		if (message_langs == all_languages["Galactic Common"]) 
+		 storedinforec += "\[[time2text(timerecorded*10,"mm:ss")]\] [strip_html_properly(html_decode(raw_message))]"
+		else
+			storedinforec += "\[[time2text(timerecorded*10,"mm:ss")]\] ["Unable to translate"]"
+		return
 		//storedinfo += "\[[time2text(timerecorded*10,"mm:ss")]\] [M.name] [verb], \"[msg]\""
 		return
 
@@ -202,7 +208,6 @@
 /obj/item/device/taperecorder/verb/print_transcript()
 	set name = "Print Transcript"
 	set category = "Object"
-	usr << "\red This function is не работает!"
 	if(usr.stat)
 		return
 	if(emagged == 1)
@@ -217,8 +222,8 @@
 	usr << "<span class='notice'>Transcript printed.</span>"
 	var/obj/item/weapon/paper/P = new /obj/item/weapon/paper(get_turf(src))
 	var/t1 = "<B>Transcript:</B><BR><BR>"
-	for(var/i=1,storedinfo.len >= i,i++)
-		t1 += "[storedinfo[i]]<BR>"
+	for(var/i=1,storedinforec.len >= i,i++)
+		t1 += "[storedinforec[i]]<BR>"
 	P.info = t1
 	P.name = "Transcript"
 	canprint = 0
