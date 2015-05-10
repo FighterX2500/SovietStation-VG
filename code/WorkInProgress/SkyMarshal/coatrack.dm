@@ -13,7 +13,7 @@
 		if("Coat")
 			if(coat)
 				if(!user.get_active_hand())
-					user.put_in_hand(coat)
+					user.put_in_hands(coat)
 				else
 					coat.loc = get_turf(user)
 				coat = null
@@ -28,7 +28,7 @@
 		if("Hat")
 			if(hat)
 				if(!user.get_active_hand())
-					user.put_in_hand(hat)
+					user.put_in_hands(hat)
 				else
 					hat.loc = get_turf(user)
 				hat = null
