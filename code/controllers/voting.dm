@@ -11,6 +11,7 @@ var/global/datum/controller/vote/vote = new()
 	var/list/voting = list()
 	var/list/current_votes = list()
 	var/list/ismapvote
+	var/changed = 1
 	var/chosen_map
 
 /datum/controller/vote/New()
@@ -39,12 +40,13 @@ var/global/datum/controller/vote/vote = new()
 			result()
 			for(var/client/C in voting)
 				if(C)
-					C << browse(null,"window=vote;can_close=0")
+					C << browse(null,"window=vote")
 			reset()
-		else
+		else if(changed)
 			for(var/client/C in voting)
 				if(C)
-					C << browse(vote.interface(C),"window=vote;can_close=0")
+					C << browse(vote.interface(C),"window=vote")
+			changed = 0
 
 			//voting.Cut()
 
@@ -173,6 +175,7 @@ var/global/datum/controller/vote/vote = new()
 			voted += usr.ckey
 			choices[choices[vote]]++	//check this
 			current_votes[ckey] = vote
+			changed = 1
 			return vote
 	return 0
 
