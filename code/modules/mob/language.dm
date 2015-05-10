@@ -12,6 +12,7 @@
 	var/colour = "body"         // CSS style to use for strings in this language.
 	var/list/key = "x"                    // Character used to speak in language eg. :o for Unathi.
 	var/flags = 0                    // Various language flags.
+	var/mob_verb = 0 //1 - использовать верб моба. 0 - использовать верб языка
 //	var/native                       // If set, non-native speakers will have trouble speaking.
 
 /datum/language/proc/broadcast(var/mob/living/speaker,var/message,var/speaker_mask)
@@ -24,18 +25,23 @@
 
 		if(istype(player,/mob/dead))
 			understood = 1
-		else if(player.can_speak_lang(src) && (check_special_condition(player) || player.universal_speak))
+		else if((player.can_speak_lang(src) && check_special_condition(player)) || player.universal_speak)
 			understood = 1
+
+		if(istype(player, /mob/living/simple_animal/jirachi))
+			understood = 0
 
 		if(understood)
 			if(!speaker_mask) speaker_mask = speaker.name
-			var/msg = "<i><span class='[colour]'>[name], <span class='name'>[speaker_mask]</span> [src.get_spoken_verb(copytext(message, length(message)))], \"[message]\"</span></i>"
+			var/msg = "<i><span class='[colour]'>[name], <span class='name'>[speaker_mask]</span> [src.get_spoken_verb(speaker, copytext(message, length(message)))], \"[message]\"</span></i>"
 			player << "[msg]"
 
 /datum/language/proc/check_special_condition(var/mob/other)
 	return 1
 
-/datum/language/proc/get_spoken_verb(var/msg_end)
+/datum/language/proc/get_spoken_verb(mob/living/speaker, var/msg_end)
+	if(mob_verb && istype(speaker) && speaker.speak_emote.len)
+		return pick(speaker.speak_emote)
 	switch(msg_end)
 		if("!")
 			return exclaim_verb
@@ -48,6 +54,14 @@
 	speech_verb = "says"
 	exclaim_verb = "exclaims"
 	key = list("0")
+	flags = RESTRICTED
+/datum/language/jirachispeak
+	name = "Jirachispeak"
+	desc = "Telepathy projected voice"
+	speech_verb = "telepatically says"
+	exclaim_verb = "telepatically cries"
+	ask_verb = "telepatically asks"
+	key = list("д","l")
 	flags = RESTRICTED
 /datum/language/clatter
 	name = "Clatter"
@@ -137,6 +151,7 @@
 	colour = "rough"
 	key = list("3")
 
+
 /datum/language/xenocommon
 	name = "Xenomorph"
 	colour = "alien"
@@ -197,6 +212,7 @@
 	ask_verb = "speaks"
 	exclaim_verb = "speaks"
 	colour = "animal"
+	mob_verb = 1
 	key = list("л","k")
 	flags = RESTRICTED
 /datum/language/slime
@@ -261,7 +277,7 @@
 			continue
 		M.show_message("<i><span class='game say'><span class='name'>synthesised voice</span> <span class='message'>beeps, \"beep beep beep\"</span></span></i>",2)
 
-	//Тратим заряд батареи на болтовню
+	//Г’Г°Г ГІГЁГ¬ Г§Г Г°ГїГ¤ ГЎГ ГІГ Г°ГҐГЁ Г­Г  ГЎГ®Г«ГІГ®ГўГ­Гѕ
 	if (isrobot(speaker))
 		var/mob/living/silicon/robot/R = speaker
 		if(R.cell)
@@ -312,6 +328,8 @@
 /atom/movable/proc/can_speak_lang(datum/language/speaking)
 	if(src.universal_speak)
 		return 1
+	if(istype(speaking, /datum/language/jirachispeak))
+		return 1
 	return (speaking in src.languages)
 /mob/living/carbon/human/can_speak_lang(datum/language/speaking)
 	if(..())
@@ -328,56 +346,27 @@
 	set name = "Language"
 	set category = "IC"
 	set src = usr
-
-	var/dat = "<b><font size = 5>Known Languages</font></b><br/><br/>"
-	if(istype(src,/mob/living))
-		var/mob/living/S = src
-		var/keytostring
-		if(!universal_speak)
-			for(var/datum/language/L in languages)
-				for(var/k in L.key)
-					keytostring += ":[k] "
-				if(S.current_language_speak == L)
-					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
-				else
-					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - <a href='byond://?src=\ref[src];setlang=[L.key[1]]'>Set default </a></b><br/>[L.desc]<br/><br/>"
-				keytostring = ""
-		else
-			for(var/W in all_languages)
-				var/datum/language/L = all_languages[W]
-				for(var/k in L.key)
-					keytostring += ":[k] "
-				if(S.current_language_speak == L)
-					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
-				else
-					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - <a href='byond://?src=\ref[src];setlang=[L.key[1]]'>Set default </a></b><br/>[L.desc]<br/><br/>"
-				keytostring = ""
-	else
-		for(var/datum/language/L in languages)
-			dat += "<b>[L.name] (:[L.key])</b><br/>[L.desc]<br/><br/>"
-	src << browse(dat, "window=checklanguage")
-	return
-/mob/living/carbon/human/check_languages()
-	set name = "Language"
-	set category = "IC"
-	set src = usr
 	var/keytostring
 	var/dat = "<b><font size = 5>Known Languages</font></b><br/><br/>"
 	if(istype(src,/mob/living))
 		var/mob/living/S = src
-		if(!universal_speak)
-			for(var/datum/language/L in languages)
-				for(var/k in L.key)
-					keytostring += ":[k] "
-				if(S.current_language_speak == L)
-					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
-				else
-					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - <a href='byond://?src=\ref[src];setlang=[L.key[1]]'>Set default</a></b><br/>[L.desc]<br/><br/>"
-				keytostring = ""
-			if(ears)
-				var/obj/item/device/radio/headset/H = ears
-				if(istype(H) && H.translate.len > 0)
-					dat += "<b><span class='confirm'>Your headset can translate:</span></b><br>"
+		var/list/langs = languages
+		if(universal_speak)
+			langs = all_languages
+		for(var/datum/language/L in langs)
+			for(var/k in L.key)
+				keytostring += ":[k] "
+			if(S.current_language_speak == L)
+				dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - Default</b><br/>[L.desc]<br/><br/>"
+			else
+				dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - <a href='byond://?src=\ref[src];setlang=[L.key[1]]'>Set Default</a></b><br/>[L.desc]<br/><br/>"
+			keytostring = ""
+		if(ishuman(src))
+			var/mob/living/carbon/human/hum = src
+			if(hum.ears)
+				var/obj/item/device/radio/headset/H = hum.ears
+				if(istype(H) && H.translate.len > 0)//Ето костыль
+					dat += "<b><span class='confirm'>Your headset can translate:</span></b><br><br>"
 					for(var/L in H.translate)
 						var/datum/language/lang = all_languages[L]
 						for(var/k in lang.key)
@@ -385,21 +374,8 @@
 						if(istype(lang))
 							dat += "<b><span class='[lang.colour]'>[lang.name]</span> ([keytostring])</b><br/>[lang.desc]<br/><br/>"
 						keytostring = ""
-		else
-			for(var/W in all_languages)
-				var/datum/language/L = all_languages[W]
-				for(var/k in L.key)
-					keytostring += ":[k] "
-				if(S.current_language_speak == L)
-					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - Default language speaking</b><br/>[L.desc]<br/><br/>"
-				else
-					dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring]) - <a href='byond://?src=\ref[src];setlang=[L.key[1]]'>Set default</a></b><br/>[L.desc]<br/><br/>"
-				keytostring = ""
 	else
-		for(var/datum/language/L in languages)
-			for(var/k in L.key)
-				keytostring += ":[k] "
-			dat += "<b><span class='[L.colour]'>[L.name]</span> ([keytostring])</b><br/>[L.desc]<br/><br/>"
-			keytostring = ""
+		src << "<span class='danger'>Нет!</span>"
+		return
 	src << browse(dat, "window=checklanguage")
 	return
