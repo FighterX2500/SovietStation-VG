@@ -1,3 +1,13 @@
+/obj/machinery/coatrack
+	name = "coat rack"
+	desc = "A fancy stand for the Detective's coat and hat."
+	icon_state = "coatrack0"
+	icon = 'coatrack.dmi'
+	density = 1
+	anchored = 1.0
+	var/obj/item/clothing/suit/storage/det_suit/coat
+	var/obj/item/clothing/head/det_hat/hat
+
 /obj/machinery/coatrack/attack_hand(mob/user as mob)
 	switch(alert("What do you want from the coat rack?",,"Coat","Hat"))
 		if("Coat")
