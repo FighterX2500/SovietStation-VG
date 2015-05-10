@@ -23,7 +23,7 @@
 	if(recording)
 		var/verb = "says"
 		if(istype(message_langs) && message_langs)
-			verb = message_langs.get_spoken_verb(copytext(raw_message, length(raw_message)))
+			verb = message_langs.get_spoken_verb(speaker, copytext(raw_message, length(raw_message)))
 		timestamp+= timerecorded
 		storedinfo["[storedinfo.len]"] = list(
 		"message" = raw_message,

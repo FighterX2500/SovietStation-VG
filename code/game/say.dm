@@ -84,10 +84,10 @@ var/list/freqtoname = list(
 /atom/movable/proc/lang_treat(atom/movable/speaker, datum/language/message_langs, raw_message, verb_need = 1)
 	if(!message_langs || !istype(message_langs))
 		message_langs = all_languages["Galactic Common"]
-	if(can_speak_lang(message_langs))
-		return "[verb_need ? (message_langs.get_spoken_verb(copytext(raw_message, length(raw_message))) + ", ") : ""]\"<span class='[message_langs.colour]'>[raw_message]</span>\""
-	else
-		return "[verb_need ? (message_langs.get_spoken_verb(copytext(raw_message, length(raw_message))) + ", ") : ""]\"<span class='[message_langs.colour]'>[stars(raw_message)]</span>\""
+	var/message = raw_message
+	if(!can_speak_lang(message_langs))
+		message = stars(raw_message)
+	return "[verb_need ? (message_langs.get_spoken_verb(speaker, copytext(raw_message, length(raw_message))) + ", ") : ""]\"<span class='[message_langs.colour]'>[message]</span>\""
 /proc/get_radio_span(freq)
 	var/returntext = freqtospan["[freq]"]
 	if(returntext)
