@@ -1,7 +1,7 @@
 /mob/living/carbon/monkey
 	name = "monkey"
 	voice_name = "monkey"
-	//speak_emote = list("chimpers")
+	speak_emote = list("chimpers")
 	icon_state = "monkey1"
 	icon = 'icons/mob/monkey.dmi'
 	gender = NEUTER
