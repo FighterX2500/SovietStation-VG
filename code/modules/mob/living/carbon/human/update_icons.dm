@@ -257,13 +257,10 @@ var/global/list/damage_icon_parts = list()
 
 	//Skin tone
 	if(!skeleton && !husk && !hulk && (species.flags & HAS_SKIN_TONE))
-		if(get_species() == "Human")
-			if(s_tone >= 0)
-				stand_icon.Blend(rgb(s_tone, s_tone, s_tone), ICON_ADD)
-			else
-				stand_icon.Blend(rgb(-s_tone,  -s_tone,  -s_tone), ICON_SUBTRACT)
+		if(s_tone >= 0)
+			stand_icon.Blend(rgb(s_tone, s_tone, s_tone), ICON_ADD)
 		else
-			stand_icon.Blend(rgb(r_skin,  g_skin,  b_skin), ICON_ADD)
+			stand_icon.Blend(rgb(-s_tone,  -s_tone,  -s_tone), ICON_SUBTRACT)
 
 	if(husk)
 		var/icon/mask = new(stand_icon)
@@ -970,9 +967,8 @@ var/global/list/damage_icon_parts = list()
 	if(species.tail && species.flags & HAS_TAIL)
 		if(!wear_suit || !(wear_suit.flags_inv & HIDEJUMPSUIT) && !istype(wear_suit, /obj/item/clothing/suit/space))
 			var/obj/Overlays/O = obj_overlays[TAIL_LAYER]
-			var/icon/tail = new/icon("icon" = 'icons/effects/species.dmi', "icon_state" = "[species.tail]_s")
-			tail.Blend(rgb(r_skin, g_skin, b_skin), ICON_ADD)
-			O.icon = image(tail)
+			O.icon = 'icons/effects/species.dmi'
+			O.icon_state = "[species.tail]_s"
 			overlays += O
 			obj_overlays[TAIL_LAYER] = O
 			//if(!old_tail_state) //only update if we didnt show our tail already

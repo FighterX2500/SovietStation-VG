@@ -17,10 +17,6 @@
 	var/b_eyes = 0
 
 	var/s_tone = 0	//Skin tone
-	var/r_skin = 0	//Skin color
-	var/g_skin = 0	//Skin color
-	var/b_skin = 0	//Skin color
-
 
 	var/lip_style = null	//no lipstick by default- arguably misleading, as it could be used for general makeup
 

@@ -74,9 +74,6 @@ var/const/MAX_SAVE_SLOTS = 8
 	var/g_facial = 0					//Face hair color
 	var/b_facial = 0					//Face hair color
 	var/s_tone = 0						//Skin color
-	var/r_skin = 0						//Skin color
-	var/g_skin = 0						//Skin color
-	var/b_skin = 0						//Skin color
 	var/r_eyes = 0						//Eye color
 	var/g_eyes = 0						//Eye color
 	var/b_eyes = 0						//Eye color
@@ -1005,12 +1002,12 @@ NOTE:  The change will take effect AFTER any current recruiting periods."}
 							b_type = new_b_type
 
 					if("hair")
-						//if(species == "Human" || species == "Unathi")
-						var/new_hair = input(user, "Choose your character's hair colour:", "Character Preference") as color|null
-						if(new_hair)
-							r_hair = hex2num(copytext(new_hair, 2, 4))
-							g_hair = hex2num(copytext(new_hair, 4, 6))
-							b_hair = hex2num(copytext(new_hair, 6, 8))
+						if(species == "Human" || species == "Unathi")
+							var/new_hair = input(user, "Choose your character's hair colour:", "Character Preference") as color|null
+							if(new_hair)
+								r_hair = hex2num(copytext(new_hair, 2, 4))
+								g_hair = hex2num(copytext(new_hair, 4, 6))
+								b_hair = hex2num(copytext(new_hair, 6, 8))
 
 					if("h_style")
 						var/list/valid_hairstyles = list()
@@ -1070,18 +1067,10 @@ NOTE:  The change will take effect AFTER any current recruiting periods."}
 
 					if("s_tone")
 						if(species != "Human")
-							var/new_tone = input(user, "Choose your character's skin colour:", "Character Preference") as color|null
-							if(new_tone)
-								r_skin = hex2num(copytext(new_tone, 2, 4))
-								g_skin = hex2num(copytext(new_tone, 4, 6))
-								b_skin = hex2num(copytext(new_tone, 6, 8))
-						else
-							var/new_s_tone = input(user, "Choose your character's skin-tone:\n(Light 1 - 220 Dark)", "Character Preference")  as num|null
-							if(new_s_tone)
-								s_tone = 35 - max(min( round(new_s_tone), 220),1)
-								r_skin = s_tone
-								g_skin = s_tone
-								b_skin = s_tone
+							return
+						var/new_s_tone = input(user, "Choose your character's skin-tone:\n(Light 1 - 220 Dark)", "Character Preference")  as num|null
+						if(new_s_tone)
+							s_tone = 35 - max(min( round(new_s_tone), 220),1)
 
 					if("ooccolor")
 						var/new_ooccolor = input(user, "Choose your OOC colour:", "Game Preference") as color|null
@@ -1334,9 +1323,6 @@ NOTE:  The change will take effect AFTER any current recruiting periods."}
 		character.b_facial = b_facial
 
 		character.s_tone = s_tone
-		character.r_skin = r_skin
-		character.b_skin = b_skin
-		character.g_skin = g_skin
 
 		character.h_style = h_style
 		character.f_style = f_style
