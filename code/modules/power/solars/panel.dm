@@ -9,47 +9,34 @@
 	var/ndir = SOUTH
 	var/turn_angle = 0
 	var/glass_quality_factor = 1 //Rglass is average. Glass is shite. Tinted glass is "Are you even trying ?" tier if anyone ever makes a sheet version
-	var/tracker = 0
 	var/obj/machinery/power/solar/control/control
 	var/obj/machinery/power/solar_assembly/solar_assembly
 
-/obj/machinery/power/solar/panel/New(loc, var/obj/machinery/power/solar_assembly/S)
+/obj/machinery/power/solar/panel/New(loc)
 	..(loc)
-	make(S)
+	make()
 
-/obj/machinery/power/solar/panel/proc/make(var/obj/machinery/power/solar_assembly/S)
-	if(!S)
+/obj/machinery/power/solar/panel/proc/make()
+	if(!solar_assembly)
 		solar_assembly = new /obj/machinery/power/solar_assembly()
 		solar_assembly.glass_type = /obj/item/stack/sheet/rglass
 		solar_assembly.anchored = 1
-		solar_assembly.density = 1
-		solar_assembly.tracker = tracker
-	else
-		solar_assembly = S
-		src.glass_quality_factor = 1 //�����
-		src.maxhealth = 10
-		src.health = 10
+
 	solar_assembly.loc = src
 	update_icon()
 
 /obj/machinery/power/solar/panel/attackby(obj/item/weapon/W, mob/user)
 	if(iscrowbar(W))
-		var/turf/T = get_turf(src)
-		var/obj/item/stack/sheet/glass/G = solar_assembly.glass_type
-		user << "<span class='notice'>You begin taking the [initial(G.name)] off the [src].</span>"
 		playsound(get_turf(src), 'sound/machines/click.ogg', 50, 1)
 		if(do_after(user, 50))
-			if(solar_assembly)
-				solar_assembly.loc = T
-				solar_assembly.give_glass()
 			playsound(get_turf(src), 'sound/items/Deconstruct.ogg', 50, 1)
-			user.visible_message("<span class='notice'>[user] takes the [initial(G.name)] off the [src].</span>",\
-			"<span class='notice'>You takes the [initial(G.name)] off the [src].</span>")
+			user.visible_message("<span class='notice'>[user] takes the glass off the solar panel.</span>")
 			qdel(src)
 	else if(W)
 		add_fingerprint(user)
 		health -= W.force
 		healthcheck()
+
 	..()
 
 /obj/machinery/power/solar/panel/blob_act()
@@ -72,14 +59,30 @@
 
 /obj/machinery/power/solar/panel/update_icon()
 	..()
-	if(!tracker)
-		overlays.len = 0
-		var/icon = "solar_panel_glass_ref"
-		if(stat & BROKEN)
-			icon += "-b"
-		overlays += image('icons/obj/power.dmi', icon_state = icon, layer = FLY_LAYER)
+
+	overlays.len = 0
+
+	if(stat & BROKEN)
+		if(solar_assembly.glass_type == /obj/item/stack/sheet/glass)
+			overlays += image('icons/obj/power.dmi', icon_state = "solar_panel-b", layer = FLY_LAYER)
+		else if(solar_assembly.glass_type == /obj/item/stack/sheet/rglass)
+			overlays += image('icons/obj/power.dmi', icon_state = "solar_panel_ref-b", layer = FLY_LAYER)
+		else if(solar_assembly.glass_type == /obj/item/stack/sheet/glass/plasmaglass)
+			overlays += image('icons/obj/power.dmi', icon_state = "solar_panel_plasma-b", layer = FLY_LAYER)
+		else if(solar_assembly.glass_type == /obj/item/stack/sheet/rglass/plasmarglass)
+			overlays += image('icons/obj/power.dmi', icon_state = "solar_panel_plasma_ref-b", layer = FLY_LAYER)
+	else if(solar_assembly.glass_type == /obj/item/stack/sheet/glass)
+		overlays += image('icons/obj/power.dmi', icon_state = "solar_panel", layer = FLY_LAYER)
 		src.dir = angle2dir(adir)
-	return
+	else if(solar_assembly.glass_type == /obj/item/stack/sheet/rglass)
+		overlays += image('icons/obj/power.dmi', icon_state = "solar_panel_ref", layer = FLY_LAYER)
+		src.dir = angle2dir(adir)
+	else if(solar_assembly.glass_type == /obj/item/stack/sheet/glass/plasmaglass)
+		overlays += image('icons/obj/power.dmi', icon_state = "solar_panel_plasma", layer = FLY_LAYER)
+		src.dir = angle2dir(adir)
+	else if(solar_assembly.glass_type == /obj/item/stack/sheet/rglass/plasmarglass)
+		overlays += image('icons/obj/power.dmi', icon_state = "solar_panel_plasma_ref", layer = FLY_LAYER)
+		src.dir = angle2dir(adir)
 
 /obj/machinery/power/solar/panel/proc/update_solar_exposure()
 	if(!sun)
@@ -100,12 +103,12 @@
 /obj/machinery/power/solar/panel/process()//TODO: remove/add this from machines to save on processing as needed ~Carn PRIORITY
 	if(stat & BROKEN)
 		return
-
+/*
 	if(!control)
 		return
-
+*/
 	if(adir != ndir)
-		adir = (360 + adir + Clamp(ndir - adir, -10, 10)) % 360
+		adir = (360 + adir + dd_range(-10, 10, ndir-adir)) % 360
 		update_icon()
 		update_solar_exposure()
 
@@ -131,7 +134,7 @@
 	if(stat & !BROKEN)
 		broken()
 	else
-		kill()
+		qdel(src)
 
 /obj/machinery/power/solar/panel/ex_act(severity)
 	switch(severity)
@@ -139,12 +142,12 @@
 			solar_assembly.glass_type = null //The glass you're looking for is below pal
 			if(prob(15))
 				getFromPool(/obj/item/weapon/shard, loc)
-			kill()
+			qdel(src)
 		if(2.0)
 			if(prob(25))
 				solar_assembly.glass_type = null //The glass you're looking for is below pal
 				getFromPool(/obj/item/weapon/shard, loc)
-				kill()
+				qdel(src)
 			else
 				broken()
 		if(3.0)
@@ -152,13 +155,6 @@
 				broken()
 			else
 				health-- //Let shrapnel have its effect
-
-/obj/machinery/power/solar/panel/proc/kill() //To make sure you eliminate the assembly as well
-	if(solar_assembly)
-		var/obj/machinery/power/solar_assembly/assembly = solar_assembly
-		solar_assembly = null
-		qdel(assembly)
-	qdel(src)
 
 /obj/machinery/power/solar/panel/disconnect_from_network()
 	. = ..()
