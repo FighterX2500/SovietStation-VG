@@ -159,7 +159,7 @@
 	if(prefs.lastchangelog != changelog_hash) //bolds the changelog button on the interface so we know there are updates.
 		winset(src, "rpane.changelog", "background-color=#eaeaea;font-style=bold")
 		prefs.SetChangelog(ckey,changelog_hash)
-		src << "<span class='info'>Changelog has changed since your last visit.</span>"
+		src << "<span class='info'>У нас апдейт, смотри Changelog.</span>"
 
 	//Set map label to correct map name
 	winset(src, "rpane.map", "text=\"[map.nameLong]\"")

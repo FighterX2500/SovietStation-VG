@@ -13,7 +13,6 @@
 	action_button_name = "Toggle Helmet Light"
 	heat_protection = HEAD
 	max_heat_protection_temperature = SPACE_SUIT_MAX_HEAT_PROTECITON_TEMPERATURE
-
 /obj/item/clothing/head/helmet/space/rig/attack_self(mob/user)
 	if(!isturf(user.loc))
 		user << "You cannot turn the light on while in this [user.loc]" //To prevent some lighting anomalities.
@@ -56,13 +55,13 @@
 	icon_state = "rig0-white"
 	item_state = "ce_helm"
 	_color = "white"
-	species_restricted = list("exclude","Vox")
+	species_restricted = list("Human")
 	max_heat_protection_temperature = FIRE_HELMET_MAX_HEAT_PROTECITON_TEMPERATURE
 
 /obj/item/clothing/suit/space/rig/elite
 	icon_state = "rig-white"
 	name = "advanced hardsuit"
-	species_restricted = list("exclude","Vox")
+	species_restricted = list("Human")
 	desc = "An advanced suit that protects against hazardous, low pressure environments. Shines with a high polish."
 	item_state = "ce_hardsuit"
 	max_heat_protection_temperature = FIRESUIT_MAX_HEAT_PROTECITON_TEMPERATURE
@@ -75,14 +74,16 @@
 	icon_state = "rig0-mining"
 	item_state = "mining_helm"
 	_color = "mining"
-	species_restricted = list("exclude","Vox")
+	species_restricted = list("Human")
+	can_change_species = 1
 
 /obj/item/clothing/suit/space/rig/mining
 	icon_state = "rig-mining"
 	name = "mining hardsuit"
 	desc = "A special suit that protects against hazardous, low pressure environments. Has reinforced plating."
 	item_state = "mining_hardsuit"
-	species_restricted = list("exclude","Vox")
+	species_restricted = list("Human")
+	can_change_species = 1
 
 
 //Syndicate rig
@@ -92,6 +93,7 @@
 	icon_state = "rig0-syndi"
 	item_state = "syndie_helm"
 	species_fit = list("Vox")
+	can_change_species = 1
 	_color = "syndi"
 	armor = list(melee = 60, bullet = 50, laser = 30,energy = 15, bomb = 35, bio = 100, rad = 60)
 	siemens_coefficient = 0.6
@@ -117,6 +119,7 @@
 	name = "blood-red hardsuit"
 	desc = "An advanced suit that protects against injuries during special operations. Property of Gorlex Marauders."
 	item_state = "syndie_hardsuit"
+	can_change_species = 1
 	species_fit = list("Vox")
 	slowdown = 1
 	w_class = 3
@@ -160,14 +163,16 @@
 	icon_state = "rig0-medical"
 	item_state = "medical_helm"
 	_color = "medical"
-	species_restricted = list("exclude","Vox")
+	species_restricted = list("Human")
+	can_change_species = 1
 
 /obj/item/clothing/suit/space/rig/medical
 	icon_state = "rig-medical"
 	name = "medical hardsuit"
 	desc = "A special suit that protects against hazardous, low pressure environments. Has minor radiation shielding."
 	item_state = "medical_hardsuit"
-	species_restricted = list("exclude","Vox")
+	species_restricted = list("Human")
+	can_change_species = 1
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/weapon/storage/firstaid,/obj/item/device/healthanalyzer,/obj/item/stack/medical)
 
 
@@ -178,7 +183,8 @@
 	icon_state = "rig0-sec"
 	item_state = "sec_helm"
 	_color = "sec"
-	species_restricted = list("exclude","Vox")
+	species_restricted = list("Human")
+	can_change_species = 1
 	armor = list(melee = 60, bullet = 10, laser = 30, energy = 5, bomb = 45, bio = 100, rad = 10)
 	siemens_coefficient = 0.7
 
@@ -187,7 +193,8 @@
 	name = "security hardsuit"
 	desc = "A special suit that protects against hazardous low pressure environments. Has an additional layer of armor."
 	item_state = "sec_hardsuit"
-	species_restricted = list("exclude","Vox")
+	species_restricted = list("Human")
+	can_change_species = 1
 	armor = list(melee = 60, bullet = 10, laser = 30, energy = 5, bomb = 45, bio = 100, rad = 10)
 	allowed = list(/obj/item/weapon/gun,/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/weapon/melee/baton)
 	siemens_coefficient = 0.7
@@ -200,7 +207,8 @@
 	icon_state = "rig0-atmos"
 	item_state = "atmos_helm"
 	_color = "atmos"
-	species_restricted = list("exclude","Vox")
+	species_restricted = list("Human")
+	can_change_species = 1
 	armor = list(melee = 40, bullet = 0, laser = 0, energy = 0, bomb = 25, bio = 100, rad = 0)
 	max_heat_protection_temperature = FIRE_HELMET_MAX_HEAT_PROTECITON_TEMPERATURE
 
@@ -209,7 +217,8 @@
 	icon_state = "rig-atmos"
 	name = "atmos hardsuit"
 	item_state = "atmos_hardsuit"
-	species_restricted = list("exclude","Vox")
+	species_restricted = list("Human")
+	can_change_species = 1
 	armor = list(melee = 40, bullet = 0, laser = 0, energy = 0, bomb = 25, bio = 100, rad = 0)
 	max_heat_protection_temperature = FIRESUIT_MAX_HEAT_PROTECITON_TEMPERATURE
 
@@ -222,7 +231,7 @@
 	icon_state = "rig0-atmos_gold"
 	item_state = "atmos_gold_helm"
 	_color = "atmos"
-	species_restricted = list("exclude","Vox")
+	species_restricted = list("Human")
 	no_light=1
 
 /obj/item/clothing/suit/space/rig/atmos/gold
