@@ -69,7 +69,6 @@
 
 	var/lastFart = 0 // Toxic fart cooldown.
 	var/lastScream = 0 // Prevent scream spam in some situations
-	var/lastHeartBeat = 0 //Or we get a lot of Heart-Beat sounds
 
 
 	fire_dmi = 'icons/mob/OnFire.dmi'
