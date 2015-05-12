@@ -324,6 +324,7 @@ var/global/list/organ_damage_overlays = list(
 		if(health < config.health_threshold_crit)
 			if(world.time-lastHeartBeat >= 500)
 				src << sound('sound/effects/Heart Beat.ogg')
+				src << sound('sound/misc/molly_revived.ogg')
 				cycle = 0
 				lastHeartBeat = world.time
 		if(health > config.health_threshold_crit)
