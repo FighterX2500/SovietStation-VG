@@ -320,6 +320,15 @@ var/global/list/organ_damage_overlays = list(
 		UpdateDamageIcon()
 	cycle++
 
+	if(world.time-lastHeartBeat >= 500)
+		if(health < config.health_threshold_crit)
+			if(world.time-lastHeartBeat >= 500)
+				src << sound('sound/effects/Heart Beat.ogg')
+				src << sound('sound/misc/molly_revived.ogg')
+				cycle = 0
+				lastHeartBeat = world.time
+		if(health > config.health_threshold_crit)
+			return
 
 
 /mob/living/carbon/human/calculate_affecting_pressure(var/pressure)
@@ -1704,6 +1713,7 @@ var/global/list/organ_damage_overlays = list(
 
 		if(shock_stage >= 150)
 			Weaken(20)
+
 
 	proc/handle_pulse()
 
