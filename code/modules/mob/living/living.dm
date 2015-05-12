@@ -1,7 +1,3 @@
-/mob/living/New()
-	..()
-	add_language(mob_type_lang)
-
 /mob/living/initialize()
 	..()
 	add_language(mob_type_lang)
