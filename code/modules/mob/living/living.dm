@@ -1,6 +1,6 @@
-/mob/living/initialize()
-	..()
+/mob/living/New()
 	add_language(mob_type_lang)
+	..()
 /mob/living/Life()
 	..()
 	if (flags & INVULNERABLE)

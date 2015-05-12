@@ -409,11 +409,11 @@ var/global/list/organ_damage_overlays = list(
 							"lifelike texture ;_;", \
 							"luv can bloooom", \
 							"PACKETS!!!", \
-							"��� �� ������ ��� ������!!!", \
-							"���� ����� ���� ����!", \
-							";���� ������������((((99", \
-							";���� �������, ������� ����!", \
-							"��� ���� ������?) � ������� �����)))"))
+							"SARAH HALE DID IT!!!", \
+							"Don't tell Chase", \
+							"not so tough now huh", \
+							"WERE NOT BAY!!", \
+							"BLAME HOSHI!!!"))
 					if(3)
 						emote("drool")
 
@@ -689,6 +689,10 @@ var/global/list/organ_damage_overlays = list(
 
 		//world << "Loc temp: [loc_temp] - Body temp: [bodytemperature] - Fireloss: [getFireLoss()] - Thermal protection: [get_thermal_protection()] - Fire protection: [thermal_protection + add_fire_protection(loc_temp)] - Heat capacity: [environment_heat_capacity] - Location: [loc] - src: [src]"
 
+		//Body temperature is adjusted in two steps. Firstly your body tries to stabilize itself a bit.
+		if(stat != 2)
+			stabilize_temperature_from_calories()
+
 //		log_debug("Adjusting to atmosphere.")
 		//After then, it reacts to the surrounding atmosphere based on your thermal protection
 		if(!on_fire) //If you're on fire, you do not heat up or cool down based on surrounding gases
@@ -696,15 +700,13 @@ var/global/list/organ_damage_overlays = list(
 				//Place is colder than we are
 				var/thermal_protection = get_cold_protection(loc_temp) //This returns a 0 - 1 value, which corresponds to the percentage of protection based on what you're wearing and what you're exposed to.
 				if(thermal_protection < 1)
-					bodytemperature += min((1-thermal_protection) * ((loc_temp - bodytemperature) / BODYTEMP_COLD_DIVISOR) * (environment.total_moles/MOLES_CELLSTANDARD), BODYTEMP_COOLING_MAX)
+					bodytemperature += min((1-thermal_protection) * ((loc_temp - bodytemperature) / BODYTEMP_COLD_DIVISOR), BODYTEMP_COOLING_MAX)
 			else
 				//Place is hotter than we are
 				var/thermal_protection = get_heat_protection(loc_temp) //This returns a 0 - 1 value, which corresponds to the percentage of protection based on what you're wearing and what you're exposed to.
 				if(thermal_protection < 1)
-					bodytemperature += min((1-thermal_protection) * ((loc_temp - bodytemperature) / BODYTEMP_HEAT_DIVISOR) * (environment.total_moles/MOLES_CELLSTANDARD), BODYTEMP_HEATING_MAX)
-		//Body temperature is adjusted in two steps. Firstly your body tries to stabilize itself a bit.
-		if(stat != 2)
-			stabilize_temperature_from_calories()
+					bodytemperature += min((1-thermal_protection) * ((loc_temp - bodytemperature) / BODYTEMP_HEAT_DIVISOR), BODYTEMP_HEATING_MAX)
+
 		// +/- 50 degrees from 310.15K is the 'safe' zone, where no damage is dealt.
 		if(bodytemperature > BODYTEMP_HEAT_DAMAGE_LIMIT)
 			//Body temperature is too hot.

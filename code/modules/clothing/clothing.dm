@@ -3,40 +3,7 @@
 	var/list/species_restricted = null //Only these species can wear this kit.
 	var/gsr = 0
 	var/wizard_garb = 0 // Wearing this empowers a wizard.
-	var/can_change_species = 0
-	proc/change_for_species(var/species) //Нужно для трансформации рига и шлема
-		var/type
-		var/list/s_restr
-		var/icon/I
 
-		if(istype(src, /obj/item/clothing/suit/space/rig))
-			type = "suits"
-		else
-			type = "hats"
-
-		switch(species)
-			if("Human")
-				s_restr = list("Human")
-				if(type == "suits") I = 'icons/obj/clothing/suits.dmi'
-				else I = 'icons/obj/clothing/hats.dmi'
-			if("Tajaran")
-				s_restr = list("Tajaran")
-				if(type == "suits") I = 'icons/obj/clothing/species/tajaran/suits.dmi'
-				else I = 'icons/obj/clothing/species/tajaran/hats.dmi'
-			if("Skrell")
-				s_restr = list("Skrell")
-				if(type == "suits") I = 'icons/obj/clothing/species/skrell/suits.dmi'
-				else I = 'icons/obj/clothing/species/skrell/hats.dmi'
-			if("Unathi")
-				s_restr = list("Unathi")
-				if(type == "suits") I = 'icons/obj/clothing/species/unathi/suits.dmi'
-				else I = 'icons/obj/clothing/species/unathi/hats.dmi'
-			else
-				usr << "<span class='info'>Эта раса не поддерживается.</span>"
-				return 0
-		species_restricted = s_restr
-		icon = I
-		return 1
 //BS12: Species-restricted clothing check.
 /obj/item/clothing/mob_can_equip(M as mob, slot)
 
@@ -135,23 +102,11 @@ BLIND     // can't see anything
 	var/wired = 0
 	var/obj/item/weapon/cell/cell = 0
 	var/clipped = 0
-	var/cutoff = 0
 	body_parts_covered = HANDS
 	slot_flags = SLOT_GLOVES
 	attack_verb = list("challenged")
 	species_restricted = list("exclude","Unathi","Tajaran","Muton")
 	var/pickpocket = 0 //Master pickpocket?
-	attackby(obj/item/W, mob/user)
-		if(..())
-			return 1
-		if(istype(W,/obj/item/weapon/wirecutters) && !cutoff)
-			cutoff = 1
-			species_restricted = list("exclude")
-			user.visible_message("<span class='notice'>[user] срезал кончики пальцев на [src].</span>")
-	examine(mob/user)
-		..()
-		if(cutoff)
-			user << "<span class='info'>Кончики пальцев срезаны.</span>"
 
 /obj/item/clothing/gloves/emp_act(severity)
 	if(cell)
