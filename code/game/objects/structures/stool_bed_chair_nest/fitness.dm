@@ -1,4 +1,4 @@
-//ÒĞÅÍÀÆÅĞ×ÈÊÈ ÎÒ ÃÎËÓÁß + ÌÎĞÊÎÂÊÈÍÀ ÄÎĞÀÁÎÒÊÀ
+//Ã’ÃÃ…ÃÃ€Ã†Ã…ÃÃ—ÃˆÃŠÃˆ ÃÃ’ ÃƒÃÃ‹Ã“ÃÃŸ + ÃŒÃÃÃŠÃÃ‚ÃŠÃˆÃÃ€ Ã„ÃÃÃ€ÃÃÃ’ÃŠÃ€
 
 /obj/structure/stool/bed/chair/fitness/lifter
 	anchored = 1
@@ -51,9 +51,10 @@
 	return
 
 
-//ÁÎÊÑÅĞÑÊÈÅ ÃĞÓØÈ
-/obj/structure/punchingbag //Ñòàíäàğòíàÿ
+//ÃÃÃŠÃ‘Ã…ÃÃ‘ÃŠÃˆÃ… ÃƒÃÃ“Ã˜Ãˆ
+/obj/structure/punchingbag //Ã‘Ã²Ã Ã­Ã¤Ã Ã°Ã²Ã­Ã Ã¿
 	anchored = 1
+	density = 1 
 	name = "Punching Bag"
 	desc = "You can punch it."
 	icon = 'icons/obj/objects.dmi'
@@ -69,7 +70,9 @@
 
 
 
-/obj/structure/punchingbag/clown //Êëîóíîâñêàÿ
+/obj/structure/punchingbag/clown //ÃŠÃ«Ã®Ã³Ã­Ã®Ã¢Ã±ÃªÃ Ã¿
+	anchored = 1
+	density = 1 
 	name = "Punching Bag"
 	desc = "You can punch it."
 	icon = 'icons/obj/objects.dmi'
@@ -84,7 +87,9 @@
 
 
 
-/obj/structure/punchingbag/wizard //Âèçàğäîâñêàÿ
+/obj/structure/punchingbag/wizard //Ã‚Ã¨Ã§Ã Ã°Ã¤Ã®Ã¢Ã±ÃªÃ Ã¿
+	anchored = 1
+	density = 1 
 	name = "Punching Bag"
 	desc = "You can punch it."
 	icon = 'icons/obj/objects.dmi'
@@ -99,7 +104,9 @@
 
 
 
-/obj/structure/punchingbag/captain //Êàïèòîí
+/obj/structure/punchingbag/captain //ÃŠÃ Ã¯Ã¨Ã²Ã®Ã­
+	anchored = 1
+	density = 1 
 	name = "Punching Bag"
 	desc = "You can punch it."
 	icon = 'icons/obj/objects.dmi'
