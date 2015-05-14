@@ -1391,3 +1391,24 @@
 	contraband = list(/obj/item/weapon/reagent_containers/food/drinks/groansbanned = 10)
 
 	pack = /obj/structure/vendomatpack/groans
+
+//Pizza-Cooker
+/obj/machinery/vending/pizza
+	name = "Pizza Cooker"
+	desc = "Oh shit, now you can get pizza without cargo and chef!!!."
+	icon_state = "pizza"
+	icon_vend = "pizza-vend"
+	vend_delay = 30
+	vend_reply = "Thank you! Cooking your pizza..."
+	product_ads = "Hey you! It's time for some pizza!;Do you want to eat?."
+	product_slogans = "Pizza!;Food!;Tasty!"
+	products = list(/obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/margherita = 5,
+					/obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/meatpizza = 5,
+					/obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/mushroompizza = 5,
+					/obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/vegetablepizza = 5)
+	prices = list(/obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/margherita = 15,
+					/obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/meatpizza = 20,
+					/obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/mushroompizza = 20,
+					/obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/vegetablepizza = 17)
+
+	pack = /obj/structure/vendomatpack/pizza

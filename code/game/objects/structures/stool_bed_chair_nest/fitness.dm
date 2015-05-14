@@ -1,8 +1,8 @@
-//“–≈Õ¿∆≈–◊» » Œ“ √ŒÀ”¡ﬂ + ÃŒ– Œ¬ »Õ¿ ƒŒ–¿¡Œ“ ¿
+//√í√ê√Ö√ç√Ä√Ü√Ö√ê√ó√à√ä√à √é√í √É√é√ã√ì√Å√ü + √å√é√ê√ä√é√Ç√ä√à√ç√Ä √Ñ√é√ê√Ä√Å√é√í√ä√Ä
 
 /obj/structure/stool/bed/chair/fitness/lifter
 	anchored = 1
-	name = "weight machine"
+	name = "Exercise machine"
 	desc = "Used to keep your form."
 	icon_state = "fitnesslifter"
 
@@ -21,12 +21,6 @@
 		buckle_mob(M, user)
 		icon_state = "fitnesslifter1"
 		M.dir = SOUTH
-
-		sleep (300)
-
-		user << "\red I feel more powerful!"
-		M.nutrition -=200
-	return
 
 /obj/structure/stool/bed/chair/fitness/lifter/unbuckle()
 	if(buckled_mob)
@@ -57,9 +51,10 @@
 	return
 
 
-//¡Œ —≈–— »≈ √–”ÿ»
-/obj/structure/punchingbag //—Ú‡Ì‰‡ÚÌ‡ˇ
+//√Å√é√ä√ë√Ö√ê√ë√ä√à√Ö √É√ê√ì√ò√à
+/obj/structure/punchingbag //√ë√≤√†√≠√§√†√∞√≤√≠√†√ø
 	anchored = 1
+	density = 1 
 	name = "Punching Bag"
 	desc = "You can punch it."
 	icon = 'icons/obj/objects.dmi'
@@ -68,7 +63,6 @@
 	icon_punched = "punchingbagsyndie2"
 
 /obj/structure/punchingbag/attack_hand(mob/user as mob)
-	usr << "\red You punch the punching bag!" //Unless emagged of course
 	var/list/punchSound = list('sound/weapons/punch1.ogg', 'sound/weapons/punch2.ogg', 'sound/weapons/punch3.ogg', 'sound/weapons/punch4.ogg')
 	var/punch = pick(punchSound)
 	playsound(get_turf(src), punch, 40, 0)
@@ -76,18 +70,51 @@
 
 
 
-/obj/structure/clownpunchingbag // ÎÓÛÌÓ‚ÒÍ‡ˇ
+/obj/structure/punchingbag/clown //√ä√´√Æ√≥√≠√Æ√¢√±√™√†√ø
 	anchored = 1
+	density = 1 
 	name = "Punching Bag"
 	desc = "You can punch it."
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "bopbag"
-	var/icon_punched
 	icon_punched = "bopbag2"
 
-/obj/structure/clownpunchingbag/attack_hand(mob/user as mob)
-	usr << "\red You punch the punching bag!" //Unless emagged of course
+/obj/structure/punchingbag/clown/attack_hand(mob/user as mob)
 	var/list/punchSound = list('sound/effects/clownstep1.ogg', 'sound/effects/clownstep2.ogg', 'sound/items/bikehorn.ogg')
+	var/punch = pick(punchSound)
+	playsound(get_turf(src), punch, 40, 0)
+	flick(src.icon_punched,src)
+
+
+
+/obj/structure/punchingbag/wizard //√Ç√®√ß√†√∞√§√Æ√¢√±√™√†√ø
+	anchored = 1
+	density = 1 
+	name = "Punching Bag"
+	desc = "You can punch it."
+	icon = 'icons/obj/objects.dmi'
+	icon_state = "punchingbagwizard"
+	icon_punched = "punchingbagwizard2"
+
+/obj/structure/punchingbag/wizard/attack_hand(mob/user as mob)
+	var/list/punchSound = list('sound/weapons/punch1.ogg', 'sound/weapons/punch2.ogg', 'sound/weapons/punch3.ogg', 'sound/weapons/punch4.ogg')
+	var/punch = pick(punchSound)
+	playsound(get_turf(src), punch, 40, 0)
+	flick(src.icon_punched,src)
+
+
+
+/obj/structure/punchingbag/captain //√ä√†√Ø√®√≤√Æ√≠
+	anchored = 1
+	density = 1 
+	name = "Punching Bag"
+	desc = "You can punch it."
+	icon = 'icons/obj/objects.dmi'
+	icon_state = "punchingbagcaptain"
+	icon_punched = "punchingbagcaptain2"
+
+/obj/structure/punchingbag/captain/attack_hand(mob/user as mob)
+	var/list/punchSound = list('sound/weapons/punch1.ogg', 'sound/weapons/punch2.ogg', 'sound/weapons/punch3.ogg', 'sound/weapons/punch4.ogg')
 	var/punch = pick(punchSound)
 	playsound(get_turf(src), punch, 40, 0)
 	flick(src.icon_punched,src)
