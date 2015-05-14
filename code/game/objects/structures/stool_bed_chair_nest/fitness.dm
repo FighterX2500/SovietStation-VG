@@ -9,18 +9,30 @@
 /obj/structure/stool/bed/chair/fitness/lifter/MouseDrop(atom/over_object)
 	return
 
+/obj/structure/stool/bed/chair/fitness/lifter/attack_hand(mob/user as mob)
+	user << "You can't unbuckle now. Please wait."
+
 /obj/structure/stool/bed/chair/fitness/lifter/MouseDrop_T(mob/living/carbon/human/M as mob, mob/user as mob)
 	if(!istype(M)) return
 //	var/mob/living/carbon/human/target = null
 //	if(ishuman(M))
 //		target = M
 	if(M.handcuffed)
-		user << "You can't buckle yourself."
+		user << "You can't buckle yourself. You are handcuffed."
+
+	if(M.loc != src.loc)
+		user << "You can't buckle yourself. You are too far."
 
 	else
 		buckle_mob(M, user)
 		icon_state = "fitnesslifter1"
 		M.dir = SOUTH
+		user << "\red You start doing the exercises."
+
+		sleep(50)
+
+		user << "\red You finish doing the exercises."
+		unbuckle()
 
 /obj/structure/stool/bed/chair/fitness/lifter/unbuckle()
 	if(buckled_mob)
@@ -32,29 +44,11 @@
 			icon_state = "fitnesslifter"
 	return
 
-/obj/structure/stool/bed/chair/fitness/lifter/manual_unbuckle(mob/user as mob)
-	if(buckled_mob)
-		if(buckled_mob.buckled == src)
-			if(buckled_mob != user)
-				buckled_mob.visible_message(\
-					"\blue [buckled_mob.name] was unbuckled by [user.name]!",\
-					"You were unbuckled from [src] by [user.name].",\
-					"You hear metal clanking")
-			else
-				buckled_mob.visible_message(\
-					"\blue [buckled_mob.name] unbuckled \himself!",\
-					"You unbuckle yourself from [src].",\
-					"You hear metal clanking")
-			unbuckle()
-			src.add_fingerprint(user)
-			icon_state = "fitnesslifter"
-	return
-
 
 //ÁÎÊÑÅÐÑÊÈÅ ÃÐÓØÈ
 /obj/structure/punchingbag //Ñòàíäàðòíàÿ
 	anchored = 1
-	density = 1 
+	density = 1
 	name = "Punching Bag"
 	desc = "You can punch it."
 	icon = 'icons/obj/objects.dmi'
@@ -72,7 +66,7 @@
 
 /obj/structure/punchingbag/clown //Êëîóíîâñêàÿ
 	anchored = 1
-	density = 1 
+	density = 1
 	name = "Punching Bag"
 	desc = "You can punch it."
 	icon = 'icons/obj/objects.dmi'
@@ -89,7 +83,7 @@
 
 /obj/structure/punchingbag/wizard //Âèçàðäîâñêàÿ
 	anchored = 1
-	density = 1 
+	density = 1
 	name = "Punching Bag"
 	desc = "You can punch it."
 	icon = 'icons/obj/objects.dmi'
@@ -106,7 +100,7 @@
 
 /obj/structure/punchingbag/captain //Êàïèòîí
 	anchored = 1
-	density = 1 
+	density = 1
 	name = "Punching Bag"
 	desc = "You can punch it."
 	icon = 'icons/obj/objects.dmi'
