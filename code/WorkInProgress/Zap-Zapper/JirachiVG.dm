@@ -61,9 +61,9 @@
 	if(star_form == 1)
 		process_med_hud(src)
 
-	if(bodytemperature > 600)
-		gain = round((bodytemperature - 600)/10, 1)
-		bodytemperature -= 400
+	if(bodytemperature > 400)
+		gain = round((bodytemperature - 400)/10, 1)
+		bodytemperature -= 200
 		if(repeat == 1)
 			src << "\blue I feel my body starting to absorb heat and converting it into light energy..."
 			visible_message("\red \bold Jirachi starts absorbing heat around itself!")
@@ -84,6 +84,8 @@
 	del src
 
 /mob/living/simple_animal/jirachi/New()
+	mob_list += src
+	living_mob_list += src
 	src.verbs -= /mob/verb/check_languages		//Åìó ýòîò âåðá íå íóæåí, îí è òàê âñåõ ïîíèìàåò. À åñëè êàêîé-ëèáî èãðîê íàæì¸ò è ïîïûòàåòñÿ ñìåíèòü Äæèðà÷è ÿçûê - íà÷í¸òñÿ ðåàëüíîå äåðüìî.
 	src.add_language("Jirachispeak")
 
@@ -897,9 +899,14 @@
 	for(var/obj/mecha/Z)
 		if(Z.occupant == I)
 			Z.go_out()
-
+	
+	for(var/obj/structure/closet/YA)
+		if(I in YA.contents)
+			YA.contents -= I
+			I.loc = get_turf(YA)
+	
 	if(I.buckled)
-		I.buckled = 0
+		I.buckled.unbuckle()
 
 	var/area/thearea = startelelocs[A]
 	var/list/L = list()
@@ -1026,7 +1033,12 @@
 	for(var/obj/mecha/Z)
 		if(Z.occupant == I)
 			Z.go_out()
-
+	
+	for(var/obj/structure/closet/YA)
+		if(I in YA.contents)
+			YA.contents -= I
+			I.loc = get_turf(YA)
+	
 	if(I && I.buckled)
 		I.buckled.unbuckle()
 
@@ -1120,29 +1132,29 @@
 //Hybernation
 
 
-/mob/living/simple_animal/jirachi/verb/hybernate()
+/mob/living/simple_animal/jirachi/verb/hibernate()
 	set category = "Jirachi"
-	set name = "Hybernation"
-	set desc = "Hybernate to regain your health and energy"
+	set name = "Hibernation"
+	set desc = "Hibernate to regain your health and energy"
 	if(star_form == 1)
-		src << "\red You can't hybernate while in Star Form!"
+		src << "\red You can't hibernate while in Star Form!"
 		return
 	if(hybernating == 1)
-		src << "\red I must regain my energy and health to awake from my hybernation"
+		src << "\red I must regain my energy and health to awake from my hibernation"
 		return
 	if(energy >= 1000 && health >=80)
-		src << "\red I do not need to hybernate right now"
+		src << "\red I do not need to hibernate right now"
 		return
 
 	if(healing == 1 || hypnotizing == 1)
-		src << "\red I can't hybernate while healing or hypnotizing someone"
+		src << "\red I can't hibernate while healing or hypnotizing someone"
 		return
 
 	if(watching == 1)
 		src << "\red I can't use my abilities while my mind is not in my body!"
 		return
 
-	src << "\blue \bold I start hybernating, to regain my life and energy..."
+	src << "\blue \bold I start hibernating, to regain my life and energy..."
 
 	hybernating = 1
 	src.icon_state = "Jirachi-Sleep"
@@ -1173,6 +1185,7 @@
 			src.canmove = 1
 			src.SetLuminosity(2)
 			src.icon_state = "Jirachi"
+			src.dir = SOUTH
 			hybernating = 0
 			return
 
@@ -1190,9 +1203,9 @@
 		if(star_form !=1)
 			src << "I am not ready to enter my true form. Wait for [600-M] seconds"
 			return
-	if(energy<1000 || health < 80)
+	if(energy<1000)
 		if(star_form != 1)
-			src << "Your energy and health must be full for that!"
+			src << "\red Your energy must be full for that!"
 			return
 	if(hybernating == 1)
 		src << "\red I can't use any of my powers, until my hybernation ends."
@@ -1207,7 +1220,7 @@
 	if(star_form == 0)
 		if(alert("Are you sure that you want to enter your true form?",,"Yes","No") == "No")
 			return
-		if(energy<1000 || health < 80)
+		if(energy<1000)
 			return
 		if(hybernating == 1)
 			src << "\red I can't use any of my powers, until my hybernation ends."
@@ -1401,7 +1414,7 @@
 	abilities += "Psystrike"
 	abilities += "Telepathy"
 	abilities += "Hypnosis"
-	abilities += "Hybernation"
+	abilities += "Hibernation"
 	abilities += "Teleport"
 	abilities += "Forcewall"
 	abilities += "Heal"
