@@ -299,12 +299,13 @@
 		playsound(get_turf(src), 'sound/effects/refill.ogg', 50, 1, -6)
 		return
 	else if (istype(O, /obj/structure/reagent_dispensers/fueltank) && get_dist(src,O) <= 1 && src.welding)
-		message_admins("[key_name_admin(user)] triggered a fueltank explosion.")
-		log_game("[key_name(user)] triggered a fueltank explosion.")
-		user << "<span class='warning'>That was stupid of you.</span>"
-		var/obj/structure/reagent_dispensers/fueltank/tank = O
-		tank.explode()
-		return
+		if(alert(src,"Are you sure you want to explode a fueltank?","Fueltank Explosion","Yes","No") == "Yes")
+			message_admins("[key_name_admin(user)] triggered a fueltank explosion.")
+			log_game("[key_name(user)] triggered a fueltank explosion.")
+			user << "<span class='warning'>That was stupid of you.</span>"
+			var/obj/structure/reagent_dispensers/fueltank/tank = O
+			tank.explode()
+			return
 	if (src.welding)
 		remove_fuel(1)
 		var/turf/location = get_turf(user)

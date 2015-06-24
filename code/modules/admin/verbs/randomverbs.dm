@@ -284,6 +284,32 @@ Ccomp's first proc.
 	log_admin("[key_name(usr)] allowed [key_name(G)] to bypass the 30 minute respawn limit")
 	message_admins("Admin [key_name_admin(usr)] allowed [key_name_admin(G)] to bypass the 30 minute respawn limit", 1)
 
+var/global/list/spawnself_players = list()
+
+/client/proc/allow_player_spawnself()
+	set category = "Special Verbs"
+	set name = "Allow player to spawn self"
+	set desc = "Let's the player spawn self a new corpce."
+	if(!holder)
+		src << "Only administrators may use this command."
+
+	var/list/targets = list()
+	targets += clients
+
+	for(var/i in targets)
+		if(i:ckey in spawnself_players)
+			targets.Remove(i)
+
+	var/target = input("Select a player", "", null, null) as null|anything in targets
+	if(!target)
+		return
+
+	spawnself_players.Add(target:ckey)
+
+	target <<"\blue <B>You may now spawn yourself.</B>"
+	log_admin("[key_name(usr)] allowed [key_name(target)] to spawn self")
+	message_admins("Admin [key_name_admin(usr)] allowed [key_name_admin(target)] to spawn self", 1)
+
 
 /client/proc/toggle_antagHUD_use()
 	set category = "Server"

@@ -34,7 +34,7 @@
 
 /mob/dead/observer/New(var/mob/body=null, var/flags=1)
 	sight |= SEE_TURFS | SEE_MOBS | SEE_OBJS | SEE_SELF
-	see_invisible = SEE_INVISIBLE_OBSERVER
+	see_invisible = SEE_INVISIBLE_OBSERVER_NOLIGHTING
 	see_in_dark = 100
 	verbs += /mob/dead/observer/proc/dead_tele
 
@@ -885,3 +885,60 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return 0
 	usr.visible_message("<span class='deadsay'><b>[src]</b> points to [A]</span>")
 	return 1
+
+/mob/dead/observer/verb/SpawnBody()
+	set category = "Ghost"
+	set name = "Spawn Body"
+	set desc = "Spawn body which is choosed in Setup Character"
+
+	if(!((client.holder && check_rights(R_SPAWN)) || (src.ckey in spawnself_players)))
+		src << "You have no power there."
+		return
+	if(alert(src,"Are you sure you wish to spawn your body there? You can spawn it only once!","Player Setup","Yes","No") == "No")
+		return
+
+	var/mob/living/carbon/human/new_character = new(get_turf(src))
+	new_character.lastarea = get_area(loc)
+	new_character.add_language(new_character.mob_type_lang)
+	var/datum/species/chosen_species
+	if(client.prefs.species)
+		chosen_species = all_species[client.prefs.species]
+	if(chosen_species)
+		new_character.set_species(client.prefs.species)
+		if(chosen_species.race_language)
+			new_character.add_language(chosen_species.race_language)
+	new_character.add_language(client.prefs.language)
+	client.prefs.copy_to(new_character)
+	src << sound(null, repeat = 0, wait = 0, volume = 85, channel = 1) // MAD JAMS cant last forever yo
+	new_character.name = real_name
+	new_character.dna.ready_dna(new_character)
+	new_character.dna.b_type = client.prefs.b_type
+
+	if(client.prefs.disabilities & DISABILITY_FLAG_NEARSIGHTED)
+		new_character.dna.SetSEState(GLASSESBLOCK,1,1)
+		new_character.disabilities |= NEARSIGHTED
+
+	if(client.prefs.disabilities & DISABILITY_FLAG_FAT)
+		new_character.mutations += M_FAT
+		new_character.overeatduration = 600 // Max overeat
+
+	if(client.prefs.disabilities & DISABILITY_FLAG_EPILEPTIC)
+		new_character.dna.SetSEState(EPILEPSYBLOCK,1,1)
+		new_character.disabilities |= EPILEPSY
+
+	if(client.prefs.disabilities & DISABILITY_FLAG_DEAF)
+		new_character.dna.SetSEState(DEAFBLOCK,1,1)
+		new_character.sdisabilities |= DEAF
+
+	new_character.dna.UpdateSE()
+
+	new_character.key = key		//Manually transfer the key to log them in
+
+	new_character.store_position()
+	ticker.mode.latespawn(new_character)
+	new_character.equip_to_slot_or_del(new /obj/item/weapon/card/id/card_labeler(new_character), slot_r_hand)
+
+	log_admin("[key_name_admin(usr)] spawned self as [new_character.name]")
+	message_admins("[key_name_admin(usr)] spawned self as [new_character.name]", 1)
+
+	spawnself_players.Remove(new_character.ckey)//only one spawn for each player

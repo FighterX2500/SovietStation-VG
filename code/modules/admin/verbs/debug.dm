@@ -535,7 +535,6 @@ Pressure: [env.return_pressure()]"}
 	if(!ishuman(M))
 		alert("Invalid mob")
 		return
-	//log_admin("[key_name(src)] has alienized [M.key].")
 	var/list/dresspacks = list(
 		"strip",
 		"Engineer RIG",
