@@ -231,6 +231,7 @@ var/global/floorIsLava = 0
 /datum/admins/proc/checkCID()
 	set category = "Admin"
 	set name = "Lookup bans on Computer ID"
+	set hidden = 1
 	if(!usr)
 		return
 	if (!istype(src,/datum/admins))
@@ -247,6 +248,7 @@ var/global/floorIsLava = 0
 /datum/admins/proc/checkCKEY()
 	set category = "Admin"
 	set name = "Lookup bans on CKEY"
+	set hidden = 1
 	if(!usr)
 		return
 	if (!istype(src,/datum/admins))

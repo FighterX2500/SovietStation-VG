@@ -359,4 +359,3 @@ var/global/event/on_unban
 
 // List of /plugins
 var/global/list/plugins = list()
-
