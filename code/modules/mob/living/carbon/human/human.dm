@@ -5,6 +5,7 @@
 	voice_name = "unknown"
 	icon = 'icons/mob/human.dmi'
 	icon_state = "body_m_s"
+	mob_type_lang = list("Galactic Common" = 1)
 	var/list/hud_list[9]
 	var/datum/species/species //Contains icon generation and language information, set during New().
 	var/embedded_flag	  //To check if we've need to roll for damage on movement while an item is imbedded in us.
@@ -12,6 +13,7 @@
 /mob/living/carbon/human/dummy
 	real_name = "Test Dummy"
 	status_flags = GODMODE|CANPUSH
+	universal_speak = 1
 
 /mob/living/carbon/human/manifested
 	real_name = "Manifested Ghost"
@@ -54,6 +56,7 @@
 	..(new_loc, "Muton")
 
 /mob/living/carbon/human/New(var/new_loc, var/new_species_name = null, var/delay_ready_dna=0)
+	..()
 	if(!hair_styles_list.len) buildHairLists()
 	if(!all_species.len) buildSpeciesLists()
 	if(!src.species)
@@ -101,7 +104,6 @@
 	obj_overlays[TAIL_LAYER] = new /obj/Overlays/tail_layer
 	obj_overlays[TARGETED_LAYER] = new /obj/Overlays/targeted_layer
 
-	..()
 
 	if(dna)
 		dna.real_name = real_name
@@ -1642,11 +1644,11 @@
 	else	new_species_name = "Human"
 
 	if(src.species)
-		//if(src.species.language)	src.remove_language(species.language)
+		if(src.species.race_language)	src.remove_language(species.race_language)
 		if(src.species.abilities)	src.verbs -= species.abilities
 	src.species = all_species[new_species_name]
 	if(src.species.abilities)
-		//if(src.species.language)	src.add_language(species.language)
+		if(src.species.race_language)	src.add_language(species.race_language)
 		if(src.species.abilities)	src.verbs |= species.abilities
 	if(force_organs || !src.organs || !src.organs.len)	src.species.create_organs(src)
 	src.see_in_dark = species.darksight

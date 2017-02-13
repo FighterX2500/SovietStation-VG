@@ -52,6 +52,7 @@ proc/check_complex_placement(var/turf/T,var/size_x,var/size_y,var/ignore_walls=0
 	*/
 
 	// /vg/: Stop spawning shit inside of the vox hideout
+
 	if(locate(/turf/simulated/wall) in surroundings && !ignore_walls)
 		return 0
 	return 1

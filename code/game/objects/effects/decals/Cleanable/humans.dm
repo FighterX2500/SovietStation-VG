@@ -57,7 +57,8 @@ var/global/list/image/splatter_cache=list()
 		return
 	if(amount < 1)
 		return
-
+	if(invisibility == INVISIBILITY_MAXIMUM)
+		return
 	if(perp.shoes)
 		perp.shoes:track_blood = max(amount,perp.shoes:track_blood)                //Adding blood to shoes
 		if(!perp.shoes.blood_overlay)

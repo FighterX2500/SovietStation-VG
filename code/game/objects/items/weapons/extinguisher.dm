@@ -10,14 +10,14 @@
 	siemens_coefficient = 1
 	throwforce = 10
 	w_class = 3.0
-	throw_speed = 2
-	throw_range = 10
-	force = 10.0
+	throw_speed = 1
+	throw_range = 5
+	force = 20.0
 	m_amt = 90 // TODO: Check against autolathe.
 	w_type = RECYK_METAL
 	melt_temperature = MELTPOINT_STEEL
 	attack_verb = list("slammed", "whacked", "bashed", "thunked", "battered", "bludgeoned", "thrashed")
-	var/max_water = 50
+	var/max_water = 100
 	var/last_use = 1.0
 	var/safety = 1
 	var/sprite_name = "fire_extinguisher"
@@ -38,7 +38,7 @@
 	w_class = 2.0
 	force = 3.0
 	m_amt = 0
-	max_water = 30
+	max_water = 50
 	sprite_name = "miniFE"
 
 /obj/item/weapon/extinguisher/foam
@@ -228,7 +228,7 @@
 	if(get_dist(src,target) <= 1)
 		if((istype(target, /obj/structure/reagent_dispensers/watertank)))
 			var/obj/o = target
-			o.reagents.trans_to(src, 50)
+			o.reagents.trans_to(src, 100)
 			user << "<span class='notice'>\The [src] is now refilled</span>"
 			playsound(get_turf(src), 'sound/effects/refill.ogg', 50, 1, -6)
 			return

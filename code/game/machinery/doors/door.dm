@@ -20,6 +20,7 @@
 	var/autoclose = 0
 	var/glass = 0
 	var/normalspeed = 1
+	var/blockair = 1 // Блокирует воздух
 
 	machine_flags = SCREWTOGGLE
 
@@ -236,7 +237,9 @@
 
 	door_animate("opening")
 	src.SetOpacity(0)
-	sleep(10)
+	blockair = 0
+
+	sleep(7)
 	src.layer = 2.7
 	src.density = 0
 	explosion_resistance = 0
@@ -262,6 +265,9 @@
 
 	operating = 1
 	door_animate("closing")
+
+	spawn(10)
+		blockair = 1
 
 	layer = 3.0
 
@@ -290,10 +296,14 @@
 		// above most items if closed
 		layer = 3.1
 
+		blockair = 1
+
 		explosion_resistance = initial(explosion_resistance)
 	else
 		// under all objects if opened. 2.7 due to tables being at 2.6
 		layer = 2.7
+
+		blockair = 0
 
 		explosion_resistance = 0
 
@@ -328,7 +338,10 @@
 	..()
 
 /obj/machinery/door/CanPass(atom/movable/mover, turf/target, height=1.5, air_group = 0)
-	if(air_group) return 0
+	if(air_group)
+		if(blockair)
+			return 1
+		return 0
 	if(istype(mover) && mover.checkpass(PASSGLASS))
 		return !opacity
 	return !density

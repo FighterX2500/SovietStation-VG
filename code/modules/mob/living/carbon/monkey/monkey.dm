@@ -1,11 +1,11 @@
 /mob/living/carbon/monkey
 	name = "monkey"
 	voice_name = "monkey"
-	//speak_emote = list("chimpers")
-	languages = MONKEY
+	speak_emote = list("chimpers")
 	icon_state = "monkey1"
 	icon = 'icons/mob/monkey.dmi'
 	gender = NEUTER
+	mob_type_lang = "Animalspeak"
 	pass_flags = PASSTABLE
 	update_icon = 0		///no need to call regenerate_icon
 
@@ -28,6 +28,7 @@
 	voice_name = "farwa"
 	speak_emote = list("mews")
 	icon_state = "tajkey1"
+	mob_type_lang = "Animalspeak"
 	uni_append = list(0x0A0,0xE00) // 0A0E00
 
 /mob/living/carbon/monkey/skrell
@@ -35,6 +36,7 @@
 	voice_name = "neaera"
 	speak_emote = list("squicks")
 	icon_state = "skrellkey1"
+	mob_type_lang = "Animalspeak"
 	uni_append = list(0x01C,0xC92) // 01CC92
 
 /mob/living/carbon/monkey/unathi
@@ -42,6 +44,7 @@
 	voice_name = "stok"
 	speak_emote = list("hisses")
 	icon_state = "stokkey1"
+	mob_type_lang = "Animalspeak"
 	uni_append = list(0x044,0xC5D) // 044C5D
 	canWearClothes = 0
 
@@ -90,21 +93,18 @@
 	..()
 	dna.mutantrace = "lizard"
 	greaterform = "Unathi"
-	//add_language("Sinta'unathi")
 
 /mob/living/carbon/monkey/skrell/New()
 
 	..()
 	dna.mutantrace = "skrell"
 	greaterform = "Skrell"
-	//add_language("Skrellian")
 
 /mob/living/carbon/monkey/tajara/New()
 
 	..()
 	dna.mutantrace = "tajaran"
 	greaterform = "Tajaran"
-	//add_language("Siik'tajr")
 
 /mob/living/carbon/monkey/diona/New()
 
@@ -113,7 +113,7 @@
 	gender = NEUTER
 	dna.mutantrace = "plant"
 	greaterform = "Diona"
-	//add_language("Rootspeak")
+	add_language("Rootspeak")
 
 /mob/living/carbon/monkey/show_inv(mob/living/carbon/user as mob)
 	user.set_machine(src)

@@ -47,6 +47,7 @@
 	seed_type = null
 
 /obj/item/seeds/random/New()
+	..()
 	seed = new()
 	seed.randomize()
 

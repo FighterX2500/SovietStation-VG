@@ -94,22 +94,26 @@
 		var/datum/organ/internal/I = pick(internal_organs)
 		I.take_damage(brute / 2)
 		brute -= brute / 2
-
 	if(status & ORGAN_BROKEN && prob(40) && brute)
 		owner.emote("scream",,, 1)	//getting hit on broken hand hurts
+	var/clamp = 0
 	if(used_weapon)
 		add_autopsy_data("[used_weapon]", brute + burn)
+		if(istype(used_weapon,/obj/item))
+			var/obj/item/I = used_weapon
+			if(I.flags & BLOODCLEAR)
+				clamp = 1
 
 	var/can_cut = (prob(brute*2) || sharp) && !(status & (ORGAN_ROBOT|ORGAN_PEG))
 	// If the limbs can break, make sure we don't exceed the maximum damage a limb can take before breaking
 	if((brute_dam + burn_dam + brute + burn) < max_damage || !config.limbs_can_break)
 		if(brute)
 			if(can_cut)
-				createwound( CUT, brute )
+				createwound( CUT, brute, clamp )
 			else
-				createwound( BRUISE, brute )
+				createwound( BRUISE, brute, clamp )
 		if(burn)
-			createwound( BURN, burn )
+			createwound( BURN, burn, clamp )
 	else
 		//If we can't inflict the full amount of damage, spread the damage in other ways
 		//How much damage can we actually cause?
@@ -118,9 +122,9 @@
 			if (brute > 0)
 				//Inflict all burte damage we can
 				if(can_cut)
-					createwound( CUT, min(brute,can_inflict) )
+					createwound( CUT, min(brute,can_inflict), clamp )
 				else
-					createwound( BRUISE, min(brute,can_inflict) )
+					createwound( BRUISE, min(brute,can_inflict), clamp )
 				var/temp = can_inflict
 				//How much mroe damage can we inflict
 				can_inflict = max(0, can_inflict - brute)
@@ -212,7 +216,7 @@ This function completely restores a damaged organ to perfect condition.
 	owner.updatehealth()
 
 
-/datum/organ/external/proc/createwound(var/type = CUT, var/damage)
+/datum/organ/external/proc/createwound(var/type = CUT, var/damage, var/clamp = 0)
 	if(damage == 0) return
 
 	// first check whether we can widen an existing wound
@@ -229,21 +233,10 @@ This function completely restores a damaged organ to perfect condition.
 
 	//Creating wound
 	var/datum/wound/W
-	var/size = min( max( 1, damage/10 ) , 6)
-	//Possible types of wound
-	var/list/size_names = list()
-	switch(type)
-		if(CUT)
-			size_names = typesof(/datum/wound/cut/) - /datum/wound/cut/
-		if(BRUISE)
-			size_names = typesof(/datum/wound/bruise/) - /datum/wound/bruise/
-		if(BURN)
-			size_names = typesof(/datum/wound/burn/) - /datum/wound/burn/
-
-	size = min(size,size_names.len)
-	var/wound_type = size_names[size]
+	var/wound_type = get_wound_type(type, damage)
 	W = new wound_type(damage)
-
+	if(damage > 100)
+		W.needs_treatment = 1
 	//Possibly trigger an internal wound, too.
 	var/local_damage = brute_dam + burn_dam + damage
 	if(damage > 10 && type != BURN && local_damage > 20 && prob(damage) && !(status & (ORGAN_ROBOT|ORGAN_PEG))&& !(owner.species && owner.species.flags & NO_BLOOD))
@@ -257,10 +250,14 @@ This function completely restores a damaged organ to perfect condition.
 			// okay, add it!
 			other.damage += W.damage
 			other.amount += 1
+			if(other.damage > 100)
+				other.needs_treatment = 1
 			W = null // to signify that the wound was added
 			break
 	if(W)
 		wounds += W
+		if(clamp)
+			W.clamped = 1
 
 /****************************************************
 			   PROCESSING & UPDATING
@@ -450,22 +447,21 @@ Note that amputating the affected organ does in fact remove the infection from t
 				W.damage = max(0, W.damage - 0.2)
 
 		// slow healing
-		var/heal_amt = 0
+		var/heal_amt = 0.2
 
-		if (W.damage < 15) //this thing's edges are not in day's travel of each other, what healing?
-			heal_amt += 0.2
-
-		if(W.is_treated() && W.damage < 50) //whoa, not even magical band aid can hold it together
+		if(W.is_treated()) //whoa, not even magical band aid can hold it together
 			heal_amt += 0.3
 
 		//we only update wounds once in [wound_update_accuracy] ticks so have to emulate realtime
 		heal_amt = heal_amt * wound_update_accuracy
 		//configurable regen speed woo, no-regen hardcore or instaheal hugbox, choose your destiny
 		heal_amt = heal_amt * config.organ_regeneration_multiplier
+		//Костыль. Раны заживают медленее
+		heal_amt *= 0.5
 		// amount of healing is spread over all the wounds
 		heal_amt = heal_amt / (wounds.len + 1)
 		// making it look prettier on scanners
-		heal_amt = round(heal_amt,0.1)
+		heal_amt = round(heal_amt,0.01)
 		W.heal_damage(heal_amt)
 
 		// Salving also helps against infection
@@ -492,7 +488,6 @@ Note that amputating the affected organ does in fact remove the infection from t
 			burn_dam += W.damage
 
 		if(!(status & (ORGAN_ROBOT|ORGAN_PEG)) && W.bleeding())
-			W.bleed_timer--
 			status |= ORGAN_BLEEDING
 
 		clamped |= W.clamped

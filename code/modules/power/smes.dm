@@ -13,6 +13,7 @@
 	anchored = 1
 	use_power = 0
 	var/output = 50000
+	var/outputting = 0 //
 	var/lastout = 0
 	var/loaddemand = 0
 	var/capacity = 5e6
@@ -168,11 +169,28 @@
 	var/last_onln = online
 
 	// inputting
+	if(chargemode)
+		var/target_load = min((capacity-charge)/SMESRATE, chargelevel)
+		var/actual_load
+		var/excess = terminal.surplus()
+		if(excess >= target_load)
+			add_load(target_load)
+			charging = 2
+			actual_load = target_load
+		else if(excess)
+			add_load(excess)
+			charging = 1
+			actual_load = excess
+		else
+			charging = 0
+			actual_load = 0
+		charge += actual_load * SMESRATE
+/*
 	if(terminal)
 		var/excess = terminal.surplus()
 
 		if(charging)
-			if(excess >= 0)		// if there's power available, try to charge
+			if(excess >= chargelevel)		// if there's power available, try to charge
 
 				var/load = min((capacity-charge)/SMESRATE, chargelevel)		// charge at set rate, limited to spare capacity
 
@@ -181,8 +199,10 @@
 				add_load(load)		// add the load to the terminal side network
 
 			else					// if not enough capcity
-				charging = 0		// stop charging
+				charging = 1
 				chargecount  = 0
+				charge += load * SMESRATE	// increase the charge
+				add_load(load)
 
 		else
 			if(chargemode)
@@ -196,8 +216,24 @@
 					chargecount = 0
 			else
 				chargecount = 0
-
+*/
 	// outputting
+
+	if(outputting)
+		lastout = min( charge/SMESRATE, output)		//limit output to that stored
+
+		charge -= lastout*SMESRATE		// reduce the storage (may be recovered in /restore() if excessive)
+
+		add_avail(lastout)				// add output to powernet (smes side)
+
+		if(lastout < 0.0001)			// either from no charge or set to 0
+			outputting = 0
+	else if(online && charge > output && output > 0)
+		outputting = 1
+	else
+		lastout = 0
+
+	/*
 	if(online)
 		lastout = min( charge/SMESRATE, output)		//limit output to that stored
 
@@ -207,7 +243,7 @@
 
 		if(charge < 0.0001)
 			online = 0					// stop output if charge falls to zero
-
+*/
 	// only update icon if state changed
 	if(last_disp != chargedisplay() || last_chrg != charging || last_onln != online)
 		updateicon()
@@ -277,6 +313,12 @@
 	data["outputLevel"] = output
 	data["outputMax"] = SMESMAXOUTPUT
 	data["outputLoad"] = round(loaddemand)
+	if(outputting)
+		data["outputting"] = 2			// smes is outputting
+	else if(!outputting && online)
+		data["outputting"] = 1			// smes is online but not outputting because it's charge level is too low
+	else
+		data["outputting"] = 0			// smes is not outputting
 
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = nanomanager.try_update_ui(user, src, ui_key, ui, data)
@@ -315,6 +357,7 @@
 
 	else if( href_list["online"] )
 		online = !online
+		outputting = online
 		updateicon()
 	else if( href_list["input"] )
 		switch( href_list["input"] )

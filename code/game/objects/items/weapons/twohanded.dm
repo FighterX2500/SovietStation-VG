@@ -226,10 +226,11 @@
 	throw_range = 5
 	w_class = 2.0
 	force_unwielded = 3
-	force_wielded = 30
+	force_wielded = 50
 	wieldsound = 'sound/weapons/saberon.ogg'
 	unwieldsound = 'sound/weapons/saberoff.ogg'
-	flags = FPRINT
+	hitsound = 'sound/weapons/saberhit1.ogg'
+	flags = FPRINT | NOBLOODY | BLOODCLEAR
 	origin_tech = "magnets=3;syndicate=4"
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 

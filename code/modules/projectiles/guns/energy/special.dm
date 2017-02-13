@@ -45,6 +45,7 @@ var/available_staff_transforms=list("monkey","robot","slime","xeno","human","fur
 	projectile_type = "/obj/item/projectile/change"
 	origin_tech = null
 	clumsy_check = 0
+	can_remove_cell = 0
 	var/charge_tick = 0
 	var/changetype=null
 	var/next_changetype=0
@@ -114,6 +115,7 @@ var/available_staff_transforms=list("monkey","robot","slime","xeno","human","fur
 	projectile_type = "/obj/item/projectile/energy/floramut"
 	origin_tech = "materials=2;biotech=3;powerstorage=3"
 	modifystate = "floramut"
+	can_remove_cell = 0
 	var/charge_tick = 0
 	var/mode = 0 //0 = mutate, 1 = yield boost
 
@@ -172,6 +174,7 @@ var/available_staff_transforms=list("monkey","robot","slime","xeno","human","fur
 	projectile_type = "/obj/item/projectile/meteor"
 	charge_cost = 100
 	cell_type = "/obj/item/weapon/cell/potato"
+	can_remove_cell = 0
 	clumsy_check = 0 //Admin spawn only, might as well let clowns use it.
 	var/charge_tick = 0
 	var/recharge_time = 5 //Time it takes for shots to recharge (in ticks)
@@ -270,6 +273,7 @@ obj/item/weapon/gun/energy/staff/focus/attack_self(mob/living/user as mob)
 	projectile_type = "/obj/item/projectile/kinetic"
 	cell_type = "/obj/item/weapon/cell/miningborg"
 	charge_cost = 50
+	can_remove_cell = 0
 	var/charge_tick = 0
 
 /obj/item/weapon/gun/energy/kinetic_accelerator/cyborg/New()
@@ -303,6 +307,7 @@ obj/item/weapon/gun/energy/staff/focus/attack_self(mob/living/user as mob)
 	icon_state = "radgun"
 	fire_sound = 'sound/weapons/radgun.ogg'
 	charge_cost = 100
+	can_remove_cell = 0
 	var/charge_tick = 0
 	projectile_type = "/obj/item/projectile/energy/rad"
 

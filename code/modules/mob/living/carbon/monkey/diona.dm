@@ -72,7 +72,7 @@
 	gender = NEUTER
 	dna.mutantrace = "plant"
 	greaterform = "Diona"
-	//add_language("Rootspeak")
+	add_language("Rootspeak")
 
 //Verbs after this point.
 
@@ -143,7 +143,7 @@
 		del(L)
 
 	//for(var/datum/language/L in languages)
-		//adult.add_language(L.name)
+		adult.add_language(L.name)
 	adult.regenerate_icons()
 
 	adult.name = src.name
@@ -173,6 +173,7 @@
 		return
 
 	src.visible_message("\red [src] flicks out a feeler and neatly steals a sample of [M]'s blood.","\red You flick out a feeler and neatly steal a sample of [M]'s blood.")
+	src.add_language(M.languages)//Учим язык жертвы
 	donors += M.real_name
 	spawn(25)
 		update_progression()
@@ -187,9 +188,9 @@
 		src << "\green You feel ready to move on to your next stage of growth."
 	else if(donors.len == 2)
 		src << "\green You feel your awareness expand, and realize you know how to understand the creatures around you."
-	else if(donors.len == 4)
-		languages = HUMAN
-		src << "\green You feel your vocal range expand, and realize you know how to speak with the creatures around you."
+	//else if(donors.len == 4)
+	//	languages = HUMAN
+	//	src << "\green You feel your vocal range expand, and realize you know how to speak with the creatures around you."
 	else if(donors.len == 3)
 		src << "\green More blood seeps into you, continuing to expand your growing collection of memories."
 	else

@@ -23,7 +23,6 @@
 	var/maxf = 1499
 //			"Example" = FREQ_LISTENING|FREQ_BROADCASTING
 	flags = FPRINT | HEAR
-	languages = HUMAN | ROBOT
 	siemens_coefficient = 1
 	slot_flags = SLOT_BELT
 	throw_speed = 2
@@ -222,10 +221,10 @@
 	return
 
 */
-/obj/item/device/radio/talk_into(mob/living/M as mob, message, channel)
+/obj/item/device/radio/talk_into(mob/living/M as mob, message, channel, datum/language/lang = M.current_language_speak)
 	if(!on) return // the device has to be on
 	//  Fix for permacell radios, but kinda eh about actually fixing them.
-	if(!M || !message) return
+	if(!M || !message || !istype(M)) return
 
 	//  Uncommenting this. To the above comment:
 	// 	The permacell radios aren't suppose to be able to transmit, this isn't a bug and this "fix" is just making radio wires useless. -Giacom
@@ -347,7 +346,7 @@
 			"server" = null, // the last server to log this signal
 			"reject" = 0,	// if nonzero, the signal will not be accepted by any broadcasting machinery
 			"level" = position.z, // The source's z level
-			"languages" = M.languages //The languages M is talking in.
+			"languages" = lang //язык
 		)
 		signal.frequency = freq // Quick frequency set
 
@@ -399,7 +398,8 @@
 		"type" = 0,
 		"server" = null,
 		"reject" = 0,
-		"level" = position.z
+		"level" = position.z,
+		"languages" = lang //язык
 	)
 	signal.frequency = text2num(freq) // Quick frequency set
 
@@ -417,14 +417,14 @@
   	// Send a mundane broadcast with limited targets:
 		Broadcast_Message(M, voicemask,
 						  src, message, voice, jobname, real_name,
-						  filter_type, signal.data["compression"], list(position.z), freq)
+						  filter_type, signal.data["compression"], list(position.z), freq, lang)
 
 /obj/item/device/radio/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq)
 	if(radio_freq)
 		return
 	if (broadcasting)
 		if(get_dist(src, speaker) <= canhear_range)
-			talk_into(speaker, raw_message)
+			talk_into(speaker, raw_message, null, message_langs)
 /*
 /obj/item/device/radio/proc/accept_rad(obj/item/device/radio/R as obj, message)
 
@@ -503,7 +503,6 @@
 	else return
 
 /obj/item/device/radio/emp_act(severity)
-	broadcasting = 0
 	listening = 0
 	for (var/ch_name in channels)
 		channels[ch_name] = 0
@@ -515,6 +514,7 @@
 //Giving borgs their own radio to have some more room to work with -Sieve
 
 /obj/item/device/radio/borg
+	name = "Radio module"
 	var/obj/item/device/encryptionkey/keyslot = null//Borg radios can handle a single encryption key
 
 /obj/item/device/radio/borg/attackby(obj/item/weapon/W as obj, mob/user as mob)

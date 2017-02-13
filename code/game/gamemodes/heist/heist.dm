@@ -9,7 +9,7 @@
 	name = "heist"
 	config_tag = "heist"
 	required_players = 15
-	required_players_secret = 25
+	required_players_secret = 21
 	required_enemies = 4
 	recommended_enemies = 6
 
@@ -90,7 +90,7 @@
 		vox.generate_name()
 		vox.languages = list() // Removing language from chargen.
 		vox.flavor_text = ""
-		//vox.add_language("Vox-pidgin")
+		vox.add_language("Vox-pidgin")
 		vox.h_style = "Short Vox Quills"
 		vox.f_style = "Shaved"
 		for(var/datum/organ/external/limb in vox.organs)

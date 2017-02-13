@@ -142,7 +142,6 @@
 	name = "heart"
 	parent_organ = "chest"
 	removed_type = /obj/item/organ/heart
-
 /datum/organ/internal/lungs
 	name = "lungs"
 	parent_organ = "chest"

@@ -196,7 +196,8 @@ var/MAX_EXPLOSION_RANGE = 14
 #define FPRINT		256		// takes a fingerprint
 #define ON_BORDER	512		// item has priority to check when entering or leaving
 #define NOBLUDGEON  4  // when an item has this it produces no "X has been hit by Y with Z" message with the default handler
-#define NOBLOODY	2048	// used to items if they don't want to get a blood overlay
+#define NOBLOODY	2048	// Оружие не пачкается
+#define BLOODCLEAR 4096 //Оружие не оставляет кровоточащие раны.
 #define HEAR		16
 
 #define GLASSESCOVERSEYES	1024
@@ -231,15 +232,8 @@ var/MAX_EXPLOSION_RANGE = 14
 #define PASSBLOB	8
 
 /*
-	These defines are used specifically with the atom/movable/languages bitmask.
-	They are used in atom/movable/Hear() and atom/movable/say() to determine whether hearers can understand a message.
+нахуй
 */
-
-#define HUMAN 1
-#define MONKEY 2
-#define ALIEN 4
-#define ROBOT 8
-#define SLIME 16
 
 //turf-only flags
 #define NOJAUNT		1
@@ -760,16 +754,6 @@ var/list/TAGGERLOCATIONS = list(
 #define AGE_MIN 17			//youngest a character can be
 #define AGE_MAX 85			//oldest a character can be
 
-//Languages!
-#define LANGUAGE_HUMAN		1
-#define LANGUAGE_ALIEN		2
-#define LANGUAGE_DOG		4
-#define LANGUAGE_CAT		8
-#define LANGUAGE_BINARY		16
-#define LANGUAGE_OTHER		32768
-
-#define LANGUAGE_UNIVERSAL	65535
-
 #define LEFT 1
 #define RIGHT 2
 
@@ -841,7 +825,7 @@ var/list/RESTRICTED_CAMERA_NETWORKS = list( //Those networks can only be accesse
 //Language flags.
 #define WHITELISTED 1  // Language is available if the speaker is whitelisted.
 #define RESTRICTED 2   // Language can only be accquired by spawning or an admin.
-
+#define HIVEMIND 4
 // Hairstyle flags
 #define HAIRSTYLE_CANTRIP 1 // 5% chance of tripping your stupid ass if you're running.
 
@@ -975,6 +959,7 @@ var/list/RESTRICTED_CAMERA_NETWORKS = list( //Those networks can only be accesse
 #define I_NTSL     "ntsl"
 #define I_SINGULO  "singulo"
 #define I_ATMOS    "atmos"
+#define I_RCD      "rcd"
 
 // delayNext() flags.
 #define DELAY_MOVE    1

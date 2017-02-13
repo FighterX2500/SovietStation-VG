@@ -8,9 +8,8 @@
 	//speak_emote = list("hisses")
 	icon = 'icons/mob/alien.dmi'
 	gender = NEUTER
+	mob_type_lang = list("Xenomorph" = 1,"Hivemind" = 1)
 	dna = null
-	languages = ALIEN
-
 	var/storedPlasma = 250
 	var/max_plasma = 500
 

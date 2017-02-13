@@ -36,18 +36,18 @@ var/list/freqtoname = list(
 		return
 	send_speech(message)
 
-/atom/movable/proc/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq)
+/atom/movable/proc/Hear(message, atom/movable/speaker, datum/language/message_langs, raw_message, radio_freq, need_to_render = 1)
 	return
 
 /atom/movable/proc/can_speak()
 	return 1
 
-/atom/movable/proc/send_speech(message, range)
-	var/rendered = compose_message(src, languages, message)
+/atom/movable/proc/send_speech(message, range, datum/language/lang = all_languages["Galactic Common"])
+	//var/rendered = compose_message(src, lang, message)
 	for(var/atom/movable/AM in get_hearers_in_view(range, src))
-		AM.Hear(rendered, src, languages, message)
+		AM.Hear(message, src, lang, message)
 
-/atom/movable/proc/compose_message(atom/movable/speaker, message_langs, raw_message, radio_freq)
+/atom/movable/proc/compose_message(atom/movable/speaker, datum/language/message_langs, raw_message, radio_freq)
 	//This proc uses text() because it is faster than appending strings. Thanks BYOND.
 	//Basic span
 	var/spanpart1 = "<span class='[radio_freq ? get_radio_span(radio_freq) : "game say"]'>"
@@ -80,29 +80,14 @@ var/list/freqtoname = list(
 		return "exclaims, \"[text]\""
 
 	return "says, \"[text]\""
-
-/atom/movable/proc/lang_treat(atom/movable/speaker, message_langs, raw_message)
-	if(languages & message_langs)
-		var/atom/movable/AM = speaker.GetSource()
-		if(AM)
-			return AM.say_quote(raw_message)
-		else
-			return speaker.say_quote(raw_message)
-	else if(message_langs & HUMAN)
-		var/atom/movable/AM = speaker.GetSource()
-		if(AM)
-			return AM.say_quote(stars(raw_message))
-		else
-			return speaker.say_quote(stars(raw_message))
-	else if(message_langs & MONKEY)
-		return "chimpers."
-	else if(message_langs & ALIEN)
-		return "hisses."
-	else if(message_langs & ROBOT)
-		return "beeps rapidly."
-	else
-		return "makes a strange sound."
-
+/////////В этой функции мы проверяем язык и уродуем сообщение, если не говорим на этом языке. Если язык = null, то это значит, что говорит какой-либо автомат или еще какая хуйня.
+/atom/movable/proc/lang_treat(atom/movable/speaker, datum/language/message_langs, raw_message, verb_need = 1)
+	if(!message_langs || !istype(message_langs))
+		message_langs = all_languages["Galactic Common"]
+	var/message = raw_message
+	if(!can_speak_lang(message_langs))
+		message = stars(raw_message)
+	return "[verb_need ? (message_langs.get_spoken_verb(speaker, copytext(raw_message, length(raw_message))) + ", ") : ""]\"<span class='[message_langs.colour]'>[message]</span>\""
 /proc/get_radio_span(freq)
 	var/returntext = freqtospan["[freq]"]
 	if(returntext)

@@ -2,7 +2,7 @@
 	name = "Horror"
 	icobase = 'icons/mob/human_races/r_horror.dmi'
 	deform = 'icons/mob/human_races/r_horror.dmi'  // TODO: Need deform.
-	language = "Clatter"
+	race_language = "Clatter"
 	attack_verb = "punch"
 
 	flags = NO_BREATHE /*| NON_GENDERED*/ | NO_PAIN

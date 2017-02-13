@@ -14,6 +14,8 @@
 	var/trackrate = 60		//Measured in tenths of degree per minute (i.e. defaults to 6.0 deg/min)
 	var/trackdir = 1		//-1 = CCW, 1 = CW
 	var/nexttime = 0		//Next clock time that manual tracking will move the array
+	var/obj/machinery/power/solar/tracker/connected_tracker = null
+	var/list/connected_panels = list()
 
 	l_color = "#FF9933"
 
@@ -47,14 +49,35 @@
 		overlays += image('icons/obj/computer.dmi', "solcon-o", FLY_LAYER, angle2dir(cdir))
 
 /obj/machinery/power/solar/control/attack_ai(mob/user)
-	add_hiddenprint(user)
-	interact(user)
+	if(!..())
+		add_hiddenprint(user)
+		interact(user)
 
 /obj/machinery/power/solar/control/attack_hand(mob/user)
-	add_fingerprint(user)
-	interact(user)
+	if(!..())
+		add_fingerprint(user)
+		interact(user)
+
+/obj/machinery/power/solar/control/disconnect_from_network()
+	..()
+	solars_list.Remove(src)
+	// Забываем про подсоединенные панели и тракер
+	for(var/obj/machinery/power/solar/panel/M in connected_panels)
+		M.control = null
+	if(connected_tracker)
+		connected_tracker.control = null
+	connected_panels = list()
+	connected_tracker = null
+
+
+/obj/machinery/power/solar/control/connect_to_network()
+	var/to_return = ..()
+	if(powernet) //if connected and not already in solar_list...
+		solars_list |= src //... add it
+	return to_return
 
 /obj/machinery/power/solar/control/process()
+	..()
 	lastgen = gen
 	gen = 0
 
@@ -68,7 +91,10 @@
 		cdir = (cdir + trackdir + 360) % 360
 		set_panels(cdir)
 		update_icon()
-
+	if(track == 2)
+		if(connected_tracker.sun_angle != sun.angle)
+			connected_tracker.set_angle(sun.angle)
+			update_icon()
 	updateDialog()
 
 /obj/machinery/power/solar/control/attackby(I as obj, user as mob)
@@ -119,92 +145,94 @@
 
 	if ((get_dist(src, user) > 1))
 		if (!istype(user, /mob/living/silicon/ai))
-			user.unset_machine()
+			usr.set_machine(null)
 			user << browse(null, "window=solcon")
 			return
 
 	user.set_machine(src)
-
-
-	// AUTOFIXED BY fix_string_idiocy.py
-	// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\power\solar.dm:407: var/t = "<TT><B>Solar Generator Control</B><HR><PRE>"
-	var/t = {"<TT><B>Solar Generator Control</B><HR><PRE>
-<B>Generated power</B> : [round(lastgen)] W<BR>
-Station Orbital Period : [60/abs(sun.rotationRate)] minutes<BR>
-Station Orbital Direction : [sun.rotationRate < 0 ? "CCW" : "CW"]<BR>
-Star Orientation : [sun.angle]&deg ([angle2text(sun.angle)])<BR>
-Array Orientation : [rate_control(src,"cdir","[cdir]&deg",1,10,60)] ([angle2text(cdir)])<BR>
-<BR><HR><BR>
-Tracking :"}
-	// END AUTOFIX
+	var/t = "<B><span class='highlight'>Generated power</span></B> : [round(lastgen)] W<BR>"
+	t += "<B><span class='highlight'>Star Orientation</span></B>: [sun.angle]&deg ([angle2text(sun.angle)])<BR>"
+	t += "<B><span class='highlight'>Array Orientation</span></B>: [rate_control(src,"cdir","[cdir]&deg",1,15)] ([angle2text(cdir)])<BR>"
+	t += "<B><span class='highlight'>Tracking:</B><div class='statusDisplay'>"
 	switch(track)
 		if(0)
-			t += "<B>Off</B> <A href='?src=\ref[src];track=1'>Manual</A> <A href='?src=\ref[src];track=2'>Automatic</A><BR>"
+			t += "<span class='linkOn'>Off</span> <A href='?src=\ref[src];track=1'>Timed</A> <A href='?src=\ref[src];track=2'>Auto</A><BR>"
 		if(1)
-			t += "<A href='?src=\ref[src];track=0'>Off</A> <B>Manual</B> <A href='?src=\ref[src];track=2'>Automatic</A><BR>"
+			t += "<A href='?src=\ref[src];track=0'>Off</A> <span class='linkOn'>Timed</span> <A href='?src=\ref[src];track=2'>Auto</A><BR>"
 		if(2)
-			t += "<A href='?src=\ref[src];track=0'>Off</A> <A href='?src=\ref[src];track=1'>Manual</A> <B>Automatic</B><BR>"
+			t += "<A href='?src=\ref[src];track=0'>Off</A> <A href='?src=\ref[src];track=1'>Timed</A> <span class='linkOn'>Auto</span><BR>"
 
+	t += "Tracking Rate: [rate_control(src,"tdir","[trackrate] deg/h ([trackrate<0 ? "CCW" : "CW"])",1,30,180)]</div><BR>"
 
-	// AUTOFIXED BY fix_string_idiocy.py
-	// C:\Users\Rob\Documents\Projects\vgstation13\code\modules\power\solar.dm:423: t += "Manual Tracking Rate: [rate_control(src,"tdir","[trackrate/10]&deg/min ([trackdir<0 ? "CCW" : "CW"])",1,10)]<BR>"
-	t += {"Manual Tracking Rate: [rate_control(src,"tdir","[trackrate/10]&deg/min ([trackdir<0 ? "CCW" : "CW"])",1,10)]<BR>
-Manual Tracking Direction:"}
-	// END AUTOFIX
-	switch(trackdir)
-		if(-1)
-			t += "<A href='?src=\ref[src];trackdir=1'>CW</A> <B>CCW</B><BR>"
-		if(1)
-			t += "<B>CW</B> <A href='?src=\ref[src];trackdir=-1'>CCW</A><BR>"
-	t += "<A href='?src=\ref[src];close=1'>Close</A></TT>"
-	user << browse(t, "window=solcon")
-	onclose(user, "solcon")
+	t += "<B><span class='highlight'>Connected devices:</span></B><div class='statusDisplay'>"
+
+	t += "<A href='?src=\ref[src];search_connected=1'>Search for devices</A><BR>"
+	t += "Solar panels : [connected_panels.len] connected<BR>"
+	t += "Solar tracker : [(connected_tracker != null) ? "<span class='good'>Found</span>" : "<span class='bad'>Not found</span>"]</div><BR>"
+
+	t += "<A href='?src=\ref[src];close=1'>Close</A>"
+
+	var/datum/browser/popup = new(user, "solcon", name)
+	popup.set_content(t)
+	popup.open()
+
 	return
 
 /obj/machinery/power/solar/control/Topic(href, href_list)
 	if(..())
 		usr << browse(null, "window=solcon")
-		usr.unset_machine()
-		return
-
+		usr.set_machine(null)
+		return 0
 	if(href_list["close"] )
 		usr << browse(null, "window=solcon")
-		usr.unset_machine()
-		return
-
-	if(href_list["dir"])
-		cdir = text2num(href_list["dir"])
-		set_panels(cdir)
-		update_icon()
+		usr.set_machine(null)
+		return 0
 
 	if(href_list["rate control"])
 		if(href_list["cdir"])
-			cdir = dd_range(0, 359, (360 + cdir + text2num(href_list["cdir"])) % 360)
+			src.cdir = dd_range(0,359,(360+src.cdir+text2num(href_list["cdir"]))%360)
+			if(track == 2) //manual update, so losing auto-tracking
+				track = 0
 			spawn(1)
 				set_panels(cdir)
-				update_icon()
 		if(href_list["tdir"])
-			trackrate = dd_range(0, 360, trackrate + text2num(href_list["tdir"]))
-			if(trackrate)
-				nexttime = world.time + 6000 / trackrate
+			src.trackrate = dd_range(-7200,7200,src.trackrate+text2num(href_list["tdir"]))
+			if(src.trackrate) nexttime = world.time + 36000/abs(trackrate)
 
 	if(href_list["track"])
-		if(trackrate)
-			nexttime = world.time + 6000 / trackrate
-
 		track = text2num(href_list["track"])
-
 		if(track == 2)
-			for(var/obj/machinery/power/solar/tracker/T in getPowernetNodes())
-				cdir = T.sun_angle
-				break
+			if(connected_tracker != null)
+				connected_tracker.set_angle(sun.angle)
+				set_panels(cdir)
+		else if (track == 1) //begin manual tracking
+			if(src.trackrate) nexttime = world.time + 36000/abs(trackrate)
+			set_panels(cdir)
 
-	if(href_list["trackdir"])
-		trackdir = text2num(href_list["trackdir"])
+	if(href_list["search_connected"])
+		src.search_for_connected()
+		if(connected_tracker && track == 2)
+			connected_tracker.set_angle(sun.angle)
+		src.set_panels(cdir)
 
-	set_panels(cdir)
-	update_icon()
-	updateUsrDialog()
+	interact(usr)
+	return 1
+
+/obj/machinery/power/solar/control/proc/search_for_connected()
+	if(powernet)
+		for(var/obj/machinery/power/M in powernet.nodes)
+			if(istype(M, /obj/machinery/power/solar/panel))
+				var/obj/machinery/power/solar/panel/S = M
+				if(!S.control) //i.e unconnected
+					S.control = src
+					connected_panels |= S
+			else if(istype(M, /obj/machinery/power/solar/tracker))
+				if(!connected_tracker) //if there's already a tracker connected to the computer don't add another
+					var/obj/machinery/power/solar/tracker/T = M
+					if(!T.control) //i.e unconnected
+						connected_tracker = T
+						T.control = src
+
 
 /obj/machinery/power/solar/control/proc/set_panels(var/cdir)
 	for(var/obj/machinery/power/solar/panel/P in getPowernetNodes())
@@ -246,3 +274,4 @@ Manual Tracking Direction:"}
 	if(prob(75))
 		broken()
 		density = 0
+

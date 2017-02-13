@@ -32,7 +32,8 @@ var/global/list/whitelisted_species = list("Human")
 
 	var/primitive                // Lesser form, if any (ie. monkey for humans)
 	var/tail                     // Name of tail image in species effects icon file.
-	var/language                 // Default racial language, if any.
+	var/list/languages  // Default racial language, if any.
+	var/race_language
 	var/attack_verb = "punch"    // Empty hand hurt intent verb.
 	var/punch_damage = 0		 // Extra empty hand attack damage.
 	var/punch_throw_range = 0
@@ -93,7 +94,6 @@ var/global/list/whitelisted_species = list("Human")
 	var/wear_suit_icons = 'icons/mob/suit.dmi'
 	var/wear_mask_icons = 'icons/mob/mask.dmi'
 	var/back_icons      = 'icons/mob/back.dmi'
-
 
 	//Used in icon caching.
 	var/race_key = 0
@@ -324,7 +324,7 @@ var/global/list/whitelisted_species = list("Human")
 
 /datum/species/human
 	name = "Human"
-	language = "Sol Common"
+	race_language = "Sol Common"
 	primitive = /mob/living/carbon/monkey
 
 	flags = HAS_SKIN_TONE | HAS_LIPS | HAS_UNDERWEAR | CAN_BE_FAT
@@ -333,7 +333,6 @@ var/global/list/whitelisted_species = list("Human")
 	name = "Manifested"
 	icobase = 'icons/mob/human_races/r_manifested.dmi'
 	deform = 'icons/mob/human_races/r_def_manifested.dmi'
-	language = "Sol Common"
 	primitive = /mob/living/carbon/monkey
 
 	flags = HAS_SKIN_TONE | HAS_LIPS | HAS_UNDERWEAR | CAN_BE_FAT
@@ -342,7 +341,7 @@ var/global/list/whitelisted_species = list("Human")
 	name = "Unathi"
 	icobase = 'icons/mob/human_races/r_lizard.dmi'
 	deform = 'icons/mob/human_races/r_def_lizard.dmi'
-	language = "Sinta'unathi"
+	race_language = "Sinta'unathi"
 	tail = "sogtail"
 	attack_verb = "scratch"
 	punch_damage = 5
@@ -370,7 +369,7 @@ var/global/list/whitelisted_species = list("Human")
 	name = "Skellington"
 	icobase = 'icons/mob/human_races/r_skeleton.dmi'
 	deform = 'icons/mob/human_races/r_skeleton.dmi'  // TODO: Need deform.
-	language = "Clatter"
+	race_language = "Clatter"
 	attack_verb = "punch"
 
 	flags = IS_WHITELISTED | HAS_LIPS | NO_SCAN | NO_BREATHE /*| NON_GENDERED*/ | NO_BLOOD
@@ -387,7 +386,7 @@ var/global/list/whitelisted_species = list("Human")
 	name = "Tajaran"
 	icobase = 'icons/mob/human_races/r_tajaran.dmi'
 	deform = 'icons/mob/human_races/r_def_tajaran.dmi'
-	language = "Siik'tajr"
+	race_language = "Siik'tajr"
 	tail = "tajtail"
 	attack_verb = "scratch"
 	punch_damage = 5
@@ -409,7 +408,12 @@ var/global/list/whitelisted_species = list("Human")
 
 	var/datum/speech_filter/filter = new
 
+	equip(var/mob/living/carbon/human/H)
+		H.u_equip(H.shoes)
+		H.equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal(H), slot_shoes)
+
 /datum/species/tajaran/New()
+	..()
 	// Combining all the worst shit the world has ever offered.
 
 	// Note: Comes BEFORE other stuff.
@@ -422,28 +426,25 @@ var/global/list/whitelisted_species = list("Human")
 			"party pooper"
 		)
 	)
-	filter.addWordReplacement("me","meow")
-	filter.addWordReplacement("I","meow") // Should replace with player's first name.
-	filter.addReplacement("fuck","yiff")
-	filter.addReplacement("shit","scat")
-	filter.addReplacement("scratch","scritch")
-	filter.addWordReplacement("(help|assist)\\bmeow","kill meow") // help me(ow) -> kill meow
-	filter.addReplacement("god","gosh")
-	filter.addWordReplacement("(ass|butt)", "rump")
+	filter.addWordReplacement("(ìîé|ìîÿ|ìîå|ìî¸)","ìÿó")
+	filter.addWordReplacement("&#255;","Ì&#255;ó") // Should replace with player's first name.
+	filter.addReplacement("Áëÿäü","Ïğğ")
+	filter.addReplacement("Ãîâíî","Ïîì¸ò")
+	filter.addReplacement("Áîã","Áîõ")
 
 /datum/species/tajaran/say_filter(mob/M, message, datum/language/speaking)
 	if(prob(15))
 		message = ""
 		if(prob(50))
 			message = pick(
-				"GOD, PLEASE",
-				"NO, GOD",
-				"AGGGGGGGH",
+				"Áîõ, ïîæàëóéñòà!",
+				"ÍÅÒ, ÁÎÕ!",
+				"ÌßÓÓÓÓÓÓÓÓ!",
 			)+" "
 		message += pick(
-			"KILL ME",
-			"END MY SUFFERING",
-			"I CAN'T DO THIS ANYMORE",
+			"ÓÁÅÉÒÅ ÌßÓ!",
+			"ÇÀÊÎÍ×ÈÒÅ ÑÒĞÀÄÀÍÈß ÌßÓ!",
+			"ÌßÓ ÁÎËÜØÅ ÍÅ ÌÎÆÅÒ İÒÎÃÎ ÒÅĞÏÅÒÜ!",
 		)
 		return message
 	if(copytext(message, 1, 2) != "*")
@@ -454,7 +455,6 @@ var/global/list/whitelisted_species = list("Human")
 	name = "Grey"
 	icobase = 'icons/mob/human_races/r_grey.dmi'
 	deform = 'icons/mob/human_races/r_def_grey.dmi'
-	language = "Grey"
 	attack_verb = "punch"
 	darksight = 5 // BOOSTED from 2
 	eyes = "grey_eyes_s"
@@ -473,7 +473,7 @@ var/global/list/whitelisted_species = list("Human")
 	name = "Muton"
 	icobase = 'icons/mob/human_races/r_muton.dmi'
 	deform = 'icons/mob/human_races/r_def_muton.dmi'
-	language = "Muton"
+	race_language = "Muton"
 	attack_verb = "punch"
 	darksight = 1
 	eyes = "eyes_s"
@@ -497,7 +497,7 @@ var/global/list/whitelisted_species = list("Human")
 	name = "Skrell"
 	icobase = 'icons/mob/human_races/r_skrell.dmi'
 	deform = 'icons/mob/human_races/r_def_skrell.dmi'
-	language = "Skrellian"
+	race_language = "Skrellian"
 	primitive = /mob/living/carbon/monkey/skrell
 
 	flags = IS_WHITELISTED | HAS_LIPS | HAS_UNDERWEAR | HAS_SKIN_TONE
@@ -508,7 +508,7 @@ var/global/list/whitelisted_species = list("Human")
 	name = "Vox"
 	icobase = 'icons/mob/human_races/r_vox.dmi'
 	deform = 'icons/mob/human_races/r_def_vox.dmi'
-	language = "Vox-pidgin"
+	race_language = "Vox-pidgin"
 
 	survival_gear = /obj/item/weapon/storage/box/survival/vox
 
@@ -601,7 +601,7 @@ var/global/list/whitelisted_species = list("Human")
 	name = "Diona"
 	icobase = 'icons/mob/human_races/r_plant.dmi'
 	deform = 'icons/mob/human_races/r_def_plant.dmi'
-	language = "Rootspeak"
+	race_language = "Rootspeak"
 	attack_verb = "slash"
 	punch_damage = 5
 	primitive = /mob/living/carbon/monkey/diona

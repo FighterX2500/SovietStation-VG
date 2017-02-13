@@ -18,7 +18,8 @@
 	unacidable = 1
 	status_flags = 1
 	pass_flags = PASSTABLE
-	languages = ALL
+	//languages = ALL
+	universal_speak = 1 //’уйн€ конечно, но пусть хот€бы так
 	var/energy = 900
 	var/const/max_energy = 900
 	var/star_form = 0		//Is S-form enabled?
@@ -26,7 +27,7 @@
 	var/hypnotizing = 0		//Is Jirachi hypnotizing someone?
 	var/hybernating = 0		//Is Jirachi sleeping?
 	var/list/startelelocs = list()		//Teleport locations
-	heat_damage_per_tick = 0
+	heat_damage_per_tick = -5
 	cold_damage_per_tick = 0
 	min_oxy = 0
 	max_oxy = 0
@@ -43,21 +44,33 @@
 	var/used_teleport
 	var/used_steleport
 	var/used_hypno
+	var/repeat = 1
+
+/mob/living/simple_animal/jirachi/Life()		//Jirachi loves fire!
+	..()
+	var/gain = 0
+	if(bodytemperature > 600)
+		gain = round((bodytemperature - 600)/10, 1)
+		bodytemperature -= 400
+		if(repeat == 1)
+			src << "\blue I feel my body starting to absorb heat and converting it into light energy..."
+			visible_message("\red \bold Jirachi starts absorbing heat around itself!")
+			repeat = 0
+	else if(repeat == 0)
+		repeat = 1
+
+	energy = min(energy + gain, max_energy)
 
 
 
-	Life()
-	 ..()
-		if(stat == 2)
-			new /obj/effect/decal/cleanable/ash(src.loc)
-			for(var/mob/M in viewers(src, null))
-				if((M.client && !( M.blinded )))
-					M.show_message("\red [src] starts burning with bright fire from inside, before turning into ashes") //Poor Jirachi :(
-					ghostize()
-			del src
-			return
-
-
+/mob/living/simple_animal/jirachi/Die()
+	..()
+	new /obj/effect/decal/cleanable/ash(src.loc)
+	for(var/mob/M in viewers(src, null))
+		if((M.client && !( M.blinded )))
+			M.show_message("\red [src] starts burning with bright fire from inside, before turning into ashes") //Poor Jirachi :(
+	ghostize()
+	del src
 
 /mob/living/simple_animal/jirachi/Process_Spacemove(var/check_drift = 0)//Move freely in space
 	return 1
@@ -670,11 +683,6 @@
 		sleep(10)
 
 
-
-
-
-
-
 /mob/living/simple_animal/jirachi/verb/telepathy(mob/living/E as mob in player_list)
 	set category = "Jirachi"
 	set name = "Telepathy"
@@ -710,8 +718,9 @@
 
 /mob/living/simple_animal/jirachi/verb/teleport()
 	set category = "Jirachi"
-	set name = "Teleport(150)"
+	set name = "Teleportation(150)"
 	set desc = "Teleport yourself or somebody near you to the any location"
+
 	if(energy<150)
 		src << "You don't have enough power!"
 		return
@@ -722,7 +731,7 @@
 
 	var/Q = round((world.time - used_teleport)/10, 1)
 	if(Q<=20 && star_form == 0)
-		src << "\red I am not ready to teleport again. Wait for [20-Q] seconds"
+		src << "\red I am not ready to use this ability again. Wait for [20-Q] seconds"
 		return
 
 
@@ -812,9 +821,8 @@
 		if ((M.client && !( M.blinded ) && (M != I)))
 			M << "\red [I] suddenly appears out of nowhere!"
 
-
-
 	energy-=150
+
 
 
 /mob/living/simple_animal/jirachi/verb/hybernate()
@@ -894,6 +902,7 @@
 	var/mob/living/simple_animal/jirachi/C = src
 	var/client/W = C.client
 
+
 	if(star_form == 0)
 		if(alert("Are you sure that you want to enter your true form?",,"Yes","No") == "No")
 			return
@@ -907,11 +916,11 @@
 		src.response_harm   = "tries to punch"
 		src.harm_intent_damage = 0
 		src.verbs.Add(/mob/living/simple_animal/jirachi/proc/global_telepathy,/mob/living/simple_animal/jirachi/proc/shockwave, /mob/living/simple_animal/jirachi/proc/starlight)
+		icon_state = "Jirachi-Star"
+		name = "Jirachi-S"	//Change it's sprite!
 		for(var/mob/living/carbon/human/patient in world)	//Medhud during S-form
 			W.images += patient.hud_list[HEALTH_HUD]
 			W.images += patient.hud_list[STATUS_HUD]
-		icon_state = "Jirachi-Star"
-		name = "Jirachi-S"	//Change it's sprite!
 
 		for(var/mob/living/carbon/P in view(7,src))
 			flick("e_flash", P.flash)
@@ -920,49 +929,37 @@
 		if(src.star_form)
 			C << "<b>Strange feeling of blindness covered me, as I closed my Third Eye. Energies calms inside me and I revert back to my orginal form.</b>"
 			star_form = 0
-			src.see_invisible = SEE_INVISIBLE_LIVING
-			src.sight = null
-			src.SetLuminosity(2)
-			response_harm   = "punches"
-			harm_intent_damage = 10
-			src.verbs -= /mob/living/simple_animal/jirachi/proc/global_telepathy
-			src.verbs -= /mob/living/simple_animal/jirachi/proc/shockwave
-			src.verbs -=/mob/living/simple_animal/jirachi/proc/starlight
-			for(var/mob/living/carbon/human/patient in world)
-				W.images -= patient.hud_list[HEALTH_HUD]
-				W.images -= patient.hud_list[STATUS_HUD]
-			icon_state = "Jirachi"
-			name = "Jirachi"
-
-			for(var/mob/living/carbon/L in view(7,src))
-				L << "\red <b>Light energy envelops Jirachi-S, as it starts transforming back to it's normal form!</b>"
 
 
-	while(star_form == 1)
-		src.energy -=3
+	for(energy, energy>0, energy -= 3)
+		if(star_form == 0)
+			energy += 3
+			break
 		sleep(10)
 
-		if(energy <= 0)
-			C << "\red <b>I am too exhausted...I can't further maintain my true form, I almost ran out of energy...I revert back to my original form.</b>"
-			star_form = 0
-			energy = 0
-			src.sight = null
-			src.SetLuminosity(2)
-			response_harm   = "punches"
-			harm_intent_damage = 10
-			src.verbs -= /mob/living/simple_animal/jirachi/proc/global_telepathy
-			src.verbs -= /mob/living/simple_animal/jirachi/proc/shockwave
-			src.verbs -= /mob/living/simple_animal/jirachi/proc/starlight
-			for(var/mob/living/carbon/human/patient in world)
-				W.images -= patient.hud_list[HEALTH_HUD]
-				W.images -= patient.hud_list[STATUS_HUD]
-			icon_state = "Jirachi"
-			name = "Jirachi"
-			health=health/2 //If it rans out of energy, shit happens.
-			used_star = world.time
-			for(var/mob/living/carbon/Y in view(7,src))
-				Y << "\red <b>Light energy envelops Jirachi-S, as it starts transforming back to it's normal form!</b>"
-			return
+	if(energy <= 0)
+		energy = 0
+		health=health/2
+		C << "\red <b>I am too exhausted...I can't further maintain my true form, I almost ran out of energy...I revert back to my original form.</b>"
+	star_form = 0
+	src.see_invisible = SEE_INVISIBLE_LIVING
+	src.sight = null
+	src.SetLuminosity(2)
+	response_harm   = "punches"
+	harm_intent_damage = 15
+	src.verbs -= /mob/living/simple_animal/jirachi/proc/global_telepathy
+	src.verbs -= /mob/living/simple_animal/jirachi/proc/shockwave
+	src.verbs -=/mob/living/simple_animal/jirachi/proc/starlight
+	icon_state = "Jirachi"
+	name = "Jirachi"
+	for(var/mob/living/carbon/human/patient in world)
+		W.images -= patient.hud_list[HEALTH_HUD]
+		W.images -= patient.hud_list[STATUS_HUD]
+
+	for(var/mob/living/carbon/L in view(7,src))
+		L << "\red <b>Light energy envelops Jirachi-S, as it starts transforming back to it's normal form!</b>"
+
+
 	used_star = world.time
 
 
@@ -1047,15 +1044,106 @@
 	hypnotizing = 0
 	energy-=300
 
+/mob/living/simple_animal/jirachi/verb/teleporthidden(mob/living/I as mob in view())
+	set category = null
+	set name = "Teleport(150)"
+	set desc = "Teleport yourself or somebody near you to the any location"
+	set src = usr
+
+	if(energy<150)
+		src << "You don't have enough power!"
+		return
+
+	if(hybernating == 1)
+		src << "\red I can't use any of my powers, until my hybernation ends."
+		return
+
+	var/Q = round((world.time - used_teleport)/10, 1)
+	if(Q<=20 && star_form == 0)
+		src << "\red I am not ready to use this ability again. Wait for [20-Q] seconds"
+		return
+
+	if(!startelelocs.len)
+		for(var/area/AR in world)
+			if(istype(AR, /area/shuttle) || istype(AR, /area/syndicate_station) || istype(AR, /area/centcom) || istype(AR, /area/asteroid)) continue
+			if(startelelocs.Find(AR.name)) continue
+			var/turf/picked = pick(get_area_turfs(AR.type))
+			if (picked.z == 1 || picked.z == 5 || picked.z == 3)
+				startelelocs += AR.name
+				startelelocs[AR.name] = AR
+
+	startelelocs = sortAssoc(startelelocs)	//Jirachi has his own list with locs
+
+
+	var/A = input("Area to teleport to", "Teleport") in startelelocs
+
+	for(var/mob/S in viewers(src, null))
+		if (S.client && !(S.blinded))
+			S << "\red [src]'s eyes starts to glow with the blue light..."
+	for(var/mob/M in viewers(I, null))
+		if (M.client && !(M.blinded) && (M != I))
+			M << "\red [I] wanishes in a cerulean flash!"
+
+	for(var/obj/mecha/Z)
+		if(Z.occupant == I)
+			Z.go_out()
+
+	if(I && I.buckled)
+		I.buckled.unbuckle()
+
+	var/area/thearea = startelelocs[A]
+	for(var/mob/living/C in view())
+		var/list/L = list()
+		for(var/turf/T in get_area_turfs(thearea.type))
+			if(!T.density)
+				var/clear = 1
+				for(var/obj/O in T)
+					if(O.density)
+						clear = 0
+						break
+					if(clear)
+						L+=T
+
+		if(!L.len)
+			usr <<"\red I can't teleport [I] into that location"
+			return
+
+		var/list/tempL = L
+		var/attempt = null
+		var/success = 0
+		while(tempL.len)
+			attempt = pick(tempL)
+			success = I.Move(attempt)
+			if(!success)
+				tempL.Remove(attempt)
+			else
+				break
+
+		if(!success)
+			I.loc = pick(L)
+
+	if(I == src)
+		src << "\blue I transfer myself to the [A]"
+	else
+		src << "\blue I teleport [I] to the [A]"
+		I << "\red Suddenly, you've been blinded with a flash of light!"
+		flick("e_flash", I.flash)
+
+	used_teleport = world.time
+
+
+	for(var/mob/M in viewers(I, null))
+		if ((M.client && !( M.blinded ) && (M != I)))
+			M << "\red [I] suddenly appears out of nowhere!"
+
+	energy-=150
+
 
 /mob/living/simple_animal/jirachi/proc/global_telepathy()
 	set category = "Jirachi"
-	set name = "Global Telepathy(50)"
+	set name = "Global Telepathy"
 	set desc = "Send telepathic message to all organic creatures on the station."
 
-	if(energy<50)
-		src << "You don't have enough power!"
-		return
 	if(star_form == 0)
 		src << "You can use that power only in Star Form!"
 		return
@@ -1068,15 +1156,14 @@
 	if (!msg)
 		return
 
-	for(var/mob/living/carbon/human/P in world)
-		if(!(P.species.flags & IS_SYNTHETIC))
-			P << "\blue <b><i>You hear echoing, powerful voice in your head...</i></b> \italic \bold [msg]"
+	for(var/mob/living/P in world)
+		if(istype(P, /mob/living/silicon))
+			continue
+		P << "\blue <b><i>You hear echoing, powerful voice in your head...</i></b> \italic \bold [msg]"
 	for(var/mob/dead/observer/G in player_list)
 		G << "\bold GLOBAL TELEPATHY: [msg]"
 	log_say("Global Telepathy: [key_name(usr)] : [msg]")
 	src << {"\blue You project "[msg]" into mind of every living creature"}
-
-	energy-=50
 	return
 
 /mob/living/simple_animal/jirachi/verb/showa()
@@ -1120,9 +1207,9 @@
 		if("Hypnosis")
 			src << ""
 			src << "Hypnosis - Jirachi starts hypnotizing selected target. If target moves - hypnosis will be interrupted.  If hypnosis was interrupted, Jirachi can't use this ability for 25 seconds, but energy will not be spended. After 12 seconds passed, and neither target, nor Jirachi moved, target will fall asleep for 5 minutes. Jirachi can't hypnotize IPC's, or the one with eye protection. S-form upgrade: Jirachi can hypnotize through eye protection, and target can't move or act while Jirachi hypnotizing it."
-		if("Teleport")
+		if("Teleportation")
 			src << ""
-			src << "Teleport - Teleports Jirachi itself or anyone Jirachi can see into selected location in the world, it can also teleport you to the different Z-levels. Cooldown: 20 seconds. S-form upgrade: No cooldown, and Jirachi can teleport anyone in the world, not only the one it can see."
+			src << "Teleport - Teleports Jirachi itself or anyone Jirachi can see into selected location in the world, it can also teleport you target the different Z-levels. Cooldown: 20 seconds. Can be used through right-click. S-form upgrade: No cooldown, and Jirachi can teleport anyone in the world, not only the one it can see."
 		if("Blink(Middle Mouse Button)")
 			src << ""
 			src << "Blink - Costs 100 energy. Teleports Jirachi to the selected tile via middle mouse button or right-click => turf => Blink(100). Jirachi can't blink into blocked turfs. Cooldown: 5 seconds. S-form upgrade: No cooldown."
@@ -1210,9 +1297,13 @@
 		src << "\red I can't use any of my powers, until my hybernation ends."
 		return
 
-	for(var/mob/living/carbon/human/M in view(7,src))
-		M.Weaken(27-2*get_dist(M, src))		//Stun time depends on distance
-		M << "\red You have been knocked down from your feet!"
+	for(var/mob/living/M in oview(7,src))
+		if(!M.lying)
+			M.adjustFireLoss(35-5*get_dist(M,src))
+			M.Weaken(27-2*get_dist(M, src))		//Stun time depends on distance
+			M << "\red You have been knocked down from your feet!"
+		else
+			M.adjustBruteLoss(2)
 
 	var/list/atoms = list()
 	if(isturf(src))
@@ -1389,6 +1480,6 @@
 			jirachi << "\blue <i><b>Star power begins to emerge from me, breaking my involucre</b></i>"
 			jirachi << "\blue <i><b>My crystalline shell brokens, as I opened my eyes...</b></i>"
 			jirachi << ""
-			jirachi << "<b>You are now playing as Jirachi - the Child Of The Star!</b> Jirachi is the creature, born by means of Light, Life and Star powers. It is kind to all living beings. That means you ought to protect ordinary crew members, wizards, traitors, aliens, changelings, Syndicate Operatives and others from killing each other. <b><font color=red>Do no harm! Jirachi can't stand pain or suffering of any living creature. Try to use your offensive abilities as little as possible</font></b> In short - you are adorable but very powerful creature, which loves everybody. More information how to RP as Jirachi can be found here: http://tauceti.ru/forums/index.php?topic=3171.0 Have fun!"
+			jirachi << "<b>You are now playing as Jirachi - the Child Of The Star!</b> Jirachi is the creature, born by means of Light, Life and Star powers. It is kind to all living beings. That means you ought to protect ordinary crew members, wizards, traitors, aliens, changelings, Syndicate Operatives and others from killing each other. <b><font color=red>Do no harm! Jirachi can't stand pain or suffering of any living creature. Try to use your offensive abilities as little as possible</font></b> In short - you are adorable but very powerful creature, which loves everybody. Also remember, that fire is best friend for you(and the worst enemy for the most other creatures). Being on fire is the other than Hybernation method to pretty rapidly regenerate your health and energy. More information how to RP as Jirachi can be found here: http://tauceti.ru/forums/index.php?topic=3171.0 Have fun!"
 			dead_mob_list -= C
 			del(src)

@@ -5,8 +5,7 @@
 	icon = 'icons/obj/radio.dmi'
 	icon_state = "cypherkey"
 	item_state = ""
-	var/translate_binary = 0
-	var/translate_hive = 0
+	var/translate
 	var/syndie = 0
 	var/list/channels = list()
 
@@ -20,7 +19,7 @@
 
 /obj/item/device/encryptionkey/binary
 	icon_state = "cypherkey"
-	translate_binary = 1
+	translate = "Robot Talk"
 	origin_tech = "syndicate=3"
 
 /obj/item/device/encryptionkey/headset_sec
@@ -70,6 +69,12 @@
 	desc = "An encryption key for a radio headset.  Contains cypherkeys."
 	icon_state = "cap_cypherkey"
 	channels = list("Command" = 1, "Security" = 1, "Engineering" = 0, "Science" = 0, "Medical" = 0, "Supply" = 0, "Service" = 0)
+
+/obj/item/device/encryptionkey/ai
+	name = "AI's Encryption Key"
+	desc = "An encryption key for a radio headset.  Contains cypherkeys."
+	icon_state = "cap_cypherkey"
+	channels = list("Command" = 1, "Security" = 1, "Engineering" = 1, "Science" = 1, "Medical" = 1, "Supply" = 1, "Service" = 1)
 
 /obj/item/device/encryptionkey/syndicate/hacked
 	name = "Standard Encryption Key"

@@ -87,7 +87,6 @@ var/global/borer_chem_types = typesof(/datum/borer_chem) - /datum/borer_chem
 	friendly = "prods"
 	wander = 0
 	pass_flags = PASSTABLE
-	languages = ALL
 
 
 	var/chemicals = 10                      // Chemicals used for reproduction and spitting neurotoxin.

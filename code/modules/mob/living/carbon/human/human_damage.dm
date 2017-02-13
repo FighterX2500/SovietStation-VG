@@ -292,13 +292,13 @@ This function restores all organs.
 			damageoverlaytemp = 20
 			if(species && species.brute_mod)
 				damage = damage*species.brute_mod
-			if(organ.take_damage(damage, 0, sharp, edge, used_weapon))
+			if(organ.take_damage(brute = damage, burn = 0, sharp = sharp, edge = edge, used_weapon = used_weapon))
 				QueueUpdateDamageIcon(1)
 		if(BURN)
 			damageoverlaytemp = 20
 			if(species && species.burn_mod)
 				damage = damage*species.burn_mod
-			if(organ.take_damage(0, damage, sharp, edge, used_weapon))
+			if(organ.take_damage(brute = 0, burn = damage,  sharp = sharp, edge = edge, used_weapon = used_weapon))
 				QueueUpdateDamageIcon(1)
 
 	// Will set our damageoverlay icon to the next level, which will then be set back to the normal level the next mob.Life().

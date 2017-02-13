@@ -11,8 +11,7 @@
 	canhear_range = 0 // can't hear headsets from very far away
 
 	slot_flags = SLOT_EARS
-	var/translate_binary = 0
-	var/translate_hive = 0
+	var/list/translate = list()
 	var/obj/item/device/encryptionkey/keyslot1 = null
 	var/obj/item/device/encryptionkey/keyslot2 = null
 	maxf = 1489
@@ -165,7 +164,6 @@
 	item_state = "headset"
 	freerange = 1
 	keyslot2 = new /obj/item/device/encryptionkey/ert
-
 /obj/item/device/radio/headset/attackby(obj/item/weapon/W as obj, mob/user as mob)
 //	..()
 	user.set_machine(src)
@@ -224,8 +222,7 @@
 
 /obj/item/device/radio/headset/proc/recalculateChannels()
 	src.channels = list()
-	src.translate_binary = 0
-	src.translate_hive = 0
+	src.translate = list()
 	src.syndie = 0
 
 	if(keyslot1)
@@ -235,11 +232,8 @@
 			src.channels += ch_name
 			src.channels[ch_name] = keyslot1.channels[ch_name]
 
-		if(keyslot1.translate_binary)
-			src.translate_binary = 1
-
-		if(keyslot1.translate_hive)
-			src.translate_hive = 1
+		if(keyslot1.translate)
+			src.translate += keyslot1.translate
 
 		if(keyslot1.syndie)
 			src.syndie = 1
@@ -251,11 +245,8 @@
 			src.channels += ch_name
 			src.channels[ch_name] = keyslot2.channels[ch_name]
 
-		if(keyslot2.translate_binary)
-			src.translate_binary = 1
-
-		if(keyslot2.translate_hive)
-			src.translate_hive = 1
+		if(keyslot2.translate)
+			src.translate += keyslot2.translate
 
 		if(keyslot2.syndie)
 			src.syndie = 1

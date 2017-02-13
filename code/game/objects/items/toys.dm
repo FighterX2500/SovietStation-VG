@@ -895,6 +895,7 @@
 	desc = "The holy grail of all programmers."
 	icon = 'icons/obj/module.dmi'
 	icon_state = "gooncode"
+	origin_tech = "programming=6;powerstorage=3;engineering=4;materials=5"
 
 	suicide_act(mob/user)
 		viewers(user) << "<span class = 'danger'>[user] is using [src.name]! It looks like \he's  trying to re-add poo!</span>"

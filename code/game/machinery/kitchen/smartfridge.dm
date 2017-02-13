@@ -147,6 +147,44 @@
 
 	RefreshParts()
 
+/obj/machinery/smartfridge/blood
+	name = "\improper Blood Storage"
+	desc = "A refrigerated storage unit for blood packs"
+	var/blood_packs_count_at_start = 5
+	var/list/blood_types_at_start = list("A+","A-","B+","B-","O+","O-")
+	accepted_types = list(	/obj/item/weapon/reagent_containers/blood)
+	New()
+		. = ..()
+		component_parts = newlist(
+			/obj/item/weapon/circuitboard/smartfridge/drinks,
+			/obj/item/weapon/stock_parts/manipulator,
+			/obj/item/weapon/stock_parts/manipulator,
+			/obj/item/weapon/stock_parts/matter_bin,
+			/obj/item/weapon/stock_parts/matter_bin,
+			/obj/item/weapon/stock_parts/matter_bin,
+			/obj/item/weapon/stock_parts/matter_bin,
+			/obj/item/weapon/stock_parts/scanning_module,
+			/obj/item/weapon/stock_parts/console_screen,
+			/obj/item/weapon/stock_parts/console_screen
+		)
+		for(var/type in blood_types_at_start)
+			for(var/i = 0, i < blood_packs_count_at_start, i++)
+				var/obj/item/weapon/reagent_containers/blood/pack
+				switch (type)
+					if("A+") pack = new/obj/item/weapon/reagent_containers/blood/APlus/
+					if("A-") pack = new/obj/item/weapon/reagent_containers/blood/AMinus/
+					if("B+") pack = new/obj/item/weapon/reagent_containers/blood/BPlus/
+					if("B-") pack = new/obj/item/weapon/reagent_containers/blood/BMinus/
+					if("O+") pack = new/obj/item/weapon/reagent_containers/blood/OPlus/
+					else pack = new/obj/item/weapon/reagent_containers/blood/OMinus/
+				pack.loc = src
+				var/sanitized_name = sanitize(pack.name, list("\"" = "", "'" = "", "+" = " plus", ";" = "", "^" = "", "&" = "", "<" = "", ">" = ""))
+				pack.name = sanitized_name
+				if(item_quants[sanitized_name])
+					item_quants[sanitized_name]++
+				else
+					item_quants[sanitized_name] = 1
+
 /obj/machinery/smartfridge/drinks
 	name = "\improper Drink Showcase"
 	desc = "A refrigerated storage unit for tasty tasty alcohol."
@@ -297,7 +335,7 @@
 
 				// AUTOFIXED BY fix_string_idiocy.py
 				// C:\Users\Rob\Documents\Projects\vgstation13\code\game\machinery\kitchen\smartfridge.dm:140: dat += "<FONT color = 'blue'><B>[capitalize(O)]</B>:"
-				dat += {"<FONT color = 'blue'><B>[capitalize(O)]</B>:
+				dat += {"<FONT color = 'blue'><B>[O]</B>:
 					[N] </font>
 					<a href='byond://?src=\ref[src];vend=[O];amount=1'>Vend</A> "}
 				// END AUTOFIX

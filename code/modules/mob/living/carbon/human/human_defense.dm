@@ -211,14 +211,14 @@ emp_act
 	if(armor >= 2)	return 0
 	if(!I.force)	return 0
 
-	apply_damage(I.force, I.damtype, affecting, armor , is_sharp(I), I)
+	apply_damage(damage = I.force, damagetype = I.damtype, def_zone = affecting, blocked = armor ,edge = 0, sharp = is_sharp(I), used_weapon = I)
 
 	var/bloody = 0
 	if(((I.damtype == BRUTE) || (I.damtype == HALLOSS)) && prob(25 + (I.force * 2)))
-		I.add_blood(src)	//Make the weapon bloody, not the person.
 //		if(user.hand)	user.update_inv_l_hand()	//updates the attacker's overlay for the (now bloodied) weapon
 //		else			user.update_inv_r_hand()	//removed because weapons don't have on-mob blood overlays
-		if(prob(33))
+		if(prob(33) && !(I.flags & BLOODCLEAR))
+			I.add_blood(src)
 			bloody = 1
 			var/turf/location = loc
 			if(istype(location, /turf/simulated))

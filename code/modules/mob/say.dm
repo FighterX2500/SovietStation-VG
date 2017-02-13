@@ -6,10 +6,12 @@
 		usr << "<span class='danger'>Speech is currently admin-disabled.</span>"
 		return
 	usr.say(message)
-
-/mob/verb/whisper(message as text)
+/mob/verb/whisper_verb(message as text)
 	set name = "Whisper"
 	set category = "IC"
+	whisper(message, null)
+	return
+/mob/proc/whisper(message as text, datum/language/lang)
 	return
 /*
 /mob/proc/whisper(var/message, var/unheard=" whispers something", var/heard="whispers,", var/apply_filters=1, var/allow_lastwords=1)
@@ -27,9 +29,11 @@
 	message = trim(copytext(sanitize(message), 1, MAX_MESSAGE_LEN))
 
 	if(ishuman(src) || isrobot(src))
-		usr.emote("me",usr.emote_type,message)
+		custom_emote(usr.emote_type, message)
+//		usr.emote("me",usr.emote_type,message)
 	else
-		usr.emote(message)
+		custom_emote(1, message)
+//		usr.emote(message)
 
 /mob/proc/say_dead(var/message)
 	var/name = src.real_name

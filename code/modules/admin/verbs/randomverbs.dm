@@ -284,6 +284,32 @@ Ccomp's first proc.
 	log_admin("[key_name(usr)] allowed [key_name(G)] to bypass the 30 minute respawn limit")
 	message_admins("Admin [key_name_admin(usr)] allowed [key_name_admin(G)] to bypass the 30 minute respawn limit", 1)
 
+var/global/list/spawnself_players = list()
+
+/client/proc/allow_player_spawnself()
+	set category = "Special Verbs"
+	set name = "Allow player to spawn self"
+	set desc = "Let's the player spawn self a new corpce."
+	if(!holder)
+		src << "Only administrators may use this command."
+
+	var/list/targets = list()
+	targets += clients
+
+	for(var/i in targets)
+		if(i:ckey in spawnself_players)
+			targets.Remove(i)
+
+	var/target = input("Select a player", "", null, null) as null|anything in targets
+	if(!target)
+		return
+
+	spawnself_players.Add(target:ckey)
+
+	target <<"\blue <B>You may now spawn yourself.</B>"
+	log_admin("[key_name(usr)] allowed [key_name(target)] to spawn self")
+	message_admins("Admin [key_name_admin(usr)] allowed [key_name_admin(target)] to spawn self", 1)
+
 
 /client/proc/toggle_antagHUD_use()
 	set category = "Server"
@@ -961,3 +987,26 @@ Traitors and the like can also be revived with the previous role mostly intact.
 		usr << "Random events disabled"
 		message_admins("Admin [key_name_admin(usr)] has disabled random events.", 1)
 	feedback_add_details("admin_verb","TRE") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+
+/client/proc/load_map()
+	set category = "Fun"
+	set name = "Load Map"
+	if(!holder)
+		src << "Only administrators may use this command."
+		return
+
+	if(!check_rights(R_FUN))	return
+	var/map = input("Pick file:","File") as file|null
+	if(!map)
+		return
+	if(isfile(map))
+		log_admin("[key_name(usr)] start loading map [map].")
+		message_admins("[key_name(usr)] start loading map [map].", 1)
+		maploader.load_map(map)
+		for(var/obj/effect/landmark/L in landmarks_list)
+			if (L.name != "awaystart")
+				continue
+			awaydestinations.Add(L)
+	log_admin("[key_name(usr)] loaded map [map].")
+	message_admins("[key_name(usr)] loaded map [map].", 1)
+	feedback_add_details("admin_verb","LOADMAP") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!

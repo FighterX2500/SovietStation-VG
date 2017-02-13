@@ -66,8 +66,6 @@
 				AI.eyeobj.setLoc(src)
 
 /mob/living/Click()
-	if(isAI(usr))
-		return
 	..()
 
 /mob/living/DblClick()

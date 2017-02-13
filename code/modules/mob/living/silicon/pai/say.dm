@@ -13,6 +13,3 @@
 		src << "<font color=green>Communication circuits remain unitialized.</font>"
 	else
 		..(msg)
-
-/mob/living/silicon/pai/binarycheck()
-	return 0

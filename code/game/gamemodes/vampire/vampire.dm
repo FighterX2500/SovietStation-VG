@@ -1,5 +1,6 @@
 //This is the gamemode file for the ported goon gamemode vampires.
 //They get a traitor objective and a blood sucking objective
+#define BLOOD_DRAIN_AMOUNT 25
 /datum/game_mode
 	var/list/datum/mind/vampires = list()
 	var/list/datum/mind/enthralled = list() //those controlled by a vampire
@@ -269,8 +270,10 @@ You are weak to holy things and starlight. Don't go into space and avoid the Cha
 /mob/proc/handle_bloodsucking(mob/living/carbon/human/H)
 	src.mind.vampire.draining = H
 	var/blood = 0
+	var/blood_drain
 	var/bloodtotal = 0 //used to see if we increased our blood total
 	var/bloodusable = 0 //used to see if we increased our blood usable
+	var/victim_blood_amount
 	src.attack_log += text("\[[time_stamp()]\] <font color='red'>Bit [H.name] ([H.ckey]) in the neck and draining their blood</font>")
 	H.attack_log += text("\[[time_stamp()]\] <font color='orange'>Has been bit in the neck by [src.name] ([src.ckey])</font>")
 	log_attack("[src.name] ([src.ckey]) bit [H.name] ([H.ckey]) in the neck")
@@ -280,6 +283,7 @@ You are weak to holy things and starlight. Don't go into space and avoid the Cha
 	else
 		H.LAssailant = src
 	while(do_mob(src, H, 50))
+		blood_drain = BLOOD_DRAIN_AMOUNT
 		if(!mind.vampire || !(mind in ticker.mode.vampires))
 			src << "\red Your fangs have disappeared!"
 			return 0
@@ -288,21 +292,24 @@ You are weak to holy things and starlight. Don't go into space and avoid the Cha
 			return 0
 		bloodtotal = src.mind.vampire.bloodtotal
 		bloodusable = src.mind.vampire.bloodusable
-		if(!H.vessel.get_reagent_amount("blood"))
-			src << "\red They've got no blood left to give."
-			break
+		victim_blood_amount = H.vessel.get_reagent_amount("blood")
+		if(victim_blood_amount < blood_drain)
+			if(victim_blood_amount <= 0) //Если крови нет, то заканчиваем
+				src << "\red They've got no blood left to give."
+				break
+			blood_drain = victim_blood_amount
 		if(H.stat < 2) //alive
-			blood = min(10, H.vessel.get_reagent_amount("blood"))// if they have less than 10 blood, give them the remnant else they get 10 blood
+			blood = min(10, blood_drain)// if they have less than 10 blood, give them the remnant else they get 10 blood
 			src.mind.vampire.bloodtotal += blood
 			src.mind.vampire.bloodusable += blood
 			H.adjustCloneLoss(10) // beep boop 10 damage
 		else
-			blood = min(5, H.vessel.get_reagent_amount("blood"))// The dead only give 5 bloods
+			blood = min(5, blood_drain)// The dead only give 5 bloods
 			src.mind.vampire.bloodtotal += blood
 		if(bloodtotal != src.mind.vampire.bloodtotal)
 			src << "\blue <b>You have accumulated [src.mind.vampire.bloodtotal] [src.mind.vampire.bloodtotal > 1 ? "units" : "unit"] of blood[src.mind.vampire.bloodusable != bloodusable ?", and have [src.mind.vampire.bloodusable] left to use" : "."]"
 		check_vampire_upgrade(mind)
-		H.vessel.remove_reagent("blood",25)
+		H.vessel.remove_reagent("blood",blood_drain)
 
 	src.mind.vampire.draining = null
 	src << "\blue You stop draining [H.name] of blood."

@@ -159,12 +159,12 @@
 
 /obj/item/weapon/card/emag/attack()
 	return
-	
+
 /obj/item/weapon/card/emag/afterattack(atom/target, mob/user, proximity)
 	var/atom/A = target
 	if(!proximity) return
 	A.emag_act(user)
-		
+
 /obj/item/weapon/card/id
 	name = "identification card"
 	desc = "A card used to provide ID and determine access across the station."
@@ -182,6 +182,46 @@
 	var/assignment = null	//can be alt title or the actual job
 	var/rank = null			//actual job
 	var/dorm = 0		// determines if this ID has claimed a dorm already
+
+	card_labeler
+		name = "ID Labeler"
+		desc = "A card used to label ID."
+		icon_state = "data"
+
+		verb/setup_label()
+			set category = "IC"
+			set name = "ID Labeler: Setup"
+			set desc = "Takes basic id data from holder."
+
+			if(istype(loc, /mob/living/carbon/human))
+				registered_name = loc:name
+				blood_type = loc:dna:b_type
+				dna_hash = loc:dna:unique_enzymes
+				fingerprint_hash = md5(loc:dna:uni_identity)
+				name = "[initial(name)]:[registered_name]([rank])"
+			return
+
+		verb/set_rank(t as text)
+			set category = "IC"
+			set name = "ID Labeler: Set Rank"
+			set desc = "Sets custom rank"
+
+			if(t)
+				rank = t
+				assignment = t
+				name = "[initial(name)]:[registered_name]([rank])"
+			return
+
+		afterattack(var/obj/item/weapon/card/id/I as obj)
+			I.registered_name = registered_name
+			I.blood_type = blood_type
+			I.dna_hash = dna_hash
+			I.fingerprint_hash = fingerprint_hash
+			I.rank = rank
+			I.assignment = assignment
+			I.name = "[registered_name]([rank])"
+			del(src)
+
 
 /obj/item/weapon/card/id/New()
 	..()

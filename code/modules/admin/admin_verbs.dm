@@ -66,6 +66,7 @@ var/list/admin_verbs_admin = list(
 	/client/proc/free_slot,			/*frees slot for chosen job*/
 	/client/proc/cmd_admin_change_custom_event,
 	/client/proc/cmd_admin_rejuvenate,
+	/client/proc/cmd_assume_direct_control,
 	/client/proc/toggleattacklogs,
 	/client/proc/toggledebuglogs,
 	/datum/admins/proc/show_skills,
@@ -79,8 +80,8 @@ var/list/admin_verbs_admin = list(
 )
 var/list/admin_verbs_ban = list(
 	/client/proc/unban_panel,
-	/client/proc/jobbans,
-	/client/proc/unjobban_panel
+	/client/proc/jobbans
+	///client/proc/unjobban_panel
 	// /client/proc/DB_ban_panel
 	)
 var/list/admin_verbs_sounds = list(
@@ -107,11 +108,13 @@ var/list/admin_verbs_fun = list(
 	/client/proc/editappear,
 	/client/proc/commandname,
 	/client/proc/delete_all_adminbus,
+	/client/proc/load_map,
 	/client/proc/gib_money // /vg/
 	)
 var/list/admin_verbs_spawn = list(
 	/datum/admins/proc/spawn_atom,		/*allows us to spawn instances*/
-	/client/proc/respawn_character
+	/client/proc/respawn_character,
+	/client/proc/allow_player_spawnself
 	)
 var/list/admin_verbs_server = list(
 	/client/proc/Set_Holiday,
@@ -499,7 +502,7 @@ var/list/admin_verbs_mod = list(
 
 /client/proc/warn(warned_ckey)
 	var/reason = "Autobanning due to too many formal warnings"
-	if(!check_rights(R_MOD))	return
+	if(!check_rights(R_MOD) && !check_rights(R_ADMIN))	return
 
 	if(!warned_ckey || !istext(warned_ckey))	return
 	/*if(warned_ckey in admin_datums)
@@ -681,13 +684,14 @@ var/list/admin_verbs_mod = list(
 	set category = "Admin"
 
 	if(holder)
-		log_admin("[src] deadminned themself.")
-		message_admins("[src] deadminned themself.")
-		deadmin()
-		verbs += /client/proc/readmin
-		deadmins += ckey
-		src << "<span class='interface'>You are now a normal player.</span>"
-	feedback_add_details("admin_verb","DAS") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+		if(alert(src,"Are you sure you want to deadmin yourself?","Deadmin","Yes","No") == "Yes")
+			log_admin("[src] deadminned themself.")
+			message_admins("[src] deadminned themself.")
+			deadmin()
+			verbs += /client/proc/readmin
+			deadmins += ckey
+			src << "<span class='interface'>You are now a normal player.</span>"
+			feedback_add_details("admin_verb","DAS") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /client/proc/toggle_log_hrefs()
 	set name = "Toggle href logging"

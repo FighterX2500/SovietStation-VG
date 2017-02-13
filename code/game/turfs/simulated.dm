@@ -61,7 +61,7 @@
 						from.AddTracks(/obj/effect/decal/cleanable/blood/tracks/footprints,bloodDNA,0,H.dir,bloodcolor) // Going
 
 			bloodDNA = null
-
+/*
 			// Floorlength braids?  Enjoy your tripping.
 			if((H.h_style && !(H.head && (H.head.flags & BLOCKHEADHAIR))))
 				var/datum/sprite_accessory/hair_style = hair_styles_list[H.h_style]
@@ -73,7 +73,7 @@
 						playsound(get_turf(src), 'sound/misc/slip.ogg', 50, 1, -3)
 						H.Stun(4)
 						H.Weaken(5)
-
+*/
 		switch (src.wet)
 			if(1)
 				if(istype(M, /mob/living/carbon/human)) // Added check since monkeys don't have shoes

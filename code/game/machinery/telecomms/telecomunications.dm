@@ -87,7 +87,8 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 			"type" = signal.data["type"],
 			"server" = signal.data["server"],
 			"reject" = signal.data["reject"],
-			"level" = signal.data["level"]
+			"level" = signal.data["level"],
+			"languages" = signal.data["languages"]
 			)
 
 			// Keep the "original" signal constant
@@ -556,9 +557,8 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 				log.parameters["message"] = signal.data["message"]
 				log.parameters["name"] = signal.data["name"]
 				log.parameters["realname"] = signal.data["realname"]
-
-				log.parameters["uspeech"] = signal.data["languages"] & HUMAN //good enough
-
+				log.parameters["badmessage"] = stars(signal.data["message"])
+				log.parameters["languages"] = signal.data["languages"]
 
 				// If the signal is still compressed, make the log entry gibberish
 				if(signal.data["compression"] > 0)

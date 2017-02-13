@@ -10,7 +10,7 @@
 	origin_tech = "syndicate=3"
 	var/list/clothing_choices = list()
 	siemens_coefficient = 0.8
-	species_fit = list("Vox")
+	species_restricted = null
 
 /obj/item/clothing/shoes/mime
 	name = "mime shoes"
@@ -23,7 +23,6 @@
 	icon_state = "swat"
 	armor = list(melee = 80, bullet = 60, laser = 50,energy = 25, bomb = 50, bio = 10, rad = 0)
 	flags = NOSLIP
-	species_fit = list("Vox")
 	siemens_coefficient = 0.6
 
 /obj/item/clothing/shoes/combat //Basically SWAT shoes combined with galoshes.
@@ -32,7 +31,6 @@
 	icon_state = "swat"
 	armor = list(melee = 80, bullet = 60, laser = 50,energy = 25, bomb = 50, bio = 10, rad = 0)
 	flags = NOSLIP
-	species_fit = list("Vox")
 	siemens_coefficient = 0.6
 
 	cold_protection = FEET
@@ -58,13 +56,14 @@
 	desc = "A pair of rather plain, wooden sandals."
 	name = "sandals"
 	icon_state = "wizard"
-
+	species_restricted = null
 	wizard_garb = 1
 
 /obj/item/clothing/shoes/sandal/marisa
 	desc = "A pair of magic, black shoes."
 	name = "magic shoes"
 	icon_state = "black"
+	species_restricted = null
 
 /obj/item/clothing/shoes/galoshes
 	desc = "Rubber boots"
@@ -73,7 +72,7 @@
 	permeability_coefficient = 0.05
 	flags = NOSLIP
 	slowdown = SHOES_SLOWDOWN+1
-	species_fit = list("Vox")
+	species_restricted = null
 
 /obj/item/clothing/shoes/clown_shoes
 	desc = "The prankster's standard-issue clowning shoes. Damn they're huge!"
@@ -83,6 +82,7 @@
 	slowdown = SHOES_SLOWDOWN+1
 	_color = "clown"
 	var/footstep = 1	//used for squeeks whilst walking
+	species_restricted = null
 
 /obj/item/clothing/shoes/clown_shoes/step_action()
 	if(ishuman(loc))
@@ -136,6 +136,7 @@
 	desc = "Fluffy!"
 	icon_state = "slippers"
 	item_state = "slippers"
+	species_restricted = null
 
 /obj/item/clothing/shoes/slippers_worn
 	name = "worn bunny slippers"

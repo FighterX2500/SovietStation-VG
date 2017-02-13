@@ -140,6 +140,11 @@
 	targetvendomat = /obj/machinery/vending/sovietvend
 	icon_state = "soviet"
 
+/obj/structure/vendomatpack/pizza
+	name = "Pizza ingridients recharge pack"
+	targetvendomat = /obj/machinery/vending/pizza
+	icon_state = "pizza"
+
 
 //////EMPTY PACKS//////
 

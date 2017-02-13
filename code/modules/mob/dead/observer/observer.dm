@@ -14,7 +14,7 @@
 	blinded = 0
 	anchored = 1	//  don't get pushed around
 	invisibility = INVISIBILITY_OBSERVER
-	languages = ALL
+	universal_speak = 1
 
 	// For Aghosts dicking with telecoms equipment.
 	var/obj/item/device/multitool/ghostMulti = null
@@ -34,7 +34,7 @@
 
 /mob/dead/observer/New(var/mob/body=null, var/flags=1)
 	sight |= SEE_TURFS | SEE_MOBS | SEE_OBJS | SEE_SELF
-	see_invisible = SEE_INVISIBLE_OBSERVER
+	see_invisible = SEE_INVISIBLE_OBSERVER_NOLIGHTING
 	see_in_dark = 100
 	verbs += /mob/dead/observer/proc/dead_tele
 
@@ -782,7 +782,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return
 	..()
 
-	if (href_list["follow"])
+	if(href_list["follow"])
 		var/mob/target = locate(href_list["follow"]) in mob_list
 		var/mob/A = usr;
 		A << "You are now following [target]"
@@ -805,7 +805,7 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 					sleep(15)
 				following = null
 
-	if (href_list["jump"])
+	if(href_list["jump"])
 		var/mob/target = locate(href_list["jump"])
 		var/mob/A = usr;
 		A << "Teleporting to [target]..."
@@ -821,6 +821,58 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 						return
 					loc = T
 				following = null
+
+	if(href_list["speakerinfo"])
+		var/mob/M = locate(href_list["speakerinfo"])
+		if(!ismob(M))
+			usr << "This can only be used on instances of type /mob"
+			return
+
+		var/location_description = ""
+		var/special_role_description = ""
+		var/health_description = ""
+		var/gender_description = ""
+		var/turf/T = get_turf(M)
+
+		//Location
+		if(isturf(T))
+			if(isarea(T.loc))
+				location_description = "([M.loc == T ? "at coordinates " : "in [M.loc] at coordinates "] [T.x], [T.y], [T.z] in area <b>[T.loc]</b>)"
+			else
+				location_description = "([M.loc == T ? "at coordinates " : "in [M.loc] at coordinates "] [T.x], [T.y], [T.z])"
+
+		//Job + antagonist
+		if(M.mind)
+			special_role_description = "Role: <b>[M.mind.assigned_role]</b>; Antagonist: <font color='red'><b>[M.mind.special_role]</b></font>; Has been rev: [(M.mind.has_been_rev)?"Yes":"No"]"
+		else
+			special_role_description = "Role: <i>Mind datum missing</i> Antagonist: <i>Mind datum missing</i>; Has been rev: <i>Mind datum missing</i>;"
+
+		//Health
+		if(isliving(M))
+			var/mob/living/L = M
+			var/status
+			switch (M.stat)
+				if (0) status = "Alive"
+				if (1) status = "<font color='orange'><b>Unconscious</b></font>"
+				if (2) status = "<font color='red'><b>Dead</b></font>"
+			health_description = "Status = [status]"
+			health_description += "<BR>Oxy: [L.getOxyLoss()] - Tox: [L.getToxLoss()] - Fire: [L.getFireLoss()] - Brute: [L.getBruteLoss()] - Clone: [L.getCloneLoss()] - Brain: [L.getBrainLoss()]"
+		else
+			health_description = "This mob type has no health to speak of."
+
+		//Gener
+		switch(M.gender)
+			if(MALE,FEMALE)	gender_description = "[M.gender]"
+			else			gender_description = "<font color='red'><b>[M.gender]</b></font>"
+
+		src << "<b>Info about [M.name]:</b> "
+		src << "Mob type = [M.type]; Gender = [gender_description] Damage = [health_description]"
+		src << "Name = <b>[M.name]</b>; Real_name = [M.real_name]; Mind_name = [M.mind?"[M.mind.name]":""]; Key = <b>[M.key]</b>;"
+		src << "Location = [location_description];"
+		src << "[special_role_description]"
+		if(client.holder)
+			src << "(<a href='?src=\ref[usr];priv_msg=\ref[M]'>PM</a>) (<A HREF='?src=\ref[src];adminplayeropts=\ref[M]'>PP</A>) (<A HREF='?_src_=vars;Vars=\ref[M]'>VV</A>) (<A HREF='?src=\ref[src];subtlemessage=\ref[M]'>SM</A>) (<A HREF='?src=\ref[src];adminplayerobservejump=\ref[M]'>JMP</A>) (<A HREF='?src=\ref[src];secretsadmin=check_antagonist'>CA</A>)"
+
 	..()
 //END TELEPORT HREF CODE
 
@@ -833,3 +885,60 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return 0
 	usr.visible_message("<span class='deadsay'><b>[src]</b> points to [A]</span>")
 	return 1
+
+/mob/dead/observer/verb/SpawnBody()
+	set category = "Ghost"
+	set name = "Spawn Body"
+	set desc = "Spawn body which is choosed in Setup Character"
+
+	if(!((client.holder && check_rights(R_SPAWN)) || (src.ckey in spawnself_players)))
+		src << "You have no power there."
+		return
+	if(alert(src,"Are you sure you wish to spawn your body there? You can spawn it only once!","Player Setup","Yes","No") == "No")
+		return
+
+	var/mob/living/carbon/human/new_character = new(get_turf(src))
+	new_character.lastarea = get_area(loc)
+	new_character.add_language(new_character.mob_type_lang)
+	var/datum/species/chosen_species
+	if(client.prefs.species)
+		chosen_species = all_species[client.prefs.species]
+	if(chosen_species)
+		new_character.set_species(client.prefs.species)
+		if(chosen_species.race_language)
+			new_character.add_language(chosen_species.race_language)
+	new_character.add_language(client.prefs.language)
+	client.prefs.copy_to(new_character)
+	src << sound(null, repeat = 0, wait = 0, volume = 85, channel = 1) // MAD JAMS cant last forever yo
+	new_character.name = real_name
+	new_character.dna.ready_dna(new_character)
+	new_character.dna.b_type = client.prefs.b_type
+
+	if(client.prefs.disabilities & DISABILITY_FLAG_NEARSIGHTED)
+		new_character.dna.SetSEState(GLASSESBLOCK,1,1)
+		new_character.disabilities |= NEARSIGHTED
+
+	if(client.prefs.disabilities & DISABILITY_FLAG_FAT)
+		new_character.mutations += M_FAT
+		new_character.overeatduration = 600 // Max overeat
+
+	if(client.prefs.disabilities & DISABILITY_FLAG_EPILEPTIC)
+		new_character.dna.SetSEState(EPILEPSYBLOCK,1,1)
+		new_character.disabilities |= EPILEPSY
+
+	if(client.prefs.disabilities & DISABILITY_FLAG_DEAF)
+		new_character.dna.SetSEState(DEAFBLOCK,1,1)
+		new_character.sdisabilities |= DEAF
+
+	new_character.dna.UpdateSE()
+
+	new_character.key = key		//Manually transfer the key to log them in
+
+	new_character.store_position()
+	ticker.mode.latespawn(new_character)
+	new_character.equip_to_slot_or_del(new /obj/item/weapon/card/id/card_labeler(new_character), slot_r_hand)
+
+	log_admin("[key_name_admin(usr)] spawned self as [new_character.name]")
+	message_admins("[key_name_admin(usr)] spawned self as [new_character.name]", 1)
+
+	spawnself_players.Remove(new_character.ckey)//only one spawn for each player

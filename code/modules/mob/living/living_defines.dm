@@ -1,13 +1,12 @@
 /mob/living
 	see_invisible = SEE_INVISIBLE_LIVING
-	languages = HUMAN
+	var/datum/language/current_language_speak
+	var/mob_type_lang // Привязка языка к типу моба (хайвмайнд для алиенов. Бинарная связь для роботов.)
 
 	//Health and life related vars
 	var/maxHealth = 100 //Maximum health that should be possible.
 	var/health = 100 	//A mob's health
-
 	var/hud_updateflag = 0
-
 	//Damage related vars, NOTE: THESE SHOULD ONLY BE MODIFIED BY PROCS
 	var/bruteloss = 0	//Brutal damage caused by brute force (punching, being clubbed by a toolbox ect... this also accounts for pressure damage)
 	var/oxyloss = 0		//Oxygen depravation damage (no air in lungs)

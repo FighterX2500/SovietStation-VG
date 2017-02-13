@@ -5,7 +5,7 @@
 	var/magpulse = 0
 //	flags = NOSLIP //disabled by default
 	action_button_name = "Toggle Magboots"
-	species_fit = list("Vox")
+	species_restricted = null
 
 /obj/item/clothing/shoes/magboots/verb/toggle()
 	set name = "Toggle Magboots"

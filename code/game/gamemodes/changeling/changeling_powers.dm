@@ -21,7 +21,7 @@
 			if(lesser_form && !P.allowduringlesserform)	continue
 			if(!(P in src.verbs))
 				src.verbs += P.verbpath
-
+	src.add_language("Changeling")
 	mind.changeling.absorbed_dna |= dna
 	return 1
 
@@ -175,7 +175,7 @@
 	if(src.nutrition < 400) src.nutrition = min((src.nutrition + T.nutrition), 400)
 	changeling.chem_charges += 10
 	changeling.geneticpoints += 2
-
+	src.add_language(T.languages) //Чандж изучает языки жертвы.
 	if(T.mind && T.mind.changeling)
 		if(T.mind.changeling.absorbed_dna)
 			for(var/dna_data in T.mind.changeling.absorbed_dna)	//steal all their loot

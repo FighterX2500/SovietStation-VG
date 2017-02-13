@@ -6,7 +6,7 @@
 
 	layer = 3
 	var/last_move = null
-	var/list/languages = 0
+	var/list/languages = new/list()
 	var/anchored = 0
 	var/move_speed = 10
 	var/l_move_time = 1
@@ -16,6 +16,8 @@
 	var/throw_range = 7
 	var/moved_recently = 0
 	var/mob/pulledby = null
+
+	var/universal_speak = 0 //Понимает ли моб все языки (не по рп так-то)
 
 	var/area/areaMaster
 

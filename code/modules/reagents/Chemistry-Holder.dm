@@ -413,7 +413,7 @@ datum
 				total_volume = 0
 				amount_cache.Cut()
 				for(var/datum/reagent/R in reagent_list)
-					if(R.volume < 0.1)
+					if(R.volume < 0.1 && !(ishuman(my_atom) && R.id == "blood")) //Кровь удалять нельзя.
 						del_reagent(R.id,update_totals=0)
 					else
 						total_volume += R.volume

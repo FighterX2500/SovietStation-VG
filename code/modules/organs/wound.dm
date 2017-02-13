@@ -13,8 +13,6 @@
 
 	// amount of damage this wound causes
 	var/damage = 0
-	// ticks of bleeding left.
-	var/bleed_timer = 0
 	// amount of damage the current wound type requires(less means we need to apply the next healing stage)
 	var/min_damage = 0
 
@@ -71,8 +69,6 @@
 		// make the max_bleeding_stage count from the end of the list rather than the start
 		// this is more robust to changes to the list
 		max_bleeding_stage = src.desc_list.len - max_bleeding_stage
-
-		bleed_timer += damage
 
 	// returns 1 if there's a next stage, 0 otherwise
 	proc/next_stage()
@@ -163,7 +159,6 @@
 	// opens the wound again
 	proc/open_wound(damage)
 		src.damage += damage
-		bleed_timer += damage
 
 		while(src.current_stage > 1 && src.damage_list[current_stage-1] <= src.damage)
 			src.current_stage--
@@ -172,9 +167,48 @@
 		src.min_damage = damage_list[current_stage]
 
 	proc/bleeding()
-		// internal wounds don't bleed in the sense of this function
-		return ((damage > 30 || bleed_timer > 0) && !(bandaged||clamped) && (damage_type == BRUISE && damage >= 20 || damage_type == CUT && damage >= 5) && current_stage <= max_bleeding_stage && !src.internal)
+		if (src.internal)
+			return 0	// internal wounds don't bleed in the sense of this function
 
+		if (current_stage > max_bleeding_stage)
+			return 0
+
+		if (bandaged||clamped)
+			return 0
+
+		return ((damage_type == BRUISE && damage >= 20) || (damage_type == CUT && damage >= 5))
+//“ип раны по дамагу.
+/proc/get_wound_type(var/type = CUT, var/damage)
+	switch(type)
+		if(CUT)
+			switch(damage)
+				if(70 to INFINITY)
+					return /datum/wound/cut/massive
+				if(60 to 70)
+					return /datum/wound/cut/gaping_big
+				if(50 to 60)
+					return /datum/wound/cut/gaping
+				if(25 to 50)
+					return /datum/wound/cut/flesh
+				if(15 to 25)
+					return /datum/wound/cut/deep
+				if(0 to 15)
+					return /datum/wound/cut/small
+		if(BRUISE)
+			return /datum/wound/bruise
+		if(BURN)
+			switch(damage)
+				if(50 to INFINITY)
+					return /datum/wound/burn/carbonised
+				if(40 to 50)
+					return /datum/wound/burn/deep
+				if(30 to 40)
+					return /datum/wound/burn/severe
+				if(15 to 30)
+					return /datum/wound/burn/large
+				if(0 to 15)
+					return /datum/wound/burn/moderate
+	return null //no wound
 /** CUTS **/
 /datum/wound/cut/small
 	// link wound descriptions to amounts of damage
@@ -204,38 +238,12 @@ datum/wound/cut/massive
 	max_bleeding_stage = 2
 	stages = list("massive wound" = 70, "massive healing wound" = 50, "massive angry scar" = 10,  "massive jagged scar" = 0)
 
-	needs_treatment = 1 // this only heals when bandaged
-
 /** BRUISES **/
 /datum/wound/bruise
 	stages = list("monumental bruise" = 80, "huge bruise" = 50, "large bruise" = 30,\
 				  "moderate bruise" = 20, "small bruise" = 10, "tiny bruise" = 5)
-
-	needs_treatment = 1 // this only heals when bandaged
+	max_bleeding_stage = 3
 	damage_type = BRUISE
-
-/datum/wound/bruise/monumental
-
-// implement sub-paths by starting at a later stage
-
-/datum/wound/bruise/tiny
-	current_stage = 5
-	needs_treatment = 0
-
-/datum/wound/bruise/small
-	current_stage = 4
-	needs_treatment = 0
-
-/datum/wound/bruise/moderate
-	current_stage = 3
-	needs_treatment = 0
-
-/datum/wound/bruise/large
-	current_stage = 2
-
-/datum/wound/bruise/huge
-	current_stage = 1
-
 /** BURNS **/
 /datum/wound/burn/moderate
 	stages = list("ripped burn" = 10, "moderate burn" = 5, "moderate salved burn" = 2, "fresh skin" = 0)
